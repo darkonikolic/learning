@@ -1,6 +1,10 @@
 # Claude workflow — from a question to a problem that produces an outcome
 
-This unit defines your persistent mode: **AI-assisted architect** (the goal is not “get text”; you steer **one concrete work problem**). **No calendar fiction** (“one fake week per topic”) — repeat the rituals as often as needed.
+This unit defines your persistent **mindset**: **AI-assisted architect** with **Claude Code** (the goal is not “get text”; you steer **one concrete work problem**). **No calendar fiction** (“one fake week per topic”) — repeat the rituals as often as needed.
+
+**Operational playbook:** `04-plan-to-execution-workflow.md`. **Specification habit:** `05-specification-before-implementation.md`. **Slash commands:** `02`. **Config map:** `03`. **Rules, skills, agents, memory, governance:** `09`–`13`. **GSD:** `15`–`18`.
+
+Suggested early path: `02`–`05` → `09`–`13` → `15`–`17` → labs `14` then `18`.
 
 ## What changes if you internalize this
 
@@ -26,7 +30,7 @@ This unit defines your persistent mode: **AI-assisted architect** (the goal is n
 - [ ] **One sentence:** what problem is today?
 - [ ] **3–7 steps** written by **you** without copy/paste from the model  
 - [ ] **Out-of-scope** called out explicitly  
-- [ ] Desired artefact stated: **plan** | **architecture** | **incident note** | **refactor plan**  
+- [ ] Desired artefact stated: **plan** | **SPEC** | **architecture** | **incident note** | **refactor plan**  
 
 ## Symfony drill
 

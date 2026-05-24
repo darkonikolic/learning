@@ -2,9 +2,9 @@
 
 ## Phase framing (Specification Guided Development)
 
-**Highest-leverage framing for this track:** validated **specification before** substantial implementation churn.
+**Prerequisite:** `01-claude-foundations/05-specification-before-implementation.md` — minimal SPEC habit and `docs/specs/` workflow **before** this area.
 
-Topics **`01`–`08`**.
+**This area = deep spec engineering** — acceptance ownership, boundaries, NFR, implementation spec, drift, partition. Topics **`01`–`08`**.
 
 ### Core workflow
 

@@ -8,7 +8,7 @@
 
 | Bad (illusion) | Good (reality) |
 |----------------|----------------|
-| “Claude knows my whole repo” | Claude knows **messages + attachments + open editor context + Rules + Skills nothing else** unless you pasted it |
+| “Claude knows my whole repo” | Claude knows **messages + CLAUDE.md/rules + loaded skills + tool results + files you reference** — not the whole tree unless tools read it |
 | Tiny prompt vs huge unknown system | Big problems deserve **layered deliberate** prompts (explicit **ROLE / CONTEXT / SPEC / CONSTRAINT / OUTPUT FORMAT** once you cross beyond one vague sentence) |
 
 ## Exercise: equally hard prompt, richer vs thinner input

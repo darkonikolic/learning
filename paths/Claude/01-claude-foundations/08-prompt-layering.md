@@ -1,12 +1,12 @@
 # Layered prompting — five blocks instead of “just do X for me”
 
-**Goal:** non-trivial requests open with **five visible blocks** so the model inherits your org reality intentionally (see context + token hygiene units). Topics ordered by numbering here — never calendar weeks baked into filenames-as-schedule mythology.
+**Goal:** non-trivial requests open with **five visible blocks** so the model inherits your org reality intentionally (see `06-context-ownership`, `07-token-ownership`, plan in `04`, **on-disk SPEC** in `05`). Topics ordered by numbering here — never calendar weeks baked into filenames-as-schedule mythology.
 
 ## The five blocks
 
 1. **ROLE** — persona who adjudicates architectural trade-offs (senior CQRS-owner for subsystem X?).  
 2. **CONTEXT** — tight slice of truthful system circumstance (no lore dump).  
-3. **SPEC** — bullet measurable outcomes reviewers can tick blindly.  
+3. **SPEC** — bullet measurable outcomes reviewers can tick blindly — **must match** `docs/specs/<slug>.md` when that file exists (`05`).  
 4. **CONSTRAINT** — bans + stack conventions the model cannot hand-wave past.  
 5. **OUTPUT FORMAT** — deterministic shape readers expect (**ASCII diagrams, two-column deltas, enumerated steps**, etc.)
 

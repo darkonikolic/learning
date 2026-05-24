@@ -32,7 +32,7 @@ Incidents of accidental secret exposure vectors
 
 Misclassified commands (blocked safe ops vs allowed dangerous ones)
 
-Notebook output: distilled **ALLOW / DENY / ASK_APPROVAL** matrix you will paste into `.cursor/rules` or personal runbooks—maintain consciously.
+Notebook output: distilled **ALLOW / DENY / ASK** matrix in `.claude/settings.json` or team runbook — maintain consciously.
 
 ### Checkpoint mantra
 

@@ -39,4 +39,4 @@ You stop optimizing **isolated prompts** and keep **problem-type workflows**: ar
 
 ## Outdated-alert habit
 
-Payment platforms, broker semantics, and Cursor capabilities drift — if this lab’s assumed stack doesn’t match yours, rewrite the CONTEXT card and constraints instead of fighting the model.
+Payment platforms, broker semantics, and Claude Code capabilities drift — if this lab’s assumed stack doesn’t match yours, rewrite the CONTEXT card and constraints instead of fighting the model.

@@ -31,7 +31,7 @@ Cross-cutting: **reusable workflows**, **reusable prompt shapes**, **reusable va
 
 **Checkpoint mantra:** you move from “using Claude” to owning a **Claude engineering platform**—Rules and Skills are the load-bearing walls.
 
-Where files live depends on your editor (e.g. Cursor typically uses **Rules** under `.cursor/rules/` and **Skills** as `SKILL.md` trees)—mirror your product docs; paths in labs are placeholders.
+Where files live: **Claude Code** — `.claude/rules/`, `.claude/skills/`, `CLAUDE.md`, `.claude/agents/` (see `01-claude-foundations/03` and `09`–`11`). Verify [Claude Code docs](https://code.claude.com/docs/en/overview) when paths change.
 
 ---
 
