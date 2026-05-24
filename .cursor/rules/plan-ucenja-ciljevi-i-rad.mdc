@@ -1,0 +1,108 @@
+---
+description: Learning workspace — English traces, layout rules; flag outdated tech/paths only; routine reformat needs no chat notice
+alwaysApply: true
+---
+
+# Learning plan — what we build and how
+
+## Goals
+
+- **Systems / architecture as job-relevant learning** (where the repo has material): understand systems end-to-end — requirements, service boundaries, scale, failure models, observability — not shallow text without deliverables.
+- **Other traces** (e.g. `paths/Claude/`, `paths/Oscp+/`, `paths/Ops/`): same idea — structured Markdown study material without repo-wide automation unless you control it.
+- **Language:** keep **study traces and substantive edits in English**. Chat with you may stay whatever you prefer, but `.md` learning units are maintained in English.
+
+## When you must flag something in chat (technology & learning paths)
+
+**Do not** announce routine **reformatting** (Markdown cleanup, headings, wrapping, minor structural tidy) — that is **default** and needs **no** chat notice.
+
+**Do** say explicitly in chat when you notice that something in the repo is **technically wrong, outdated, or misleading** for learning, for example:
+
+- **Stack / versions** — framework or library behavior, APIs, or defaults that no longer match reality (or you are not sure).  
+- **Product / tooling paths** — Cursor **Rules**, **Skills**, **MCP**, model names, menu names, official paths or filenames that look **stale or incorrect** vs current docs.  
+- **Learning trace claims** — exercises that assume a tool or workflow that has been renamed, removed, or superseded.
+
+Keep it short: what looks wrong, why, and what to verify (e.g. current product docs or release notes).
+
+If you are **unsure** whether a detail is still true, say so briefly instead of silently treating the trace as ground truth.
+
+## Materials and traces — no silent loss of meaning (organization and enrichment only)
+
+**Scope:** traces (`paths/Claude/`, `paths/Ops/`, …) are added **manually, one unit at a time**, when you choose.
+
+**Rule:** factual study content inside traces must not disappear (topics, steps, goals, labs) unless you **explicitly** ask to remove or shorten a part. Allowed and expected changes:
+
+- **Organization** — for **`paths/Claude/`**: **`NN-<area>/`** + **`NN-<subtopic>.md`** only; no calendar **“week estimates”** as a norm — numbers are **topic order**, not a weekly schedule; no **`Faza-*/`**, **`nedelja-*`**, **`_uvod-faze.md`** as the model for **new** work (legacy phase/week layout is **not** the canonical schema for **`paths/Claude/`** traces). Other programs under **`paths/*/`** keep **`NN-<area>/`** + **`NN-<subtopic>.md`** where you already do; legacy **`Faza-*/`** + **`nedelja-*`** is **transitional** until reorganized; better titles and structure, **without** cross-file “read next lesson” navigation.
+- **Time & pacing scaffolding** — do **not** add wall-clock tutoring in trace Markdown: **hours totals**, **“X weeks”**, **per-day durations**, **`h/day`** / **`stretches`** pacing hints, **`minutes/day`** targets, **`Rough effort`** / **`Optional rhythm`** blocks, **`Optional pacing`** lines, unless the **user explicitly requests** pacing or duration estimates **in chat** for that edit. Prefer goals, prerequisites, sequencing, labs, references; discuss calendar pressure in plain chat or external tooling when needed.
+- **Enrichment** — clearer learning outcomes, deliverables, in-file coherence, formatting, without destroying the original meaning.
+
+When moving or merging files: confirm coverage still makes sense before deleting an old file; if gaps appear, propose them in chat.
+
+## Path layout (program traces — general)
+
+- For **`paths/Claude/`** (no phase/week folder hierarchy):
+
+  - Do not add legacy phase/week layouts as **the** organizational model. Map material as areas: **`NN-<kebab-title>/`** at **`paths/Claude/`** program root; **`NN-<kebab-title>.md`** inside is one **subtopic** (hands-on worksheet).
+  - A subtopic (**`NN-*.md`**) is a **standalone practical unit** — no calendar norms. **`NN`** is stable topic ordering, **not** a timetable.
+  - No default README-style “course overview” mega-intro file; ship learning content in **`NN-<slug>.md`** only.
+  - **Do not** add **`_preamble.md`** under trace folders. **If `_preamble.md` is unused or you are not actively maintaining it as the single source for something the user demanded — delete it.** Put phase-level framing only in **`01-<slug>.md`** (short top section) or across numbered units. Create **`_preamble.md`** **only** if the user explicitly requests that filename.
+
+  - Typically one `.md` per subtopic; **`NN` within an area** is **`01`, `02`, …** with **no gaps**.
+  - **No in-trace narrative navigation:** do not add sections that work like a book’s table of contents (“Next unit”, “What follows”, “Previous topic”, mandated “read file X then Y”). Each `.md` stands alone; ordering uses numeric prefixes in filenames. Paths to tooling (e.g. `.cursor/rules/*.mdc`, `SKILL.md`) are fine when explaining where config lives — that is **not** a mandatory lesson sequence across traces.
+
+- For **other trace programs** under **`paths/*/`** (e.g. `paths/Ops/`):
+  - **Area:** **`NN-<kebab>/`** at program root; **`NN`** orders areas. **Do not** add **`_preamble.md`** here either; merge folder-level framing into **`01-*.md`** or delete orphaned preambles.
+  - **Subtopic:** **`NN-<kebab>.md`** inside area; numbering **within that area only**, no gaps.
+  - **Width:** pad all numeric prefixes in that tree uniformly; if counts exceed two digits (`99`), expand to **`NNN`/`NNNN`** so lexical sort stays correct.
+- Programs **`paths/*/…`** outside **`paths/Claude/`** that still have **`Faza-*/`** + **`nedelja-*.md`** + **`_uvod-faze.md`**: treat as **transitional** toward **`NN-<area>/`** + **`NN-<subtopic>.md`**; no mass scripted refactors without your written agreement.
+
+- Keep areas **conceptually coherent** (no mandated “previous/next markdown” arrows inside traces). For high-level sequencing, reply in chat if asked — do **not** encode mandatory reading order into traces.
+
+## Python — constrained (workspace policy)
+
+- **Default:** No ad-hoc `*.py`, generators, or one-off Python in this vault unless **you explicitly approve that script in chat**.
+- **`{stem}-learning-path.pdf`** under **`exports/`** (and the optional **`exports/{stem}-learning-path.md`** from **`--emit-markdown`**) produced from Markdown traces **must** be generated **only** with **`scripts/build_learning_path_pdf.py`** and **`scripts/requirements.txt`** (typically under **`scripts/.venv`**). Do **not** produce or replace those artifacts with **`pandoc`**, **`md-to-pdf`** / **`npx`**, **`weasyprint` one-liners**, ad-hoc Python, or duplicated export scripts unless the user explicitly decides to retire this toolchain in chat and replace it.
+- If the task is **export / refresh / regenerate** the curriculum PDF, your action is **run this script** (or the VS Code/Cursor task below) — not improvise another pipeline.
+- **Unless the user explicitly asks in chat**, do **not** run **`build_learning_path_pdf.py`**, the related PDF export tasks, or **`scripts/test_build_learning_path_pdf.py`** just to refresh `exports/*-learning-path.pdf` after trace edits—the user drives when PDFs are rebuilt.
+- By default outputs land in **`exports/`** (overwrite). Pass **`--out-dir`** only to override that directory.
+
+## Curriculum PDF — mandatory agent path
+
+Working directory **`scripts/`**:
+
+```bash
+(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -r requirements.txt)) \
+ && .venv/bin/python build_learning_path_pdf.py "/ABS/path/to/Plan ucenja/paths/Claude" "/ABS/path/to/Plan ucenja/paths/Oscp+" \\
+    --workspace "/ABS/path/to/Plan ucenja"
+```
+
+`paths/Oscp+/` (and sibling traces such as **`paths/Go/`**, **`paths/Architect/`**) use **`NN-<area>/`** with **`NN-*.md`** subtopics like **`paths/Claude/`**; that matches the default **`--layout phase`**. Use **`--layout flat`** only for trees **without** direct `NN-*` phase folders (recursive Markdown). **`sources`** are one or more Markdown trees (**`paths/<Program>/…`**) inside `--workspace`. Passing several sources **in one run** ⇒ several **`exports/{stem}-learning-path.pdf`** files. **`--pdf-name`** is only valid when there is exactly **one** source tree. **`--workspace`** is the vault root (contains **`paths/`**, **`exports/`**, `.cursor/`).
+
+Cursor/VS Code tasks **„Export … learning path PDF“** map to this script; **„Export all learning path PDFs“** renders every curriculum tree under **`paths/`** into **`exports/`** in one run.
+
+Smoke check (same `venv` as above):
+
+```bash
+cd "/ABS/path/to/Plan ucenja" && scripts/.venv/bin/python scripts/test_build_learning_path_pdf.py
+```
+
+## How we work
+
+- **New program path / new trace (“let’s create a … path”)** — unless the **user explicitly asks for curriculum or worksheets in the same instruction**, create **folder layout only** under **`paths/<Program-slug>/`**: `NN-<area>/` (and numbering agreed in chat when unclear). Do **not** fill `NN-<subtopic>.md` bodies with substantive study content, labs, or long outlines—a **minimal one-line structural placeholder file** only if Git or tooling requires a file to keep ordering visible. Populate units **when asked**.
+- Edit `.md` directly; do not automate broad repo churn without approval.
+- **Reformatting** for clarity (headings, lists, wrapping, consistent Markdown) is **expected** when touching a file — **no** separate chat announcement.
+- **Do not create `README*`** unless you explicitly ask for a concrete README; explain layout in chat instead.
+
+## Gaps / inconsistency — agent duty
+
+- If you spot **skipped `NN-*` numbering**, duplicates, **or** structural nonsense between area subtopics, propose a concise fix **in chat** — no bulk moves until you confirm. (Standalone root `.md` files not organized under **`NN-<area>/`** are exempt from folder-numbering rules unless you say otherwise.)
+
+- When reviewing or editing **`paths/Claude/*/NN-*.md`** (and similarly **`paths/Oscp+/*/NN-*.md`** for that trace program), if content is missing, ordering is irrational, or the “AI-assisted architect” goal clashes with topics, write a **short proposed change** in chat — do **not** mass-restructure without alignment on anything wider than single-file tweaks.
+
+## Style
+
+- Prefer **concise**, outcome-oriented prose: learning outcome → practice/lab → deliverable where it helps.
+
+## Preserving substance
+
+- Do not wipe large passages without explicit “trim here” intent; see materials rule above.
+

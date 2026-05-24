@@ -1,0 +1,190 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Export Claude learning path PDF",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Claude\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export Oscp+ learning path PDF",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Oscp+\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export Trader learning path PDF",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Trader\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export Go learning path PDF",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Go\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export Claude + Oscp+ learning path PDFs",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Claude\" \"${workspaceFolder}/paths/Oscp+\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export JavaScript-and-Vue learning path PDF",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/JavaScript-and-Vue\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export Architect learning path PDF",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Architect\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export MySQL-Database-Engineering learning path PDF",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/MySQL-Database-Engineering\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export Cursor learning path PDF",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Cursor\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Ops\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Export all learning path PDFs",
+      "type": "shell",
+      "command": "(test -x .venv/bin/python || (python3 -m venv .venv && .venv/bin/pip install -qr requirements.txt)) && .venv/bin/python build_learning_path_pdf.py \"${workspaceFolder}/paths/Architect\" \"${workspaceFolder}/paths/Claude\" \"${workspaceFolder}/paths/Cursor\" \"${workspaceFolder}/paths/Go\" \"${workspaceFolder}/paths/JavaScript-and-Vue\" \"${workspaceFolder}/paths/MySQL-Database-Engineering\" \"${workspaceFolder}/paths/Ops\" \"${workspaceFolder}/paths/Oscp+\" \"${workspaceFolder}/paths/PHP-Symfony-Laravel\" \"${workspaceFolder}/paths/Trader\" --workspace \"${workspaceFolder}\"",
+      "options": {
+        "cwd": "${workspaceFolder}/scripts",
+        "env": {}
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    }
+  ]
+}
