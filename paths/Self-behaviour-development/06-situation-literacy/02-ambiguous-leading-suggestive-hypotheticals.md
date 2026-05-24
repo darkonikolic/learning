@@ -6,7 +6,7 @@ Expose **smuggled factual premises** inside ornate questions; decline adopting t
 
 ## Story / lens
 
-Leading architecture tries installing conclusions you never agreed. Narrowing probes (**which instance?, which window?, which success metric?**) resurrect shared referential ground instead of debating imagination landscapes. When premises feel judicially tinted deferral / counsel channel may trump spontaneous speculation. Pair with **[channel routing](../06-audiences-channels-boundaries/01-channel-routing-and-two-world-model.md)** whenever precision alone would leak strategically dangerous detail.
+Leading architecture tries installing conclusions you never agreed. Narrowing probes (**which instance?, which window?, which success metric?**) resurrect shared referential ground instead of debating imagination landscapes. When premises feel judicially tinted deferral / counsel channel may trump spontaneous speculation. Pair with **[channel routing](../07-audiences-channels-boundaries/01-channel-routing-and-two-world-model.md)** whenever precision alone would leak strategically dangerous detail.
 
 ## Moves
 
@@ -17,3 +17,7 @@ Per underlined chunk practise **one narrowing line** aloud using allowed variant
 Five **“if X proven you must admit monstrosity…”** style frames — answer exclusively using **boundary skeleton + channel reroute** vocabulary — forbid building alternate universe plotlines emotionally.
 
 Sanity: recordings contain **zero** accidental “yeah if that’s true I guess I’m irredeemable…” spirals.
+
+## Neighbours
+
+[Cognitive distortion literacy](../04-cognitive-distortion-literacy/) · [Inform / provoke / hooks](01-classifying-messages-information-provocation-hooks.md)

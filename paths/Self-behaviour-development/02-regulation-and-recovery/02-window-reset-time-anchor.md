@@ -22,4 +22,4 @@ Timer ≤30 seconds total.
 
 ## Neighbours
 
-[Grounding primer](01-grounding-micro-label-emotion.md) · **[Observer scaffolding](../03-observer-loop/)**
+[Grounding primer](01-grounding-micro-label-emotion.md) · **[Observer scaffolding](../03-observer-loop/)** · [Sleep & fatigue guardrails](03-sleep-protection-fatigue-and-recovery-signals.md)

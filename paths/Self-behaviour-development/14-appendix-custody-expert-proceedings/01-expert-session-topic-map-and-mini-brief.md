@@ -8,7 +8,7 @@ Cover the **topic map**, rehearse a **compact brief skeleton**, maintain **prep 
 
 ## Story / lens
 
-Compress what evaluators notice before substantive questions arrive—biography without overshare, restrained conflict description that keeps children forward, pragmatic translation of tests without jargon shields, contingency language when sleep or logistics crater. Tie tempo discipline to neighbouring **[communication under pressure](../04-communication-under-pressure/)** units.
+Compress what evaluators notice before substantive questions arrive—biography without overshare, restrained conflict description that keeps children forward, pragmatic translation of tests without jargon shields, contingency language when sleep or logistics crater. Tie tempo discipline to neighbouring **[communication under pressure](../05-communication-under-pressure/)** units.
 
 **Doorway autobiography:** aim **under ~25 seconds** so dependable caregiving arcs lead, not applause arcs. Invite counsel critique whenever stakes justify it.
 

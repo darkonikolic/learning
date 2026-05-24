@@ -10,7 +10,7 @@ Classic attractor: private overload + probing office dynamics + lopsided downsid
 
 After volatile meetings, draft **five-line factual bullets** first (*facts • commitments • delegated • timeline owners*) **before** any emotional appendix—ordering keeps artefacts legible weeks later.
 
-If overload is mostly logistical, pair refusal language with **[operational stance](../01-operational-stance/)** pacing and **[audiences / channels](../06-audiences-channels-boundaries/)** routing; escalate through HR/policy paths aligned with your locality (non-specific legal advice here).
+If overload is mostly logistical, pair refusal language with **[operational stance](../01-operational-stance/)** pacing and **[audiences / channels](../07-audiences-channels-boundaries/)** routing; escalate through HR/policy paths aligned with your locality (non-specific legal advice here).
 
 ## Moves
 

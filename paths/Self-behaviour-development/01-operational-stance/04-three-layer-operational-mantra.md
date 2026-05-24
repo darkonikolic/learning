@@ -8,7 +8,7 @@ Short memorised clauses **bend posture** faster than argumentative intellect und
 
 **Core** survives arousal rehearsals; **Daily / Weekly** rotates wider fidelity toward dependents + institutions episodically; **Deep** answers genuine existential fog — not habitual irritability arcs.
 
-Compose personal analogue lines offline aligning with your ethos without mimic-the narrator theatre. Vocal delivery anchors soft jaw + diaphragm pacing (companioned by **[02-regulation-somatic sheets](../02-regulation-somatic/)**).
+Compose personal analogue lines offline aligning with your ethos without mimic-the narrator theatre. Vocal delivery anchors soft jaw + diaphragm pacing (companioned by **[02-regulation-and-recovery sheets](../02-regulation-and-recovery/)**).
 
 ## Moves
 

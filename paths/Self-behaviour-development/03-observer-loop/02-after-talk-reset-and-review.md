@@ -2,11 +2,11 @@
 
 ## What this settles
 
-Replace automatic **trial-by-imagination verdict** (“I demolished everything catastrophically”) with slim **truth tables** anchored outside catastrophic identity fusion.
+Replace automatic **trial-by-imagination verdict** (“I demolished everything catastrophically”) with slim **truth tables** anchored outside catastrophic identity fusion. When the story is **probability theatre**, tag **[distortion literacy](../04-cognitive-distortion-literacy/)** before rewriting history.
 
 ## Story / lens
 
-Amygdala offers prosecutorial screenplay immediately post friction. Three-row capture reframes residues as **witness-neutral facts**, **descriptor-only response geometry**, **next lever behavioural tweak** rather than melodrama loops reopening dossiers at bedtime. Pair evening psychological compression with **[Three evening questions](../10-reflection-evening-loop/01-three-evening-review-questions.md)** so rumination bedtime pipeline breaks.
+Amygdala offers prosecutorial screenplay immediately post friction. Three-row capture reframes residues as **witness-neutral facts**, **descriptor-only response geometry**, **next lever behavioural tweak** rather than melodrama loops reopening dossiers at bedtime. Pair evening psychological compression with **[Three evening questions](../11-reflection-evening-loop/01-three-evening-review-questions.md)** so rumination bedtime pipeline breaks.
 
 ## Moves
 
@@ -26,4 +26,4 @@ Evening coherence check: shame soliloquy paused—table dictated or handwritten 
 
 ## Neighbours
 
-[Observer braid](01-meta-observer-three-levels.md) · [Evening trio](../10-reflection-evening-loop/01-three-evening-review-questions.md)
+[Observer braid](01-meta-observer-three-levels.md) · [Evening trio](../11-reflection-evening-loop/01-three-evening-review-questions.md)

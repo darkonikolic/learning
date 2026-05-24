@@ -6,7 +6,7 @@ You learn to perceive **distinct channels simultaneously** rather than collapsin
 
 ## Story / lens
 
-Courtroom-ish rooms downgrade rhetorical virtuosity celebrating **steady affect** + truthful minimal wording. Observation ≠ moral sentencing yourself — it inventories channels so physiology + procedural reset prime before choosing communication manoeuvres (**order**: regulate → corridor clarity → linguistic tactic). Companion reflections live **[after-contact notes](02-after-talk-reset-and-review.md)** + **[FAST](../01-operational-stance/03-fast-playbook.md)**.
+Courtroom-ish rooms downgrade rhetorical virtuosity celebrating **steady affect** + truthful minimal wording. Observation ≠ moral sentencing yourself — it inventories channels so physiology + procedural reset prime, then **[interpretive hygiene separates inference from datum](../04-cognitive-distortion-literacy/)**, before you choose communication manoeuvres (**order**: regulate → distortion check → corridor clarity → linguistic tactic). Companion reflections live **[after-contact notes](02-after-talk-reset-and-review.md)** + **[FAST](../01-operational-stance/03-fast-playbook.md)**.
 
 ## Moves
 
@@ -18,4 +18,4 @@ Courtroom-ish rooms downgrade rhetorical virtuosity celebrating **steady affect*
 
 ## Ordering with regulation + tactics
 
-Observe → physiology / honest postpone if needed → select **[communication manoeuvre](../04-communication-under-pressure/)** — never reversing that stack during heat.
+Observe → physiology / honest postpone if needed → **[interpretation sanity pass](../04-cognitive-distortion-literacy/)** → select **[communication manoeuvre](../05-communication-under-pressure/)** — never reversing that stack during heat.

@@ -20,4 +20,4 @@ Calibration: ten arcs without compulsive apology-for-quiet sentence.
 
 ## Neighbours
 
-[Three-phase scaffolding](02-three-phase-opening-substance-close.md) · **[Observer fabric](../03-observer-loop/01-meta-observer-three-levels.md)**
+[Three-phase scaffolding](02-three-phase-opening-substance-close.md) · **[Observer fabric](../03-observer-loop/01-meta-observer-three-levels.md)** · **[Interpretive hygiene](../04-cognitive-distortion-literacy/)**

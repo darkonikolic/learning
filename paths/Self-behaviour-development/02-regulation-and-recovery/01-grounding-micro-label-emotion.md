@@ -16,4 +16,4 @@ Arousal data lands before argumentative mind finishes drafting; diaphragm length
 
 ## Neighbours
 
-[Window resets & truthful delay wording](02-window-reset-time-anchor.md) · [FAST backbone](../01-operational-stance/03-fast-playbook.md)
+[Window resets & truthful delay wording](02-window-reset-time-anchor.md) · [FAST backbone](../01-operational-stance/03-fast-playbook.md) · [Sleep & fatigue guardrails](03-sleep-protection-fatigue-and-recovery-signals.md)

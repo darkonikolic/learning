@@ -6,7 +6,7 @@ Train a sub-five-second calculus: **Does this messenger matter to my actual resp
 
 ## Story / lens
 
-Few pings merit equal arousal budgets. Neither importance-only nor justice feelings justify feeding bottomless arenas. Important-without-payoff-but-high-risk ⇒ shift to transactional tone, textual trace, or delegated escalation — not live duels meant for counsel / HR equivalents. Labels **Important · Risk · Goal** dovetail broader sequencing in **[Conflict ladders](../11-active-life-design/02-conflict-decision-sequence-flag-pointers.md)** and FAST routing **[here](03-fast-playbook.md)**.
+Few pings merit equal arousal budgets. Neither importance-only nor justice feelings justify feeding bottomless arenas. Important-without-payoff-but-high-risk ⇒ shift to transactional tone, textual trace, or delegated escalation — not live duels meant for counsel / HR equivalents. Labels **Important · Risk · Goal** dovetail broader sequencing in **[Conflict ladders](../12-active-life-design/02-conflict-decision-sequence-flag-pointers.md)** and FAST routing **[here](03-fast-playbook.md)**.
 
 ## Moves
 

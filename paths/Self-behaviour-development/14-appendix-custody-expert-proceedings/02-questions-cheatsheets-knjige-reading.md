@@ -8,7 +8,7 @@ Dense custody-facing prompts belong as **spoken inventory**: draw lines, assign 
 
 Usually four layers stack:
 
-1. **Long-form bank** — broad coverage; pull random batches (~5 lines), rotate techniques mapped in **[communication under pressure](../04-communication-under-pressure/)** and **[situation literacy](../05-situation-literacy/)**. Aim disciplined clips (≤45 s): pause audible?, stop honoured?, monotone dignity?, no insult echo?
+1. **Long-form bank** — broad coverage; pull random batches (~5 lines), rotate techniques mapped in **[communication under pressure](../05-communication-under-pressure/)**, **[situation literacy](../06-situation-literacy/)**, and—when rehearsals slide into courtroom-in-skull narration—brief passes through **[interpretive traps](../04-cognitive-distortion-literacy/)**. Aim disciplined clips (≤45 s): pause audible?, stop honoured?, monotone dignity?, no insult echo?
 
 2. **Short warm-up bank** — micro-set when the appointment horizon eats prep time.
 
@@ -20,7 +20,7 @@ Separate track: **damage-control narrative**—blunt outline → trimmed thirty-
 
 Trade paperbacks in a general pile can lend metaphor; they **do not replace** spoken bank reps ahead of procedural interviews.
 
-Technique shorthand throughout this trace maps to **`04-communication-under-pressure`** routing cards and **[situation-literacy tagging](../05-situation-literacy/)**.
+Technique shorthand throughout this trace maps to **`05-communication-under-pressure`** routing cards, **[situation-literacy tagging](../06-situation-literacy/)**, plus **[interpretive hygiene](../04-cognitive-distortion-literacy/)** when stories outrun facts.
 
 ## Moves
 

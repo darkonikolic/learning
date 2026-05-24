@@ -18,7 +18,7 @@ Maintain **repeatable scenario clusters** you rotate deliberately:
 - Helplessness / crisis — single next step when freeze appears; naming realistic threats vs learned spirals.
 - Contact and warmth — humane gaze, steady tempo, without charisma masked as authenticity.
 
-After each heavier block, tag **which folder (`01`–`13`)** picked up evidence—FAST typing, observer labelling, grounding—so gains attach to behaviour, not mood storytelling. Pair noisy sessions with **[observer loop](../03-observer-loop/)** material.
+After each heavier block, tag **which folder (`01`–`14`)** picked up evidence—FAST typing, observer labelling, grounding—so gains attach to behaviour, not mood storytelling. Pair noisy sessions with **[observer loop](../03-observer-loop/)** material.
 
 ## Moves
 
