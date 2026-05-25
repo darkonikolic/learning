@@ -1,52 +1,59 @@
-# Unit 01 — Terminal and filesystem foundations
+# Terminal and filesystem foundations
 
-## Theme
+Learn to navigate and manipulate the Linux filesystem from the command line. Everything else in this path builds on this muscle memory.
 
-Shell basics and filesystem navigation.
-
-## LabEx (Linux Journey)
-
-Finish:
-
-- Getting Started  
-- Linux History  
-- Choosing Distribution  
-- Ubuntu  
-- Debian  
-- The Shell  
-- Command Line  
-
-## Udemy — Linux Administration Bootcamp
-
-Sections:
-
-- Linux intro  
-- Terminal basics  
-
-## Commands to practice
-
-`pwd`, `ls`, `cd`, `mkdir`, `touch`, `cp`, `mv`, `rm`, `clear`, `history`
-
-## Exercise
+## Core navigation
 
 ```bash
-mkdir demo
-cd demo
-touch oauth.txt
-cp oauth.txt oauth2.txt
-mv oauth2.txt backup.txt
-ls
-pwd
+pwd                                  # print working directory
+ls -la /etc                          # list with permissions and hidden files
+cd /var/log && ls                    # change dir and list
+cd ~                                 # go to home directory
+cd -                                 # jump back to previous directory
 ```
 
-## Topic checklist
+## Create, copy, move, delete
 
-- Shell and terminal  
-- Filesystem  
-- Directories and files  
-- Relative vs absolute paths  
-- Command history  
+```bash
+mkdir -p ~/lab/tools/scripts ~/lab/targets/10.10.10.1
+touch ~/lab/targets/10.10.10.1/notes.txt
+cp notes.txt notes.bak
+mv notes.bak archive/notes-$(date +%F).txt
+rm -rf ~/lab/tmp/
+```
 
-## Learning outcome
+## Inspect files and metadata
 
-You can create, copy, move, and remove files and directories and explain where you are in the tree.
+```bash
+file /usr/bin/python3                # what type: binary, text, symlink
+stat /etc/passwd                     # size, permissions, timestamps, inode
+ls -lah /var/log/                    # human-readable sizes
+tree ~/lab -L 2                      # directory tree, 2 levels deep
+```
+
+## Lab exercise — build a pentest directory structure
+
+```bash
+mkdir -p ~/pentest/{recon,exploit,loot,notes}
+touch ~/pentest/notes/targets.txt
+echo "10.10.10.1 - HackTheBox" > ~/pentest/notes/targets.txt
+cat ~/pentest/notes/targets.txt
+ls -R ~/pentest
+```
+
+Expected: four subdirectories, one file with content.
+
+## What to observe
+
+- Absolute paths (`/etc/passwd`) vs relative paths (`../etc/passwd`) — critical distinction for exploits
+- Hidden files start with `.` — `ls -a` reveals them, relevant when hunting for credentials in home dirs
+- `file` distinguishes ELF binary from shell script — matters when dealing with unknown executables
+
+## Practice
+
+- LabEx Grasshopper track: https://labex.io/courses/linux-basic-commands-practice-online
+- TryHackMe Linux Fundamentals Part 1: https://tryhackme.com/room/linuxfundamentalspart1
+
+## Completion bar
+
+Run all of these without looking up flags: `pwd` `ls -la` `cd -` `mkdir -p` `cp` `mv` `rm -rf` `file` `stat` `tree`

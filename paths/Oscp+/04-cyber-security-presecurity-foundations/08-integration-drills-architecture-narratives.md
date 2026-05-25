@@ -1,23 +1,52 @@
-# Unit 08 — Integration drills (architecture narratives)
+# Integration exercise — map a full web request
 
-## Theme
+Pick any website and trace one complete HTTP request from browser to server and back.
 
-Chain earlier abstractions verbally.
+## Exercise steps
 
-Exercise A — Narrate end-to-end (no refs during attempt):
+1. Open Chrome or Firefox → press F12 → Network tab
+2. Browse to any login page (use your DVWA or Juice Shop lab)
+3. Submit the login form
+4. In the Network tab, click the POST request that appeared
+5. Document everything in the table below
 
-DNS → TLS-wrapped HTTP → application → database-ish persistence → response egress shaping
+## What to document
 
-Exercise B — Map:
+| Field | What you found |
+|---|---|
+| URL | full URL including query params |
+| Method | GET or POST |
+| Request headers | Content-Type, User-Agent, Host |
+| Cookies sent | names and values |
+| Request body | what was submitted (username, password) |
+| Response code | 200, 302, 401, 403... |
+| Response headers | Set-Cookie, Location, Content-Type |
+| Sensitive data in response | token? user data? internal paths? |
 
-client credentials presentation → verification → authorization mediation
+## Replay with curl
 
-Mark **common fragility hypotheses** succinctly—not exploit recipes.
+Right-click the request in DevTools → Copy → Copy as cURL. Paste into terminal and run.
+Now modify the password field and observe the difference in response.
 
-## Retro scoring
+```bash
+# Example — inspect cookie flags
+curl -v http://localhost/login -d "username=admin&password=password" 2>&1 | grep -i "set-cookie"
 
-Enumerate **explicit mistakes** corrected post-check vs blind spots lingering.
+# Good response (all three flags present):
+# Set-Cookie: PHPSESSID=abc123; path=/; HttpOnly; Secure; SameSite=Strict
 
-## Learning outcome
+# Bad response (no flags):
+# Set-Cookie: PHPSESSID=abc123
+```
 
-You produce **layered causal stories**, not acronym soup regurgitated.
+## Questions to answer after the exercise
+
+- Does the session cookie have `HttpOnly`? If not, XSS can steal it.
+- Does it have `Secure`? If not, it gets sent over plain HTTP.
+- Does it have `SameSite`? If not, CSRF attacks are easier.
+- Is the password sent over HTTPS or HTTP? (Check scheme in URL bar — padlock icon)
+- Does the response contain any sensitive data that shouldn't be there?
+
+## Practice
+
+TryHackMe "Putting It All Together" room: https://tryhackme.com/room/puttingitalltogether

@@ -1,31 +1,54 @@
-# Authorised labs → PEN‑200 preparedness — roadmap & ethos
+# Lab Progression Roadmap to PEN-200
 
-Purpose: unify prior Linux, networking, web security, Burp/HTTP ergonomics, Windows / AD familiarity, toolchain maturity, and systematic enumeration instincts into **repeatable authorised lab choreography**, conscientious notebooks, troubleshooting maturity—not unstructured “spray boxes” boasting.
+Work through platforms in order — don't skip ahead until you're consistently solving at the current tier.
 
-Symbolic progression (**platform inventories rename—mirror current vendor catalogues faithfully**):
+## Progression Path
 
 ```
-TryHackMe Jr penetration tester groundwork
-→ HackTheBox calibrated Easy arcs
-→ selected Medium escalation bridges
-→ OffSec-aligned Proving Grounds Practice tenor
-→ self-audited readiness for formal PEN‑200 enrollment
+TryHackMe Jr Pentester path
+  → HTB Easy (retired machines, VIP)
+    → OffSec PG Practice Easy/Medium
+      → HTB Medium (retired)
+        → PEN-200 enrollment
 ```
 
-**OSCP credential attempt remains optional**, conditioned on preparedness, affordability, organisational policy adherence, respectful assessment ethics.
+## Platform Comparison
 
-Reference surface table (non-exhaustive):
+| Platform | Free Tier | Paid | Best For |
+|----------|-----------|------|----------|
+| TryHackMe | Yes (limited rooms) | $14/mo premium | Guided intro, Jr path |
+| HackTheBox | Active machines free | $14/mo VIP (retired) | Unguided real-world boxes |
+| OffSec PG Practice | Community (time-limited) | $19/mo full access | OSCP-style machines |
 
-| Surface | Guidance |
-|---------|----------|
-| [TryHackMe](https://tryhackme.com/) | **`Jr Penetration Tester`** corridor + methodological augment rooms |
-| [HackTheBox](https://www.hackthebox.com/) | Progressive **Easy** then curated **Medium** machines—respect platform ToS/lawful use |
-| [HackTheBox Academy](https://academy.hackthebox.com/) | Structured OSCP orientation segments |
-| [OffSec proving grounds labs](https://www.offsec.com/labs/) | Style alignment **before committing** PEN‑200 tuition pacing |
-| [PEN‑200 course](https://www.offsec.com/courses/pen-200/) | **After** disciplined readiness—you schedule per OffSec process |
+- TryHackMe: tryhackme.com
+- HackTheBox: hackthebox.com
+- OffSec PG: offsec.com/labs/practice
 
-Supporting complementary narrative courses (**verify storefront currency**):
+## The Core Rule
 
-- Udemy arcs often titled variants of **“Hack The Box → OSCP”** spanning multiple instalments (+ optional bonus boxed expansions)—always confirm legitimacy & freshness before purchase **if** desired.
+Attempt every box independently for at least 30-45 minutes before looking at any hints or writeups. Use hints (not walkthroughs) if stuck after 2 hours. Read only the first step of a writeup after 3 hours — complete the rest yourself.
 
-Chosen note toolchain (Obsidian vs CherryTree vs Joplin vs plain Markdown vault) — **privacy under your stewardship**.
+## Documentation Policy
+
+Document every machine in a dedicated file:
+- Every command you ran (even failed ones)
+- Every port and service found
+- What worked, what didn't, why you pivoted
+- The exact exploit and payload used
+
+This habit is what makes the OSCP 24-hour exam manageable. Start it now.
+
+## OSCP Enrollment
+
+Enroll at: offsec.com/courses/pen-200
+
+Enroll only after you can consistently solve Medium-difficulty boxes without hints. Rushing enrollment wastes lab time.
+
+## Readiness Benchmarks
+
+| Milestone | Signal |
+|-----------|--------|
+| Start HTB Easy | Finish TryHackMe Jr Pentester path |
+| Start PG Practice | Solve 5+ HTB Easy boxes without hints |
+| Start HTB Medium | Solve 10+ PG Easy machines |
+| Enroll PEN-200 | Solve 20+ PG machines, pass self-audit in file 10 |

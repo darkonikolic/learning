@@ -1,38 +1,78 @@
-# Unit 02 — OSI, TCP/IP, TCP vs UDP, first captures
+# OSI, TCP/IP, TCP vs UDP, and first captures
 
-## Theme
+Understand the layered model in terms of what breaks at each layer and what tools operate where. Then capture real traffic.
 
-How the internet delivers bytes end-to-end at a layered mental model level.
+## OSI layers — practical mapping
 
-## Study alignment
+| Layer | Name | What fails here | Tools |
+|-------|------|-----------------|-------|
+| 7 | Application | App crashes, protocol mismatch | curl, browser |
+| 4 | Transport | Wrong port, firewall dropping packets | ss, nmap |
+| 3 | Network | Wrong route, no gateway, IP unreachable | ping, traceroute, ip route |
+| 2 | Data Link | MAC mismatch, switch config | arp, ip neigh |
+| 1 | Physical | Cable, NIC, RF | hardware |
 
-| Source | Sections |
-|--------|----------|
-| Practical Networking | OSI Model, TCP/IP Model, TCP vs UDP |
-| Selected CCNA fundamentals | Introduction, OSI, TCP/IP |
-| Spot video | OSI / TCP–UDP recap if confused |
+## TCP three-way handshake
 
-## Ubuntu drills
-
-Run and interpret succinctly:
-
-```bash
-ping -c 4 google.com
-tracepath google.com
-curl https://example.com/
-ss -tulpn | head -40
+```
+Client          Server
+  |---SYN-------->|
+  |<--SYN-ACK-----|
+  |---ACK-------->|   connection established
+  |---DATA------->|
+  |<--ACK---------|
+  |---FIN-------->|   teardown
+  |<--FIN-ACK-----|
 ```
 
-## Wireshark drills
+## TCP vs UDP
 
-Filters to practise (`tcp`), then revisit a browse session looking for **`SYN`, `SYN-ACK`, `ACK`** handshake segments on a benign site you authorize.
+| | TCP | UDP |
+|-|-----|-----|
+| Connection | Yes (handshake) | No |
+| Reliability | Yes (retransmit) | No |
+| Ordering | Yes | No |
+| Speed | Slower | Faster |
+| Use cases | HTTP, SSH, SMTP | DNS, NTP, DHCP, VoIP |
 
-Ethics reminder: capture only labs you own authorization for.
+## Basic connectivity commands
 
-## Checklist vocabulary
+```bash
+ping -c 4 8.8.8.8                    # ICMP echo — is host reachable?
+traceroute google.com                # hop-by-hop path (Layer 3)
+traceroute -n google.com             # no DNS resolution (faster)
+ss -tulpn                            # local TCP/UDP listeners
+```
 
-OSI layers (practical—not trivia regurgitation), TCP/IP shorthand, segmentation vs reliability, ICMP echo vs TCP, TTL intuition, fragmentation/MTU as a troubleshooting axis.
+## Capture the TCP handshake with tcpdump
 
-## Learning outcome
+```bash
+# Terminal 1 — start capture
+sudo tcpdump -i eth0 -c 20 tcp -w /tmp/handshake.pcap
 
-You can narrate handshake establishment and articulate what UDP forfeits versus TCP without hand-waving beyond your evidence.
+# Terminal 2 — generate traffic
+curl -s http://example.com > /dev/null
+
+# Read the capture
+sudo tcpdump -r /tmp/handshake.pcap -n
+# Look for: [S] SYN, [S.] SYN-ACK, [.] ACK
+```
+
+## Wireshark — observe the handshake
+
+```bash
+wireshark /tmp/handshake.pcap
+```
+- Filter: `tcp.flags.syn == 1` — see SYN packets only
+- Filter: `tcp` — all TCP traffic
+- Right-click a packet → Follow → TCP Stream — see full conversation
+
+## Practice
+
+- TryHackMe "OSI Model" room: https://tryhackme.com/room/osimodelzi
+- TryHackMe "Packets and Frames": https://tryhackme.com/room/packetsframes
+- Practical Networking OSI series: https://www.practicalnetworking.net/series/packet-traveling/packet-traveling/
+
+## Completion bar
+
+Capture a TCP handshake with tcpdump, open it in Wireshark, identify SYN/SYN-ACK/ACK packets — without instructions.

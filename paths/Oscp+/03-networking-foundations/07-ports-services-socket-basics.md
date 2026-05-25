@@ -1,34 +1,87 @@
-# Unit 07 — Ports, services, fingerprints
+# Ports, services, and socket basics
 
-## Theme
+Every pentest starts with port scanning. Know what runs where and how to interact with raw sockets.
 
-Associate common listening ports with service intent and tooling.
-
-## TryHackMe
-
-Complete **Network Fundamentals** milestone tasks not yet crossed off unless already satisfied honestly.
-
-## Ubuntu drills
+## Check what is listening locally
 
 ```bash
-sudo ss -tulpn | head -40
-sudo nmap -sV localhost
+ss -tulpn                        # TCP+UDP listeners with process names (modern)
+netstat -tulpn                   # same, older syntax (may need net-tools installed)
+sudo lsof -i -P -n | grep LISTEN # via lsof
+sudo nmap -sV localhost           # version scan of local services
 ```
 
-(Optional narrow scan.) Do **not** scan third-party hosts without explicit permission.
+## Common ports reference
 
-## Memorization targets (purpose, not trivia)
+| Port | Service | Notes |
+|------|---------|-------|
+| 21 | FTP | Often anonymous login, check |
+| 22 | SSH | Version matters for exploits |
+| 23 | Telnet | Plaintext — capture credentials |
+| 25 | SMTP | Mail relay, user enumeration |
+| 53 | DNS | UDP+TCP, zone transfer on TCP |
+| 80 | HTTP | Start web enum here |
+| 110 | POP3 | Email retrieval |
+| 139/445 | SMB | File shares, EternalBlue, null sessions |
+| 443 | HTTPS | Same as 80 + TLS |
+| 3306 | MySQL | Direct DB access if exposed |
+| 3389 | RDP | Windows remote desktop |
+| 5985 | WinRM | Windows remote management |
+| 8080 | HTTP-alt | Dev servers, proxies |
 
-Associate services you will collide with routinely:
+## Netcat — raw socket tool
 
-22 SSH • 53 DNS • 80 HTTP • 443 HTTPS • **445 SMB** • **389 LDAP** • **88 Kerberos** • **3389 RDP**
+```bash
+# Listen on a port
+nc -lvnp 4444                    # listen, verbose, no DNS, port 4444
 
-Understand these as **patterns** attackers enumerate—not flashcards devoid of semantics.
+# Connect to a port
+nc 10.10.10.1 80                 # connect to host:port
 
-## `netcat`/SSH micro drills
+# Banner grabbing — identify service version
+nc -w 3 10.10.10.1 22            # -w 3: timeout 3s; SSH banner appears
+nc -w 3 10.10.10.1 21            # FTP banner
+nc -w 3 10.10.10.1 80
+  GET / HTTP/1.0
+  (press Enter twice)
 
-Demonstrate purposeful local loopback chatter or SSH banner grab on your VMs only.
+# Send file
+nc -lvnp 4444 > received.txt     # receiver
+nc 10.10.10.1 4444 < file.txt    # sender
+```
 
-## Learning outcome
+## nmap — service fingerprinting
 
-When `ss` shows `LISTEN` on surprising port → you classify benign vs suspicious next-step triage thoughtfully.
+```bash
+nmap -sV 10.10.10.1              # version detection
+nmap -sV -p 21,22,80,443 target  # specific ports only
+nmap -sV --open 10.10.10.0/24    # scan subnet, show only open ports
+nmap -sC -sV target              # default scripts + version
+sudo nmap -sS target             # SYN scan (stealth, requires root)
+sudo nmap -sU -p 53,161 target   # UDP scan (DNS, SNMP)
+```
+
+## Lab exercise — banner grab three services
+
+```bash
+# Start services locally for practice
+sudo systemctl start ssh
+python3 -m http.server 80 &
+
+# Banner grab
+nc -w 3 localhost 22    # SSH banner: SSH-2.0-OpenSSH_8.9...
+nc -w 3 localhost 80    # HTTP server response
+
+# Cross-reference with nmap
+nmap -sV -p 22,80 localhost
+```
+
+## Practice
+
+- TryHackMe "Nmap": https://tryhackme.com/room/furthernmap
+- TryHackMe "Network Services": https://tryhackme.com/room/networkservices
+- GTFOBins for netcat privesc: https://gtfobins.github.io/gtfobins/nc/
+
+## Completion bar
+
+From memory: check local listeners with `ss -tulpn`, banner-grab a service with `nc`, run an nmap version scan, identify a service from its banner — without looking up flags.

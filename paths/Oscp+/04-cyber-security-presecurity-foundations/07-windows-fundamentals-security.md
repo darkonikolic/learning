@@ -1,34 +1,69 @@
-# Unit 07 — Windows fundamentals for security newcomers
+# Windows fundamentals for security — CMD and PowerShell
 
-## Theme
+Commands you run after landing on a Windows box to understand what you have.
 
-Operational literacy on Microsoft's surface area.
+## Basic enumeration — CMD
 
-## TryHackMe clusters
+```cmd
+whoami /all                     REM current user + privileges + groups
+net user                        REM all local users
+net user administrator          REM details on a specific user
+net localgroup administrators   REM who's in the admins group
+systeminfo                      REM OS version, hotfixes, hostname
+ipconfig /all                   REM network interfaces, DNS, gateway
+tasklist /SVC                   REM running processes with service names
+netstat -ano                    REM connections + PIDs
+```
 
-Sequential Windows fundamentals modules numbered typically 1–3 (titling rotates).
-
-## VM exercises — PowerShell
+## Basic enumeration — PowerShell
 
 ```powershell
-Get-Process | Select-Object -First 15
-Get-Service | Where-Object Status -EQ 'Running' | Select-Object -First 15
-hostname
-whoami
+Get-Process | Sort-Object CPU -Descending | Select-Object -First 10
+Get-Service | Where-Object { $_.Status -eq "Running" }
+Get-LocalUser
+Get-LocalGroupMember Administrators
+Get-NetIPAddress
+Get-NetTCPConnection | Where-Object State -eq Listen
 ```
 
-Classic shell auxiliaries still matter:
+## Registry — persistence and auto-run locations
+
+```cmd
+REM Check what runs on startup
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+reg query HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce
+```
+
+## File system — interesting locations
 
 ```
-tasklist
-ipconfig /all
-net user
+C:\Users\<user>\Desktop\
+C:\Users\<user>\Documents\
+C:\Users\<user>\AppData\Roaming\
+C:\Windows\System32\config\  — SAM and SYSTEM (password hashes, need SYSTEM priv)
+C:\inetpub\wwwroot\          — IIS web root (check for config files)
+C:\Program Files\            — installed software versions
 ```
 
-## Focus lenses
+## PowerShell execution policy bypass
 
-Filesystem ACL intuition, registry mention only as hive-of-misconfigs placeholder, Windows services escalation class awareness without exploit detail yet, **UAC** high-level—not bypass catalog.
+```powershell
+# Check current policy
+Get-ExecutionPolicy
 
-## Learning outcome
+# Bypass for current session (common during pentests)
+powershell -ExecutionPolicy Bypass -File script.ps1
+Set-ExecutionPolicy -Scope CurrentUser Bypass
+```
 
-You stop treating Windows internals as unknowable blobs—you ask structured triage questions about identity, privileges, services, exposures.
+## Scheduled tasks
+
+```cmd
+schtasks /query /fo LIST /v    REM all scheduled tasks verbose
+```
+
+## Practice
+
+TryHackMe "Windows Fundamentals" rooms 1–3: https://tryhackme.com/module/windows-fundamentals
+TryHackMe "Windows PrivEsc": https://tryhackme.com/room/windows10privesc

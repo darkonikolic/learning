@@ -1,42 +1,60 @@
-# Unit 02 — Files and text processing
+# Files and text processing
 
-## Theme
+Read, filter, and reshape text files from the terminal. Core skill for parsing config files, logs, and credential dumps.
 
-Reading and shaping text on the command line.
-
-## LabEx
-
-Start / continue:
-
-- **Text-Fu**
-
-## Udemy — Linux Administration Bootcamp
-
-Sections:
-
-- Filesystem  
-- File operations  
-
-## Commands to practice
-
-`cat`, `less`, `head`, `tail`, `wc`, `sort`, `uniq`, `cut`
-
-## Exercise
+## Viewing file content
 
 ```bash
-echo oauth > log.txt
-echo jwt >> log.txt
-cat log.txt
-sort log.txt
-wc log.txt
+cat /etc/passwd                      # dump entire file
+less /var/log/syslog                 # paginate (q to quit, / to search)
+head -20 /var/log/auth.log           # first 20 lines
+tail -f /var/log/auth.log            # follow live output
+wc -l /etc/passwd                    # count lines
 ```
 
-## Topic checklist
+## Sorting and deduplication
 
-- stdin / stdout / stderr  
-- Text processing  
-- File manipulation  
+```bash
+sort /etc/passwd                     # alphabetical sort
+sort -t: -k3 -n /etc/passwd          # sort by UID (field 3, numeric)
+sort file.txt | uniq                 # remove consecutive duplicates
+sort file.txt | uniq -c | sort -rn   # count occurrences, most frequent first
+```
 
-## Learning outcome
+## Extracting columns with cut
 
-You can inspect file contents, count lines/words, and sort/dedupe simple text without opening an editor for every step.
+```bash
+cut -d: -f1 /etc/passwd              # extract usernames (field 1, colon delimiter)
+cut -d: -f1,3 /etc/passwd            # username and UID
+cut -d: -f7 /etc/passwd | sort | uniq  # all shells in use
+```
+
+## Redirection and stderr
+
+```bash
+ls /etc > etc_files.txt              # stdout to file (overwrite)
+ls /etc >> etc_files.txt             # stdout to file (append)
+ls /nonexistent 2>/dev/null          # discard errors
+ls /etc /nonexistent 2>&1 | less     # merge stderr into stdout
+command | tee output.txt             # write to file AND keep stdout flowing
+```
+
+## Lab exercise — parse /etc/passwd
+
+```bash
+# Extract all usernames and shells, find which shells are used
+cut -d: -f1,7 /etc/passwd | sort -t: -k2
+# Count how many users per shell
+cut -d: -f7 /etc/passwd | sort | uniq -c | sort -rn
+# Find users with UID 0 (root-equivalent)
+awk -F: '$3 == 0 {print $1}' /etc/passwd
+```
+
+## Practice
+
+- LabEx Text-Fu track: https://labex.io/courses/linux-text-processing-and-regular-expressions
+- TryHackMe Linux Fundamentals Part 2: https://tryhackme.com/room/linuxfundamentalspart2
+
+## Completion bar
+
+Parse `/etc/passwd` to list all usernames, sort them, deduplicate shells — using only `cut`, `sort`, `uniq`, `wc`, and pipes.

@@ -1,45 +1,65 @@
-# Unit 06 — Packages, logs, and systemd
+# Packages, logs, and systemd
 
-## Theme
+Install tools, read logs, archive data. Practical ops skills used every lab session.
 
-Keeping the system maintained and observable.
-
-## LabEx
-
-Finish:
-
-- Package Management  
-- Init / Systemd  
-- Logging  
-
-## Udemy — Linux Administration Bootcamp
-
-Sections:
-
-- `apt` (or distribution equivalent)  
-- Logs  
-- `journalctl`  
-
-## Commands to practice
-
-`apt`, `dpkg`, `journalctl`, `tail`, `tar -czf backup.tar.gz demo/`, `tar -xzf backup.tar.gz`
-
-## Exercise
+## apt package management
 
 ```bash
-journalctl -xe
-tail -100 /var/log/syslog
+sudo apt update                          # refresh package index (do this first)
+sudo apt install nmap gobuster curl -y   # install tools non-interactively
+sudo apt remove nmap                     # remove package
+sudo apt autoremove                      # clean unused dependencies
+dpkg -l | grep nmap                      # check if package is installed
+dpkg -l | grep "^ii"                     # list all installed packages
+which nmap && nmap --version             # confirm install and version
 ```
 
-(Paths may differ by distro; adapt if you are not on Debian/Ubuntu.)
+## Log files — where to look
 
-## Topic checklist
+| File | Contains |
+|------|----------|
+| `/var/log/auth.log` | SSH logins, sudo usage, su attempts |
+| `/var/log/syslog` | General system events |
+| `/var/log/nginx/access.log` | Web requests |
+| `/var/log/nginx/error.log` | Web errors |
+| `/var/log/apache2/access.log` | Apache requests |
+| `/var/log/dpkg.log` | Package installs/removes |
 
-- Package management (`apt` / `dpkg` class)  
-- Logs: `journalctl`, classic syslog files  
-- systemd concepts tied to **enable/start/status**  
-- Archives: `tar` + compression  
+## journalctl — systemd logs
 
-## Learning outcome
+```bash
+sudo journalctl -f                           # follow live system log
+sudo journalctl -u ssh                       # SSH service logs only
+sudo journalctl -u ssh --since "1 hour ago"  # recent SSH activity
+sudo journalctl --since "2024-01-01" --until "2024-01-02"
+sudo journalctl -p err                       # errors only
+```
 
-You can install/update packages, inspect recent system events, and create/restore a simple tarball backup of a practice directory.
+## Archive and extract with tar
+
+```bash
+tar -czf backup.tar.gz ~/pentest/            # compress directory (c=create, z=gzip, f=file)
+tar -xzf backup.tar.gz -C /tmp/restore/     # extract to target directory
+tar -tzf backup.tar.gz                       # list contents without extracting
+tar -czf loot-$(date +%F).tar.gz /tmp/loot/ # timestamped archive
+```
+
+## Lab exercise — install nmap, run it, check journal
+
+```bash
+sudo apt update && sudo apt install nmap -y
+nmap --version
+# Run a scan and check what the system logged
+nmap -sV localhost
+sudo journalctl -u systemd-resolved --since "2 minutes ago"
+sudo tail -50 /var/log/syslog | grep -i "nmap\|scan\|port"
+```
+
+## Practice
+
+- TryHackMe "Linux Fundamentals Part 3": https://tryhackme.com/room/linuxfundamentalspart3
+- Udemy "Linux Administration Bootcamp" — package management section: https://www.udemy.com/course/linux-administration-bootcamp/
+
+## Completion bar
+
+Install a package, check journal for related activity, archive a directory, list archive contents — using `apt` `dpkg` `journalctl` `tar` without looking up flags.

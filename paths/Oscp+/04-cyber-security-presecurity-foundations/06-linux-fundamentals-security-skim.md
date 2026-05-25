@@ -1,22 +1,64 @@
-# Unit 06 — Linux fundamentals skim (security angle)
+# Linux quick reference — security-relevant commands
 
-## Theme
+Assumes basic Linux comfort. Focus here is on commands that matter during a pentest or CTF.
 
-Harvest parallel reinforcement—don't relive beginner grind fully.
-
-**Constraint:** assuming Phase one Linux completeness **honestly**, skim TryHackMe **Linux Fundamentals** arcs where they appear — prioritize deltas & security glimpses—not re-solving trivial tasks unless memory gaps surface.
-
-Ubuntu micro refresh:
+## User and privilege enumeration
 
 ```bash
-ps aux | head
-top -b -n1 | head
-journalctl --since "30 min ago" | tail -n 40 || true  # shorten window if noisy
-chmod --help >/dev/null
-ssh -V 2>/dev/null || true
-curl -I https://example.com
+whoami                          # current user
+id                              # uid, gid, groups
+sudo -l                         # what can this user run as root?
+cat /etc/passwd                 # all users (UID 0 = root)
+cat /etc/shadow                 # password hashes (requires root)
+cat /etc/sudoers                # sudo config
 ```
 
-## Learning outcome
+## SUID and interesting file hunting
 
-You consolidate identity of processes, persistence-location classes, and mutable configuration surfaces from a security lens—not another generic shell tutorial pass.
+```bash
+# Find SUID binaries — executables that run as their owner (often root)
+find / -perm -4000 -type f 2>/dev/null
+
+# Find world-writable files
+find / -perm -o+w -type f 2>/dev/null
+
+# Find files owned by root but writable by others
+find / -user root -writable 2>/dev/null | grep -v proc
+```
+
+## Scheduled tasks and services
+
+```bash
+crontab -l                      # current user's cron jobs
+cat /etc/crontab                # system-wide cron jobs
+ls /etc/cron.*                  # cron.d, cron.daily, etc.
+systemctl list-units --type=service --state=running
+ps aux                          # all running processes
+```
+
+## Network state from inside a machine
+
+```bash
+netstat -tulpn                  # listening ports and which process
+ss -tulpn                       # same, newer tool
+cat /etc/hosts                  # local hostname resolution
+ip addr                         # IP addresses on all interfaces
+```
+
+## Interesting files to check
+
+```
+/etc/passwd          — user list
+/etc/shadow          — password hashes (need root)
+/etc/hosts           — internal hostnames
+/etc/crontab         — scheduled tasks
+~/.ssh/authorized_keys  — who can SSH in as this user
+~/.bash_history      — commands the user ran
+/var/mail/           — email (sometimes contains creds)
+/tmp/ and /var/tmp/  — world-writable, used to stage payloads
+```
+
+## Practice
+
+TryHackMe "Linux Fundamentals" parts 1–3: https://tryhackme.com/module/linux-fundamentals
+TryHackMe "Linux PrivEsc": https://tryhackme.com/room/linuxprivesc

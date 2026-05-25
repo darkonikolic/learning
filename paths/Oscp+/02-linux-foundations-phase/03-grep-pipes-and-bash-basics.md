@@ -1,64 +1,82 @@
-# Unit 03 — grep, pipelines, and Bash basics
+# grep, pipes, and Bash basics
 
-## Theme
+Search files, chain commands, and write simple scripts. Used constantly during enumeration and log analysis.
 
-Finding data and composing small shell programs.
-
-## LabEx
-
-Finish:
-
-- **Text-Fu**
-
-Add basic Bash:
-
-- Variables  
-- `if`  
-- `for` / `while`  
-- Exit codes  
-
-## Commands to practice
-
-`grep`, `find`, `locate`, `tee`, `xargs`, `awk '{print $1}'`, `sed 's/old/new/g'`
-
-## Pipelines
-
-Practice composing with `|`.
-
-Example:
+## grep — find patterns
 
 ```bash
-cat app.log | grep oauth
+grep "root" /etc/passwd                        # lines containing "root"
+grep -i "failed" /var/log/auth.log             # case-insensitive
+grep -n "error" app.log                        # show line numbers
+grep -v "nologin" /etc/passwd                  # exclude matches (invert)
+grep -r "password" /etc/                       # recursive search
+grep -E "^(root|admin)" /etc/passwd            # extended regex, multiple patterns
+grep -l "password" /var/www/html/*.php         # list files that match, not lines
 ```
 
-## Bash basics
+## find — locate files
 
-Example script pattern:
+```bash
+find /etc -name "*.conf" -type f               # all .conf files
+find / -name "id_rsa" 2>/dev/null              # find private keys, suppress errors
+find /var/www -name "*.php" -newer /tmp/ref    # files modified recently
+find / -perm -4000 -type f 2>/dev/null         # SUID binaries (privesc hunting)
+find /home -name ".bash_history" 2>/dev/null   # user history files
+```
+
+## awk and sed — transform text
+
+```bash
+awk '{print $1}' access.log                    # print first field (space-delimited)
+awk -F: '{print $1, $3}' /etc/passwd           # username and UID
+awk '$9 == "404" {print $7}' access.log        # HTTP 404 URLs from Apache log
+sed 's/old/new/g' file.txt                     # replace all occurrences
+sed -n '10,20p' file.txt                       # print lines 10-20
+```
+
+## Pipes — chain three or more commands
+
+```bash
+# Top 10 IPs hitting a web server
+awk '{print $1}' /var/log/nginx/access.log | sort | uniq -c | sort -rn | head -10
+
+# Find all ERROR lines, extract unique IPs
+grep "ERROR" app.log | awk '{print $NF}' | sort | uniq
+
+# List all open ports from nmap output
+grep "open" nmap_output.txt | awk '{print $1}' | cut -d/ -f1
+```
+
+## Bash script template
 
 ```bash
 #!/bin/bash
-for f in *.log; do
-  grep ERROR "$f"
+TARGET=$1
+OUTDIR="results/$TARGET"
+mkdir -p "$OUTDIR"
+
+for PORT in 80 443 8080 8443; do
+    if nc -z -w 2 "$TARGET" "$PORT" 2>/dev/null; then
+        echo "[+] $TARGET:$PORT open" | tee -a "$OUTDIR/ports.txt"
+    fi
 done
 ```
 
-## Exercise
+## Lab exercise — find errors and count unique IPs
 
 ```bash
-find . -name "*.php"
-find . -name "*.yaml"
-grep oauth app.log
-cat app.log | awk '{print $1}'
-sed 's/oauth/oauth2/g' log.txt
+# Generate a sample log, then analyze it
+sudo journalctl -n 500 > /tmp/sample.log
+grep -i "error\|fail\|denied" /tmp/sample.log | wc -l
+grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' /tmp/sample.log | sort | uniq -c | sort -rn | head -5
+find /var/log -name "*.log" -size +1M 2>/dev/null
 ```
 
-## Topic checklist
+## Practice
 
-- `grep`, `find`, `locate`  
-- Pipes, `tee`, `xargs`  
-- Bash variables and loops  
-- Exit codes  
+- LabEx Text-Fu track: https://labex.io/courses/linux-text-processing-and-regular-expressions
+- TryHackMe Linux Fundamentals Part 3: https://tryhackme.com/room/linuxfundamentalspart3
 
-## Learning outcome
+## Completion bar
 
-You can search a tree, filter logs, and write short loops without copy‑pasting fragile one‑liners you do not understand.
+Write a one-liner that: finds all `.log` files under `/var/log`, greps for "error" case-insensitively, counts unique occurrences — using `find`, `grep`, `sort`, `uniq -c`.

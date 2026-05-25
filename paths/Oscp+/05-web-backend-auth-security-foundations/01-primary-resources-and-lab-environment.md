@@ -1,41 +1,43 @@
-# Phase four — Web, backend & auth security (resources & lab posture)
+# Resources and lab setup — web and auth security
 
-Objective: reproducibly articulate **attacks, mitigations**, and pragmatic **reviews** touching modern backends—not performing shallow exploit cosplay devoid of taxonomy.
+PortSwigger Web Security Academy is the primary platform. Everything is free.
 
-Desired capability snapshot:
+## Primary resources
 
-Reproduce cornerstone web vuln classes ethically in **local**/PortSwigger/authorized arenas
+- PortSwigger Web Security Academy: https://portswigger.net/web-security
+  Complete all Apprentice labs as minimum. Practitioner labs for depth.
+- OWASP Testing Guide: https://owasp.org/www-project-web-security-testing-guide/
 
-Articulate defenses & friction classes
+## Local lab — vulnerable apps via Docker
 
-Operate **Burp Proxy** thoughtfully
+```bash
+# DVWA — classic vulnerable PHP app
+docker run -d -p 80:80 vulnerables/web-dvwa
+# Browse to http://localhost → login: admin/password → Setup/Reset DB button
 
-Comfortably discuss **JWT lifecycle pitfalls** without magical thinking
+# OWASP Juice Shop — covers all OWASP Top 10 with gamified challenges
+docker run -d -p 3000:3000 bkimminich/juice-shop
+# Browse to http://localhost:3000
 
-Interpret **OAuth** redirect & token handling failure families
+# WebGoat — Java-based, structured lessons
+docker run -d -p 8080:8080 webgoat/webgoat
+# Browse to http://localhost:8080/WebGoat
 
-Orient **API security & dependency/supply-chain** tooling stories
+# OWASP crAPI — modern API vulnerable app
+docker run -d -p 8888:8888 crapi/crapi
+```
 
-Honor **review mental model**, not leaderboard chasing alone.
+## Burp Suite Community — install and configure
 
-## Core references
+1. Download: https://portswigger.net/burp/communitydownload
+2. Open Burp → Proxy → Options → Proxy listener on 127.0.0.1:8080
+3. In browser: set manual proxy to 127.0.0.1:8080 (or use FoxyProxy extension)
+4. Import Burp CA cert: browse to http://burpsuite → Download CA certificate → install in browser
+5. Verify: browse to any site → Burp Proxy → HTTP history shows the request
 
-| Corpus | Purpose |
-|--------|---------|
-| [PortSwigger Web Security Academy](https://portswigger.net/web-security/getting-started) | Hands-on thematic labs spanning injection, SSRF, access control nuances, deserialization, JWT, OAuth, request smuggling intro, XSS family, CSRF, file path traversal & upload pitfalls, advanced optional edges |
-| [OWASP Top 10 Project](https://owasp.org/www-project-top-ten/) | Category mapping fidelity |
-| [OWASP API Security Top 10](https://owasp.org/API-Security/) | Backend API exposure reality |
-| [Burp Suite](https://portswigger.net/burp) | interception / repeater ergonomics mastery |
-| [Trivy](https://trivy.dev/) (image & dependency scanning illustrative) | container supply posture orientation |
+## Recommended lab order
 
-Ethics: constrain traffic to sanctioned environments / personal builds / Academy targets.
-
-## Local technical stack cues (adapt to your codebase)
-
-Symfony project with realistic auth surfaces, JWT experiments, OAuth client/server flows consciously isolated, Dockerized dependencies, reproducible seeded data—not production secrets leakage.
-
-Phase rule (each vulnerability class minimally):
-
-Theory → Controlled attack rehearsal → Mitigation/defense rationale → Sanity pass on personal project surfaces if applicable.
-
-Units `02–12` operationalize sequentially.
+1. PortSwigger Apprentice labs for each topic (do them alongside each unit)
+2. DVWA — set security to Low, work through all modules
+3. Juice Shop — solve challenges while learning each attack type
+4. Repeat DVWA on Medium and High after completing the whole phase

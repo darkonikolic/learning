@@ -1,43 +1,73 @@
-# Unit 03 — IP addressing, subnetting, CIDR
+# IP addressing, subnetting, and CIDR
 
-## Theme
+Every nmap scan uses CIDR notation. Every network diagram has subnets. Know this cold.
 
-How hosts are numbered and partitioned.
-
-## Study alignment
-
-| Source | Sections |
-|--------|----------|
-| Practical Networking | IP Addressing, CIDR, Subnetting |
-| CCNA fundamentals (selected) | Subnetting, CIDR deep enough to reason |
-| Subnetting practice | [https://subnettingpractice.com/](https://subnettingpractice.com/) — maintain short daily sets |
-
-## Ubuntu drills
+## Check your own addresses
 
 ```bash
-ip a
-ip route
-ip -6 addr show
+ip a                             # all interfaces, IPs, MACs
+ip route                         # routing table — find default gateway
+ipcalc 192.168.1.0/24            # subnet calculator (apt install ipcalc)
+ipcalc 10.10.10.0/26             # shows network, broadcast, host range
 ```
 
-Interpret **addresses versus prefixes**.
+## CIDR quick reference
 
-## Drill problems (paper or scratch buffer)
+| CIDR | Subnet mask | Usable hosts | Hosts count |
+|------|-------------|--------------|-------------|
+| /30 | 255.255.255.252 | .1 – .2 | 2 |
+| /29 | 255.255.255.248 | .1 – .6 | 6 |
+| /28 | 255.255.255.240 | .1 – .14 | 14 |
+| /27 | 255.255.255.224 | .1 – .30 | 30 |
+| /26 | 255.255.255.192 | .1 – .62 | 62 |
+| /25 | 255.255.255.128 | .1 – .126 | 126 |
+| /24 | 255.255.255.0 | .1 – .254 | 254 |
+| /16 | 255.255.0.0 | — | 65,534 |
 
-Understand and annotate:
+## RFC1918 private ranges
 
-| Example | Annotate |
-|---------|----------|
-| `192.168.1.0/24` | network, broadcast, usable host ranges, gateway intuition |
-| `10.0.0.0/8` | classless meaning today |
-| `172.16.0.0/16` | private RFC1918 rationale |
+```
+10.0.0.0/8        # 10.x.x.x — class A private
+172.16.0.0/12     # 172.16.x.x – 172.31.x.x — class B private
+192.168.0.0/16    # 192.168.x.x — class C private
+```
 
-Explain in your own words: **network address**, **host**, **broadcast**, **meaning of `/24`**.
+## Subnet calculation exercise
 
-## Topics
+For `192.168.10.0/26`:
+```bash
+ipcalc 192.168.10.0/26
+# Network:   192.168.10.0
+# Broadcast: 192.168.10.63
+# First host: 192.168.10.1
+# Last host:  192.168.10.62
+# Hosts:     62
+```
 
-Private vs public IPv4 framing, baseline IPv6 awareness (dual-stack reality), gateway choice, overlapping/overlong prefixes as a conceptual misconfiguration trap.
+For `10.10.10.0/27`:
+- Network: 10.10.10.0
+- Broadcast: 10.10.10.31
+- Range: 10.10.10.1 – 10.10.10.30
+- Hosts: 30
 
-## Learning outcome
+## Security relevance
 
-You can answer “how many usable hosts?” and justify a carve without calculator dependency by the end of the unit—not necessarily instant mental math flawless, but structurally competent.
+```bash
+# Scan an entire subnet
+nmap -sn 192.168.1.0/24          # ping sweep, discover live hosts
+nmap -sV 10.10.10.0/24 -p 22,80,443 --open  # service scan, common ports only
+
+# Identify your target network from VPN interface
+ip a show tun0                   # HackTheBox VPN: usually 10.10.14.x
+# Targets are in 10.10.10.0/24 — scan that range
+```
+
+## Practice
+
+- Subnetting drill: https://subnettingpractice.com — do 10 problems per session
+- TryHackMe "What is Networking?": https://tryhackme.com/room/whatisnetworking
+- Practical Networking subnetting: https://www.practicalnetworking.net/series/subnetting/subnetting/
+
+## Completion bar
+
+Given any /24, /26, /27, or /28 — state the network address, broadcast, first host, last host, and host count from memory in under 30 seconds. Verify with `ipcalc`.

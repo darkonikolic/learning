@@ -1,19 +1,66 @@
-# Systematic enumeration, AD tooling relationships & hardened lab methodology — resources
+# Resources and Note-Taking Setup for Enumeration
 
-Integrated laboratory assets across **authorised** VMs (Kali, Ubuntu service host, reproducible simplified AD classroom if you deliberately construct one internally).
+Set up your note-taking and lab environment before starting any machine.
 
-Leverage rotational platforms:
+## Learning Platforms
 
-[TryHackMe](https://tryhackme.com/) — enumerated / SMB / Windows / AD-aligned rooms sanctioned for study.
+- TryHackMe "Jr Penetration Tester" path — structured, beginner-to-intermediate
+- HTB Academy "Penetration Tester" job role path — free with registration, covers AD enumeration
+- TryHackMe "Nmap", "Content Discovery", "Attacktive Directory" — individual rooms for specific tools
 
-[Hack The Box Academy](https://academy.hackthebox.com/) — SMB, LDAP, Kerberos intros, BloodHound orientation.
+## Note-Taking Tools
 
-Tool references (authorised contexts only):
+Obsidian — recommended: markdown, local, searchable, graph view for AD relationships:
 
-- [Impacket](https://github.com/fortra/impacket) suite — conceptual literacy first.  
-- [BloodHound](https://bloodhound.specterops.io/) identity relationship mapping ethos.  
-- [PEASS-ng](https://github.com/peass-ng/PEASS-ng) privilege escalation auditors—run only boxes you erected.
+```bash
+# Download from obsidian.md — AppImage for Linux
+chmod +x Obsidian*.AppImage && ./Obsidian*.AppImage
+```
 
-Note-taking ergonomics cited as **examples** — choose any structured editor respecting your privacy stance (CherryTree / Joplin / Obsidian or plain Markdown vaults).
+CherryTree — tree structure, popular in OSCP community:
 
-Do **not** aim tooling at unmanaged external infrastructure—integrity & lawfulness precede ego metrics.
+```bash
+sudo apt install cherrytree
+```
+
+## Directory Structure Per Engagement
+
+```bash
+mkdir -p ~/labs/TARGET_NAME/{recon,scans,exploit,loot,screenshots,report}
+```
+
+Replace `TARGET_NAME` with hostname or IP. Keep all tool output here.
+
+## Minimum Note Template Per Machine
+
+```
+Hostname:
+IP:
+OS:
+
+Open Ports:
+| Port | Service | Version | Notes |
+|------|---------|---------|-------|
+
+Credentials Found:
+- service: user:pass
+
+Flags:
+- user.txt:
+- root.txt:
+
+Attack Path:
+1.
+2.
+3.
+```
+
+## Tools Covered in This Phase
+
+nmap, gobuster, ffuf, enum4linux-ng, smbclient, NetExec (nxc), ldapsearch, BloodHound, LinPEAS, WinPEAS, Impacket suite, Kerbrute — install all upfront:
+
+```bash
+sudo apt install -y nmap gobuster ffuf enum4linux smbclient bloodhound neo4j python3-impacket
+pip3 install kerbrute 2>/dev/null || sudo apt install kerbrute
+curl -L https://github.com/Pennyw0rth/NetExec/releases/latest/download/nxc -o /usr/local/bin/nxc && chmod +x /usr/local/bin/nxc
+```

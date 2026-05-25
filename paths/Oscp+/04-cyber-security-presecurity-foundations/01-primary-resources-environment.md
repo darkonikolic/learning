@@ -1,39 +1,51 @@
-# Phase three — Cyber security foundations & PreSecurity (resources & posture)
+# Resources and lab setup — pre-security foundations
 
-Finish this phase understanding **how offensive and defensive work differ**, baseline **web mechanics from an engineer’s vantage**, foundational **Linux and Windows ergonomics**, **virtualization/cloud vocabulary**, client–server decomposition, attack surface instincts, core vocabulary—not yet “weaponized exploit artistry.”
+Work the TryHackMe Pre-Security path completionist-style, then build a local lab.
 
-Outcome shift:
+## Primary resources
 
-| Weak framing | Strong framing |
-|--------------|----------------|
-| Jump to payloads | Automatically ask where brittle trust boundaries sit |
+- TryHackMe Pre-Security path: https://tryhackme.com/path/outline/presecurity (free)
+- HTB Academy "Security Fundamentals": https://academy.hackthebox.com/module/details/18 (free)
 
-## Primary syllabus — TryHackMe Pre Security
+## Lab VMs — VirtualBox setup
 
-Path outline — verify current module naming on the platform yourself (names drift):
+Download VirtualBox: https://www.virtualbox.org/wiki/Downloads
 
-**[Pre Security Learning Path — TryHackMe](https://tryhackme.com/path/outline/presecurity)**
+Create two VMs:
+- Ubuntu 22.04 LTS: https://ubuntu.com/download/desktop
+- Windows 10 Evaluation: https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise
 
-Work the path **completionist** versus your honest pacing—integrity over badge speed.
+Network config: each VM gets two adapters — NAT (internet access) + Host-Only (VMs talk to each other).
+Take a snapshot of each VM before installing tools. Revert if something breaks.
 
-## Practice environment essentials
+## Kali Linux (attack VM)
 
-Dual VM posture where feasible:
+Pre-built VirtualBox image: https://www.kali.org/get-kali/#kali-virtual-machines
 
-| Asset | Goal |
-|-------|------|
-| **Ubuntu** | Commands + prior Linux phase reinforcement skim |
-| **Windows** VM | Fundamental admin introspection tooling |
+```bash
+# After first boot — update and install core tools
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y nmap gobuster curl wget python3 python3-pip git burpsuite feroxbuster
+```
 
-Browsers (**Chrome/Firefox**):
+## Browser DevTools
 
-- Developer tools (`F12`)  
-- Network tab (headers/status/cookies interplay)  
+Open with F12 (or Cmd+Option+I on Mac). Go to the Network tab.
+Every HTTP request your browser makes appears here — headers, cookies, response bodies.
+Key actions: filter by XHR/Fetch, copy any request as curl, inspect Set-Cookie headers.
 
-## Unit map (this numbered area folder)
+## Verify lab connectivity
 
-Proceed through `02`→`09` sequentially unless you objectively validate earlier mastery.
+```bash
+# From Kali — ping your Ubuntu VM (replace with your Host-Only IP)
+ping -c 4 192.168.56.101
 
-## Honour / ethics reinforcement
+# Scan your Ubuntu VM — Host-Only network only, never scan hosts you don't own
+nmap -sV 192.168.56.101
+```
 
-Enumerate only systems you authorize (owned VMs / THM / contracted ranges). Maintain lab journals without leaking reusable third-party-sensitive artifacts.
+## TryHackMe rooms to complete first
+
+1. "Welcome" room (how to use TryHackMe + AttackBox)
+2. "Tutorial" room (connect VPN or use AttackBox)
+3. Start Pre-Security path — complete all rooms in order
