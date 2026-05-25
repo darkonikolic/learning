@@ -1,28 +1,52 @@
-# Unit 1 — Scope: `go-api/` service spine (HTTP as real backend craft)
+# Unit 1 — Module Scope: go-api/ REST Service
 
-> **Informative cadence note:** original author envisioned ~10 deepening segments at ~1–1.5 h blocks—**topic sequencing only**.
+## What You Will Build
 
-## Learning outcome shift
+A REST API for a simple e-commerce backend — the `go-api/` codebase. Users, Products, and Orders as resources. By the end of this module you will have:
 
-Stop equating “backend” with “I exposed JSON”. Start treating systems as **living request lifecycles**:
+- A `chi` router with route groups, URL parameters, and middleware
+- JSON request decoding and response encoding with proper status codes
+- DTO types that separate HTTP shapes from domain models
+- Input validation with `go-playground/validator` and structured error responses
+- A service layer that contains business logic, separate from the HTTP handlers
+
+No ORM, no database yet (that comes in module 08 with `sqlx`). In-memory storage is fine for now.
+
+## What You Will Know by the End
+
+- How `net/http` handler lifecycle works: headers, status code, body — order matters
+- How chi's middleware chain works and why logging/recovery come first
+- What a DTO is and why you do not pass raw JSON structs into your service layer
+- How to return structured validation errors instead of bare 400 strings
+- What "handler must not contain business logic" means in practice
+
+## Project Structure
 
 ```
-socket accept → mux/router → middleware stack → thin handler adapters
-→ application behaviours → collaborators (repos/clients/logging)
-→ explicit failure mapping → structured observability breadcrumbs
-→ deadlines/cancellation coherence
+go-api/
+  cmd/api/main.go          — wire everything together, start server
+  internal/
+    domain/
+      product.go           — Product struct (domain model)
+      user.go              — User struct
+      order.go             — Order struct
+    service/
+      product_service.go   — ProductService interface + in-memory impl
+    handler/
+      product_handler.go   — HTTP handlers for /products
+      user_handler.go
+    dto/
+      product_dto.go       — CreateProductRequest, ProductResponse
+  go.mod
+  Makefile
 ```
 
-## Stack anchors (purposeful restraint)
+## The Layering Rule
 
-Implement **`go-api/`** primarily using:
+Each layer has one job:
 
-| Layer | Guidance |
-|-------|----------|
-| Transport | **`net/http`** foundational clarity supplemented by **`chi`** routing ergonomics—not opaque macro-framework |
-| Serialisation | `encoding/json` explicit control |
-| Validation | **`go-playground/validator`** (or comparable explicit strategy) guarding hostile inputs |
+- **Handler:** decode request, validate, call service, encode response. No SQL, no business rules.
+- **Service:** business logic and validation rules. No HTTP types (`http.Request`, `http.ResponseWriter`).
+- **Domain:** pure data types. No HTTP, no SQL tags (yet).
 
-Defer ORM fantasies deliberately—integrate Postgres explicitly later (**Area `08`**) aligning **sqlx** philosophy.
-
-Interview mindset emphasises **ownership**: each layer declares **what failures mean** externally vs internally—not accidental leaking stack traces verbatim.
+This separation means you can test your service without an HTTP server, and you can swap your storage layer without touching handlers.

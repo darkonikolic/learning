@@ -1,37 +1,37 @@
-# Unit 1 — Program scope, mindset, and spine project (`go-lab/`)
+# Unit 1 — Module Scope: go-lab/ CLI
 
-## What you should stop believing
+## What You Will Build
 
-You are not collecting syntax. Your target state is linguistic: **you stop reasoning “Go as dressed-up PHP classes”** and start reasoning **“Go as structs, behaviours on types, interfaces, pointers, composition, modules, explicit errors, and `context`”**.
+A single CLI codebase called `go-lab/` that grows across every unit. No HTTP, no frameworks — just Go structs, methods, interfaces, and packages. By the end of this module you will have a working CLI that manages Users, Products, and Orders, and a second small binary `task-cli/` that creates, lists, completes, and deletes tasks.
 
-Concrete end goal for Area `01`:
+The point is not the CLI itself. The point is that you stop reasoning "Go as PHP classes with a different syntax" and start reasoning in Go's actual model: **structs hold data, methods attach behaviour to types, interfaces describe capabilities, errors are values, context carries cancellation.**
 
-- **Struct**, **interface**, **pointer**, **error handling**, **package**, **module**, **context**, **receiver**, **composition**, **value vs pointer semantics**, and a basic sense of **who owns mutable memory**.
-- **`panic`** is understood as exceptional, **not** the normal error path.
+## Mental Model Shift
 
-> **Suggested cadence (informational):** roughly ten thematic blocks compatible with ~1–1.5 h/day is the original authoring pace. **Filenames order topics**, not calendars.
+Coming from class-based languages, the instinct is to ask "what class does this belong to?" Go's question is different: "what type holds this data, and what behaviour does it need?" There is no inheritance, no constructor keyword, no `implements`. A type satisfies an interface simply by having the right methods. A zero value is valid until you decide it isn't.
 
-## Continuous practice spine (Area `01`)
+This shift takes deliberate practice, not just reading. Build the code. Hit the edge cases. When something breaks, understand why.
 
-For the entire area, evolve **one** CLI-shaped codebase called something like **`go-lab/`**:
+## Module Goals (Checklist)
 
-- No web framework.
-- No HTTP servers in Area `01` (defer transport to Area `05`).
+- [ ] Declare structs with exported and unexported fields; understand zero values
+- [ ] Write value receivers (read) and pointer receivers (mutate); know when to use each
+- [ ] Use `&` and `*` correctly; avoid nil pointer panics by guarding inputs
+- [ ] Define and implement interfaces without an `implements` keyword
+- [ ] Return and wrap errors as values; never use panic for normal error flow
+- [ ] Organize code into packages with `cmd/` and `internal/` layout
+- [ ] Initialize a module with `go mod init`; add and tidy dependencies
+- [ ] Pass `context.Context` to functions that do slow or cancellable work
+- [ ] Build capabilities through struct embedding, not inheritance
+- [ ] Write table-driven tests with `go test ./...`
 
-Types you carry forward: at least **`User`**, **`Product`**, **`Order`**, later a **`Cart`**, so every unit connects to earlier ones.
+## Spine Project: go-lab/
 
-Capstone expectation (Unit 11): a separate small binary or subcommand tree **`task-cli/`** implementing **create**, **list**, **delete**, **complete** tasks. Use **structs**, **interfaces**, **explicit packages**, **`go.mod`**, **`context`** on any simulated slow work, disciplined **errors**.
+Carry these types forward across all units — each unit adds behaviour to them:
 
-## How to document your learning
+- `User` — ID, name, email
+- `Product` — ID, name, price, stock
+- `Order` — ID, user ID, product ID, quantity
+- `Cart` — items, totals
 
-Prefer short **“why”** notes (constraints, alternatives rejected) beside code. Screenshots alone are worthless in review—they don’t expose thinking.
-
-Final interview drill set for Area `01` (prepare spoken answers):
-
-- interfaces (implicit satisfaction, narrowing),
-- pointer vs receiver choice,
-- `context`,
-- packaging,
-- modules,
-- `panic` vs idiomatic **`error`** flow,
-- composition.
+Capstone (Unit 11): `task-cli/` binary with `create`, `list`, `delete`, `complete` subcommands. Uses structs, interfaces, explicit packages, `go.mod`, and `context` on any simulated slow work.
