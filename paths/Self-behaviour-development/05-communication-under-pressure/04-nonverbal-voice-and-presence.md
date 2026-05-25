@@ -1,28 +1,34 @@
-# Non-verbal fascia — tempo · shoulders · humane gaze · anti-spasm gestures
+# Physical presence in difficult conversations
 
-## What this settles
+## What this is
 
-Conscious stewardship of outward shell: moderated cadence; shoulder stack lowered; palms visible calmly; reciprocal humane gaze intervals (not glaring nor glued to floor); resisting urge to verbally patch silences prematurely; outlawing caricature spikes.
+When you are anxious or under attack, your body shows it before you say a word. Your pace speeds up, your shoulders rise, your eyes either dart away or lock on too hard, and small nervous habits leak through — a dismissive exhale, a tense laugh, a sudden gesture.
 
-## Story / lens
+People in evaluative or hostile settings read your body at least as much as they read your words. A calm, steady physical presence reinforces what you are saying. Nervous, defensive body language undermines it, even when your words are exactly right.
 
-Lexical choreography loses contests observers score mainly by **animation profile**. Hostile arenas weaponise audible sneer-exhales to bait chain escalation. Prefer a lightweight **silent checklist** over obsessive self-camera rumination mid-sentence: steady medium vocal amplitude, humane gaze rhythmic micro-breaks, cancelling dismissive hiss-breaths that invite tit-for-tat heat.
+## When to use this
 
-## Moves
+- Before any formal conversation, hearing, or evaluation
+- When you are rehearsing how to handle a difficult exchange
+- After reviewing a recording of yourself and noticing something you want to change
 
-Film ~30s neutral rehearsal answering a vanilla prompt; audit only:
+## How to do it
 
-1. Pace slower than caffeinated default  
-2. Shoulders not riding ear-line  
-3. Hands calm and visible  
-4. Eyes humane, not glare or floor-lock  
-5. No panic syllables during intentional silence wells  
-6. No sudden sweeping gesture spikes  
+Before or during a difficult conversation, run through this checklist mentally:
 
-Repeat until all pass—or pick one focus for the next pass.
+1. **Pace** — speak slower than you naturally would when anxious. When nerves kick in, people speed up. Slow is calm.
+2. **Shoulders** — drop them away from your ears. Tension lives there. Lower them deliberately.
+3. **Hands** — keep them visible and still. No gripping, no fidgeting, no sudden gestures.
+4. **Eyes** — maintain normal, human eye contact. Not a stare, not the floor. Look at the person, look away briefly, look back. Normal.
+5. **Silence** — do not fill pauses with sounds. No "um," no exhale, no nervous laugh. Let silence be silence.
+6. **No dismissive reactions** — no eye-rolls, no sighs of contempt, no snort-laughs. These invite escalation and they are remembered. If you feel the urge, breathe instead.
 
-Cull one chronic micro-twitch (eye-roll, jitter laugh, dismissive exhale). Substitute: blink + jaw soft + one measured breath; three short daily passes until absent on recording.
+## Practice
 
-## Neighbours
+Record yourself answering a simple, neutral question for about 30 seconds. Then watch it back and check only the six items above — not your words, just your body and pace. If something fails, repeat and focus on that one thing.
 
-[Golden chain pacing](01-golden-chain-pause-structure-silence.md)
+If you have one chronic habit you want to remove — a dismissive exhale, a nervous laugh, an eye-roll — replace it with something specific: a slow blink, a soft jaw, one quiet breath. Practice that replacement daily for a week until it becomes the automatic response instead.
+
+## Connects to
+
+- [Pause and silence habit](01-golden-chain-pause-structure-silence.md) — pacing connects directly to this

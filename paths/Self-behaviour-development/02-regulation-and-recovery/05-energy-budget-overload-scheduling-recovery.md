@@ -1,29 +1,48 @@
-# Energy budget — overload, decision fatigue, recovery scheduling
+# Decision fatigue — managing overload before it manages you
 
-## What this settles
+## What this is
 
-**Decision fatigue** and **cognitive overload** degrade the same faculties you rely on for boundaries, pacing, and clean wording—usually before you consciously notice vocabulary shrinking.
+Every decision you make costs something. When you have too many open decisions, too many unresolved situations, and no recovery time, the quality of your thinking drops — often before you notice it is happening. Your words get sharper, your patience shrinks, your judgment gets worse.
 
-**Recovery scheduling** and **energy budgeting** mean choosing where finite attention goes *before* emergencies pick for you.
+This file gives you a simple system for managing where your attention goes, capping decisions before the well runs dry, and protecting at least one recovery block per week.
 
-## Story / lens
+## When to use this
 
-Siege seasons tempt **heroic cramming**: every fight open, zero slack. Behavioural realism names **fewer decisive battles**, protected sleep/movement anchors, buffered decision slots. This neighbours **[FAST triage](../01-operational-stance/03-fast-playbook.md)** and **[importance/risk/goal routing](../01-operational-stance/02-energy-routing-triad-important-risky-goal.md)** intentionally.
+- You feel like everything is urgent and nothing is getting done
+- Your patience and judgment are noticeably worse than usual
+- You are making impulsive decisions or saying things you regret
+- You have a stretch of heavy days coming and want to protect yourself
 
-Overload also feeds **[interpretive traps](../04-cognitive-distortion-literacy/)**—repair load first when spirals correlate with depleted weeks.
+## How to do it
 
-## Moves
+**Step 1 — Keep a simple attention log on weekdays.**
 
-Maintain **attention ledger** weekdays: columns *must decide today · can wait · belongs to advisor/procedure.*
+Sort your open items into three columns:
+- Must decide today
+- Can wait (name a real date)
+- Belongs to someone else or to a formal process
 
-Cap **heavy decisions/day** pragmatically—queue overflow explicitly.
+Anything in the third column — remove it from your mental load today. It is not yours to carry right now.
 
-Weekly **recovery block** defended like medical appointment—even quiet logistics counts.
+**Step 2 — Cap heavy decisions per day.**
 
-Identify **automatic decisions** templates (meal rotation, bedtime protocol, clothed weekday exit) shedding micro-choices drained arenas steal.
+Decide on a realistic number of genuinely difficult decisions you can make well in one day. When you hit that number, stop. Queue anything extra to tomorrow. This is not laziness — it is accuracy about how human attention works.
 
-Overload episode post-mortem: three bullets *sleep · fuel · movement · unclosed loops* factual only.
+**Step 3 — Protect one recovery block per week.**
 
-## Neighbours
+Put it on the calendar like a medical appointment. It does not have to be long. It does not have to be exciting. Even quiet time spent on logistics you have been avoiding counts. The point is that it is protected and it happens.
 
-[Movement & nutrition](04-movement-nutrition-under-stress.md) · [Window resets](02-window-reset-time-anchor.md)
+**Step 4 — Automate the small decisions.**
+
+Every micro-decision you make on autopilot is one you do not have to pay for. Set defaults for routine things: what you eat in the morning, what you wear on workdays, what your evening routine is. These sound trivial. Over a week, they add up.
+
+**Step 5 — When you overload, review these four things.**
+
+After a week where everything went sideways, write three honest bullet points covering: how was your sleep, did you move and eat, what decisions stayed open and drained you, and what could go on someone else's plate. No essay. Just the facts.
+
+## Connects to
+
+- [Movement and food basics](04-movement-nutrition-under-stress.md)
+- [Recognising when you are off and resetting](02-window-reset-time-anchor.md)
+- [In-the-moment decision steps](../01-operational-stance/03-fast-playbook.md)
+- [The three-question filter](../01-operational-stance/02-energy-routing-triad-important-risky-goal.md)

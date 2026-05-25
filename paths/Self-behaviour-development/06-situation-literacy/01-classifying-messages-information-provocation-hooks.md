@@ -1,21 +1,49 @@
-# Message tagging — Inform · Provoke · Hook narrative
+# Read the message before you react — three types to know
 
-## What this settles
+## What this is
 
-Before reacting, imprint **tiny bucket labels** distinguishing real information pulls from provocation payloads or storyline bait — interrupting autopilot argumentative soup.
+Not every message that lands hard is asking for information. Some are designed to trigger an emotional reaction. Some are trying to pull you into a story someone else wrote. If you respond to all of them the same way — by defending yourself or explaining — you will almost always make things worse.
 
-## Story / lens
+Before you respond to anything, classify what it actually is. There are three types:
 
-Misreading logistical curiosity as summons to autobiographical defence corrodes adjudicatory patience once stakes climb. Classification latency pushes **routing** toward **[six routing cards](../05-communication-under-pressure/03-six-techniques-and-negation-protocol.md)** rather than improvised cross-examination once stamped **Provoke / Hook**.
+- **I — Information:** A genuine request for facts or a straightforward question. Answer it directly.
+- **P — Provocation:** Designed to make you angry, defensive, or reactive. Responding emotionally is exactly what it wants. Use a structured technique instead.
+- **H — Hook:** Inviting you into a narrative or storyline you did not author. Accepting the framing means you are already playing on someone else's terms.
 
-## Moves
+Classification comes before response. You do not reply until you know what you are dealing with.
 
-Harvest ~**30 arduous lines** (saved threads, voicemail transcripts, or rehearsal banks in **[appendix sheet](../14-appendix-custody-expert-proceedings/02-questions-cheatsheets-knjige-reading.md)**) — margin tag **only I | P | H** on a first pass without answering yet — sanity cross-check instincts against exemplars inside **`05-communication-under-pressure`** when ambiguity persists.
+## When to use this
 
-Iterate **toughest dozen**: whisper label then aloud speak matching **solo technique digit** referencing **[routing cards](../05-communication-under-pressure/03-six-techniques-and-negation-protocol.md)** — defer full scripted reply until numbering reflex slips below ~2 median seconds across sessions.
+- You receive a message that hits you and you have an impulse to reply immediately
+- You are reviewing a transcript or thread before deciding how to respond
+- You are in a conversation where the questions feel designed to corner you
+- Multiple questions are coming at once and you feel overwhelmed
 
-When an ally piles on rapid overlapping questions in rehearsal, deploy pause gesture plus courteous **one-at-a-time** pacing before resuming bounded answers.
+## How to do it
 
-## Neighbours
+**Step 1 — Read or hear the message once. Do not respond.**
 
-[Cognitive distortion literacy](../04-cognitive-distortion-literacy/) · [Ambiguous & leading frames](02-ambiguous-leading-suggestive-hypotheticals.md)
+**Step 2 — Assign a label: I, P, or H.**
+Ask yourself: Is this genuinely asking for information? Or is it trying to get a reaction? Or is it framing me inside a story I did not agree to?
+
+**Step 3 — Route to the right response.**
+- I messages: answer directly and simply
+- P messages: use the refusal-of-premise technique or a factual boundary statement
+- H messages: narrow it down to specific facts, or decline to engage with the narrative
+
+**Step 4 — If multiple questions are stacked, slow down.**
+Say "one at a time" and answer one, then stop. Do not try to address everything at once.
+
+## Example
+
+Message received: "You never cared about any of this until it became convenient for you."
+
+Classification: P — this is a provocation, not a question. There is no information being requested. It is designed to produce a defensive reaction.
+
+Response: Do not defend, do not explain your history, do not mirror the emotional charge. Instead: "That's not how I see it. What specifically are you asking about?"
+
+## Connects to
+
+- [Six response techniques](../05-communication-under-pressure/03-six-techniques-and-negation-protocol.md) — where to route P and H messages
+- [Ambiguous and leading questions](02-ambiguous-leading-suggestive-hypotheticals.md) — a specific subset of H messages
+- [Cognitive distortion literacy](../04-cognitive-distortion-literacy/)

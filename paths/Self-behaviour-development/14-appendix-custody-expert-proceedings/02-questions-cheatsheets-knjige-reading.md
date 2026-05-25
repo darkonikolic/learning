@@ -1,31 +1,39 @@
-# Question banks, cheatsheets, optional reading — oral rehearsal harness
+# Practice banks for custody and evaluation questions
 
-## What this settles
+## What this is
 
-Dense custody-facing prompts belong as **spoken inventory**: draw lines, assign a communication technique family, answer out loud—not silent highlighting.
+Preparation for custody-related evaluations only works if you practice answering questions out loud. Reading notes silently, highlighting, or reviewing cheat sheets in your head does not prepare you for the real thing. This file organises the four layers of practice you use at different times.
 
-## Story / lens
+## The four practice layers
 
-Usually four layers stack:
+**Layer 1 — The long question bank (weekly practice)**
+A broad set of questions covering all likely topics. Each week, pull seven questions you have not seen recently and answer each one aloud in 45 seconds or less. After each answer, name which communication technique you used — pause, short answer, neutral tone, redirect to facts. Archive audio only if a coach or lawyer would benefit from hearing it.
 
-1. **Long-form bank** — broad coverage; pull random batches (~5 lines), rotate techniques mapped in **[communication under pressure](../05-communication-under-pressure/)**, **[situation literacy](../06-situation-literacy/)**, and—when rehearsals slide into courtroom-in-skull narration—brief passes through **[interpretive traps](../04-cognitive-distortion-literacy/)**. Aim disciplined clips (≤45 s): pause audible?, stop honoured?, monotone dignity?, no insult echo?
+Check each answer against four things: Did you pause before answering? Did you stop at the right moment? Did you keep a steady tone without matching any hostility in the question? Did you avoid repeating any insult or accusation back?
 
-2. **Short warm-up bank** — micro-set when the appointment horizon eats prep time.
+**Layer 2 — Short warm-up bank (when time is tight)**
+A smaller set of five to ten questions for days when you have limited time before an appointment. Quick pass, aloud, to get your voice and pacing activated.
 
-3. **Term / operator cheatsheet** — same-day skim: read bullets slowly once, immediately answer **two improvised surprise lines** **without rewriting** the crib mid-stream—keeps memory skeletal instead of edit-anxiety.
+**Layer 3 — Term and concept reference sheet (day-of review)**
+A list of key terms and concepts you may encounter. On the day of a session, read through it once, slowly. Immediately after reading, answer two surprise questions aloud from memory without looking back at the sheet. The goal is to keep the knowledge available in your head — not to memorise scripts.
 
-4. **Emergency orientation card** — under-one-minute skim at the door—orientation only; no cramming fresh script.
+**Layer 4 — Emergency orientation card (at the door)**
+A single card you read in under one minute immediately before entering. Orientation only — who you are, what your goal is, what tone you are aiming for. No new information. No cramming. Just grounding.
 
-Separate track: **damage-control narrative**—blunt outline → trimmed thirty-to-sixty-second version stressing **facts, logistics, stability for the child**—avoid accidental manifestos.
+## Weekly practice routine
 
-Trade paperbacks in a general pile can lend metaphor; they **do not replace** spoken bank reps ahead of procedural interviews.
+1. Pull seven unseen questions from the long bank.
+2. Answer each one aloud in 45 seconds or less.
+3. Note which technique you used after each answer.
+4. Track total oral repetitions week by week. As appointment dates get closer, this number should go up, not down.
 
-Technique shorthand throughout this trace maps to **`05-communication-under-pressure`** routing cards, **[situation-literacy tagging](../06-situation-literacy/)**, plus **[interpretive hygiene](../04-cognitive-distortion-literacy/)** when stories outrun facts.
+## A note on reading books
 
-## Moves
+General books on communication or psychology can be useful for context and perspective. They do not replace spoken practice. If you are reading more than you are practicing aloud, the ratio is wrong.
 
-Weekly: pull seven unseen lines from the long bank—each earns spoken answer ≤45 s plus technique ID; archive audio only if counsel or coaching benefits.
+## Connects to
 
-Morning-of: read cheatsheet bullets aloud slowly once → **two surprise follow-ups aloud immediately** → no mid-session page fiddling.
-
-Track countable oral repetitions—they should slope **up** as calendar pressure rises, not shelf time.
+- `01-expert-session-topic-map-and-mini-brief.md`
+- `../05-communication-under-pressure/` — technique routing for specific question types
+- `../06-situation-literacy/` — reading what is actually happening in the room
+- `../04-cognitive-distortion-literacy/` — for when your inner narrative starts running ahead of the facts

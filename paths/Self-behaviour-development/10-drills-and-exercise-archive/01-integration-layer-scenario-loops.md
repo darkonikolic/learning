@@ -1,29 +1,38 @@
-# Integration layer — scenario-first landing
+# Practice drills — rotating scenario clusters
 
-## What this settles
+## What this is
 
-Role-play blocks, timed turns, and written-conflict rehearsal are how this program **sticks**—not perpetual new prose. Repeated scenario sets confront accusations, chat ambushes, institutional tone, and fatigue until responses feel boringly clean rather than improvised.
+Reading about communication skills does not make them stick. Practicing them does. This file holds the set of scenario types you rotate through each week. The rule is simple: the number of scenarios you actually practice must be higher than the number of new pages you read.
 
-## Story / lens
+## When to use this
 
-Maintain **repeatable scenario clusters** you rotate deliberately:
+Every week. Pick one cluster, do the minimum reps, log whether you did them or skipped.
 
-- Overview + integration — how simulated weeks chain; neutral field notes after rough contact (fact, shape of response, one lever).
-- Ten-minute skeleton — minimum viable rep when calendar is hostile.
-- Provocation / accusation sets — short turns, zero insult mirroring, breath between clauses.
-- Presence + reputation — gossip pressure, third-party audience, boringly clean on record.
-- Written conflict — chat/email rhythm; fewer reactive paragraphs; bounded facts.
-- Loved-one friction with competing interests — grief-friendly wording that still holds limits.
-- Compromise under time pressure — when partial deals buy peace versus leak leverage.
-- Helplessness / crisis — single next step when freeze appears; naming realistic threats vs learned spirals.
-- Contact and warmth — humane gaze, steady tempo, without charisma masked as authenticity.
+## The scenario clusters
 
-After each heavier block, tag **which folder (`01`–`14`)** picked up evidence—FAST typing, observer labelling, grounding—so gains attach to behaviour, not mood storytelling. Pair noisy sessions with **[observer loop](../03-observer-loop/)** material.
+Rotate through these over time:
 
-## Moves
+- **Provocation and accusations** — someone attacks, accuses, or provokes you. Practice short responses with no insult back and a breath between sentences.
+- **Written conflict** — chat messages and emails that are hostile or ambiguous. Practice responding with fewer words, no reactive paragraphs, only bounded facts.
+- **Communication under time pressure** — you have very little time to decide. Practice making a partial deal or holding a firm position without leaking leverage.
+- **Institutional and formal tone** — official settings, formal letters, proceedings. Practice staying calm and factual when the stakes feel high.
+- **Warmth and contact** — practice being genuinely present and warm without performing it.
+- **Crisis response** — when something feels overwhelming or frozen. Practice naming one next step and separating real threats from imagined ones.
 
-Pick **one** scenario cluster per week; complete its minimum reps; log a plain done/skipped line—essay optional.
+## How to do it
 
-After each intense rep, one line naming which unit skill moved (pause, technique routing, observer label, somatic reset).
+**Each week:**
+1. Pick one cluster from the list above.
+2. Do the minimum reps — say the scenarios aloud, write the responses, or role-play them.
+3. Log one line: done or skipped. No essay required.
 
-Rebalance weekly: **attempted scenarios** should outrun **fresh pages skimmed**.
+**After each session:**
+Write one sentence naming which specific skill moved during that session. For example: "I paused before responding instead of matching the other person's tone."
+
+**Weekly check:**
+Count how many scenarios you practiced versus how many new pages you read. Scenarios practiced should be the higher number.
+
+## Connects to
+
+- `../03-observer-loop/` — pair noisy sessions with observer loop material
+- `../02-regulation-and-recovery/` — if a session activates you, go to regulation work first

@@ -1,19 +1,34 @@
-# Daily micro ritual — breaths, digit, single move
+# Morning micro-ritual — three breaths, a number, one move
 
-## What this settles
+## What this is
 
-Before the first heavyweight contact chunk of the day, you run an automatic **triple breath**, **stress digit label**, **one reachable action sentence** so cognition-heavy arenas never start cold from improvised heroics.
+Before you start your first serious interaction of the day — a message, a meeting, a difficult call — you do three things that take under a minute. This is not meditation or self-help theatre. It is a small act that prevents you from going into high-stakes moments cold, reactive, and improvised.
 
-## Story / lens
+The three things are: three slow breaths, a stress number, and one concrete action for the day.
 
-The ritual stacks **regulated breathing**, **named arousal level**, and **microscopic executable move** upstream of reactive loops. Verification is behavioural integrity—not a moral score. The action sentence must point at something **observable** (send / not send / schedule / walk)—not abstraction alone.
+## When to use this
 
-Optional layering ties to **[Three-layer operational mantra](../01-operational-stance/04-three-layer-operational-mantra.md)** without turning the mantra into theatre.
+Every morning, before your first significant interaction. That means before you reply to anything charged, before a difficult call, before a meeting that matters.
 
-## Moves
+## How to do it
 
-Keep a streak mark for days where the ritual completed **before** first serious interaction—mechanical repetition matters more than story.
+**Step 1 — Three breaths.**
+Breathe in slowly, breathe out slowly. Do that three times. That is it.
 
-Evening glance: today’s sentence must have referred to a **bounded commitment** visible on a calendar or outbox—not only an intention.
+**Step 2 — Name your stress level.**
+Give today a number from 1 to 5. Do not overthink it. Just say the number to yourself. 1 is calm. 5 is close to the edge.
 
-Rough target once load rises: seven-day bare minimum streak before treating the ritual as optional.
+**Step 3 — Name one achievable action for today.**
+Pick something specific and completable. Not a vague intention. A real thing: send a message, make a call, write one paragraph, go for a walk. It needs to be something you can mark as done by end of day.
+
+**Track your streak.**
+Each day you complete the ritual before your first serious interaction, mark it. The streak number matters more than how you feel about it. Aim for seven days in a row before you consider skipping.
+
+## Example
+
+You wake up, check your phone, and see a message that makes your stomach tighten. Before you respond: put the phone down. Three breaths. You give the day a 3. You name your one action: "Send the logistics email by noon." Now you can respond.
+
+## Connects to
+
+- `../01-operational-stance/04-three-layer-operational-mantra.md`
+- `../11-reflection-evening-loop/01-three-evening-review-questions.md`

@@ -1,30 +1,55 @@
-# FAST core — seven kernels + micro-pipeline
+# In-the-moment decision steps
 
-## What this settles
+## What this is
 
-Moment-of-contact automation: **one breath**, internal triage, choose macro move, **one operative sentence**, then stay quiet while the outer world reacts.
+A simple sequence for the moment something happens — a message arrives, someone confronts you, a difficult situation starts. The sequence gives you a decision path so you are not improvising while already activated.
 
-**FAST shorthand:** Breath → Worth/Risk/Situation type (**A|M|I|N**) → choose **Enter / Minimal / Distance / Exit** → **one** sentence delivered → wait-without-padding.
+The whole thing runs in seconds. One breath → read the situation → choose a response mode → say one sentence → stop.
 
-Types: **A** aggression · **M** manipulation/play · **I** institution / record-bearing · **N** workable normal dialogue.
+## When to use this
 
-## Story / lens
+- Something lands and you feel the urge to respond immediately
+- A conversation starts going somewhere difficult
+- You are in a room or on a call and something is escalating
+- You need to say something but are not sure how much or what
 
-Second sentences smuggle regret; adrenaline loves stacking tactics simultaneously. Institutional **I** channel wants dry, factual, survivable neutrality; aggression wants low tone plus prepared exit—not ego arm wrestle. Maintain a revolving five-line repertoire recognisably *yours*, not borrowed screenplay dialect.
+## How to do it
 
-Seven kernel jobs (adapt language — preserve behavioural job):
+**Step 1 — One breath before anything else.**
+Not a pause for effect. An actual breath. This is the only mandatory thing.
 
-1. Reciprocity reality — stop sprinting after indifference · 2. Micro boundary / fidelity probe · 3. Pause outperforms twitch · 4. One sentence ⇄ one point · 5. Honour absent respect with retreat · 6. Institutional = brief third-person façade · 7. Departures owe no trophy speech  
+**Step 2 — Classify the situation in one word:**
+- **Aggressive** — hostile, pushing, wanting a fight
+- **Manipulative** — playing games, testing you, leading you somewhere
+- **Institutional** — formal context, record-bearing, professional setting
+- **Normal** — a genuine, workable exchange
 
-## Moves
+**Step 3 — Choose your response mode:**
+- **Engage** — normal dialogue, this is fine, participate fully
+- **Minimal** — say one neutral thing and nothing more
+- **Distance** — pull back from the conversation without disappearing
+- **Exit** — leave the exchange entirely (physically or by ending the message thread)
 
-- **Morning kernel chorus** till order memorises cleanly without prompts.
+**Step 4 — Say one sentence. Stop.**
+Not two sentences. Not a follow-up clarification. One sentence, then wait. Let the other person respond before you add anything.
 
-- **Letter + operative line reps** (~15 cues): classify **A|M|I|N**, follow with **exactly one** predetermined line from your revolving cache — discard round if unauthorised clause arrives before counterpart’s pause settles.
+Second sentences are where regret usually lives. The impulse to keep going, to explain, to cover yourself — that impulse makes things worse more often than it helps.
 
-- **0–4 intensity calibration** voiced as digits only paired with shorthand behaviour label (no improvised monologue):  
-  **0** ignore / withhold fuel · **1** lone neutral operative line · **2** explicit boundary wording · **3** thematic terminal stop · **4** disconnect channel / leave / escalate legally or professionally  
+**Step 5 — Intensity check (0–4):**
+If you need a quick read on how much to do:
+- **0** — ignore, give no response, starve it
+- **1** — one neutral sentence
+- **2** — state a clear limit
+- **3** — name that the conversation is ending
+- **4** — disconnect, leave, escalate formally
 
-## Neighbours
+## Example
 
-[Triage worksheet](02-energy-routing-triad-important-risky-goal.md)
+You receive a message that feels aggressive and accusatory. Your impulse is to defend yourself at length.
+
+Breath. Classify: aggressive. Response mode: minimal. Write one sentence that is factual and does not escalate. Send it. Stop. Do not follow up for at least 20 minutes.
+
+## Connects to
+
+- [The three-question filter](02-energy-routing-triad-important-risky-goal.md)
+- [Calming your body before speaking](../02-regulation-and-recovery/01-grounding-micro-label-emotion.md)

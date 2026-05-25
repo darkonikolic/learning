@@ -1,21 +1,32 @@
-# Building-life offensive layer — when the fire is no longer everyday
+# Building your life — shifting from survival to active choices
 
-## What this settles
+## What this is
 
-**“Offense”** here names **deliberate energy allocation**—relational filters, ROI, option menus—not winning arguments. You also notice when defence-only loops ([regulation & recovery](../02-regulation-and-recovery/), institutional stress hygiene, reactive communication habits) still eat the calendar, so “life design” would be insulting noise on top.
+After a long period of conflict, stress, or crisis, most of your energy goes into managing damage — staying stable, not making things worse, getting through the day. That is survival mode, and it is sometimes the only realistic option.
 
-## Story / lens
+But at some point, conditions shift enough that you can start making deliberate choices about where to invest your energy, rather than just defending yourself. This is the shift from survival to active life building. It does not mean the hard things are over. It means you have enough stability to start choosing, not just reacting.
 
-**Survival / defence** lowers damage on wrong battlegrounds; **offence** names where relationship and vitality actually compound. Readiness often shifts from constant fight-or-flight toward having attention for **relational ROI** without melodrama, while still running **[conflict decision sequencing](02-conflict-decision-sequence-flag-pointers.md)** so every poke does not default to open war.
+This phase covers five practical areas: who you spend energy on, whether relationships give back proportionally, widening your options before you feel cornered, making faster decisions on things that are reversible, and recognising when moral grievance loops are consuming your energy without producing progress.
 
-Practical threads: tighten **people filters**, measure **relational ROI**, **feed** workable alliances, **widen options** before cornered feeling, use **fast commit** rules on reversible choices, catch **patterns** that yoink you back into pure-defence burnout—moral grievance loops, apology theatre without proportional repair.
+## When to use this
 
-Carve deliberate **[positive bandwidth](03-positive-life-bandwidth-social-identity-and-joy.md)** alongside conflict sequencing so siege posture does not devour hobbies, friendships, or future arcs.
+Use this when:
+- The daily fire-fighting has reduced enough that you have some capacity to think ahead
+- You notice your calendar is still entirely reactive even though the crisis has passed
+- You have been in survival mode for so long that it has become the default, even when it no longer needs to be
 
-If themes feel unreachable, linger with regulation/recovery work, **[interpretive hygiene](../04-cognitive-distortion-literacy/)**, observer tools, and conflict sequencing until baseline smoke clears.
+**If life design still feels insulting** — if you are still in the thick of it and reading this makes you angry — stop here. Stay with the regulation and recovery work until the baseline clears. This phase is not relevant until it feels reachable.
 
-## Moves
+## How to do it
 
-One line each: today’s stability bottleneck / whether life-design framing feels aspirational or insulting—if insulting, park offence work.
+**One line each day:**
+Write down today's stability bottleneck, and whether thinking about life design feels aspirational or insulting. If it feels insulting, park this work and return to regulation.
 
-Pick **one outward behaviour that widens healthy options or depth**—coffee with a trusted colleague, restoring a neglected logistics channel, politely narrowing a draining contact—and **calendar it**, not as aspiration alone.
+**One outward action each week:**
+Pick one thing that widens your options or deepens something healthy. Put it on the calendar. Examples: coffee with a trusted person, restoring a logistics channel you have been avoiding, politely reducing contact with someone who drains you. Calendar it as a real appointment, not as an aspiration.
+
+## Connects to
+
+- `02-conflict-decision-sequence-flag-pointers.md` — so not every incoming challenge defaults to full engagement
+- `03-positive-life-bandwidth-social-identity-and-joy.md` — protecting the parts of life not defined by conflict
+- `../02-regulation-and-recovery/` — if this phase feels unreachable, stay here first

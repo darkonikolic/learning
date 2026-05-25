@@ -1,23 +1,31 @@
-# Evening three questions — audit loop
+# Evening review — three questions, 90 seconds
 
-## What this settles
+## What this is
 
-Replace rumination autopilot with three nightly probes that separate **facts**, **intrinsic stability duty**, and **impossible validation contracts**—so “reflection” does not disguise prosecuting yourself past midnight.
+At the end of the day, instead of letting your mind churn through the same loops, you ask yourself three specific questions. The whole thing takes 90 seconds. That limit is not a suggestion — it is the point. If you go over, you are not reviewing, you are ruminating. Start again shorter.
 
-## Story / lens
+## When to use this
 
-Brevity is the gate: overrun time budgets mean storytelling, not auditing. Aim answers tethered to **measurable stability** and child-forward / institution-neutral tone—not confessional melodrama for an imaginary sympathetic jury.
+Each evening before bed, or at the end of your work day. Takes 90 seconds total. Each answer is one sentence.
 
-Daytime companion sheet: **[After-talk reset and review](../03-observer-loop/02-after-talk-reset-and-review.md)**.
+## How to do it
 
-## Moves
+Ask yourself these three questions out loud or in writing. One sentence each. Stop when you have answered all three.
 
-Voice-journal capped at **ninety seconds** total:
+**Question 1: What fact changed today?**
+Something that actually happened. Not how you feel about it — just the fact. "I received the document." "The meeting was rescheduled." "He did not respond."
 
-1. **What fact changed objectively today** (one sentence factual layer)?
-2. **What acted toward intrinsic stability**—not applause mining?
-3. **Which audience was I proving toward—and can they actually supply the validation I demanded**?
+**Question 2: What did I do today that moved me toward stability?**
+Not what others thought of you. Not whether you were impressive. Something you did, however small, that was genuinely stabilising for you or your situation.
 
-If you blow the cap, restart tighter—shorter beats thorough.
+**Question 3: Who was I trying to impress today — and can they actually give me what I was looking for?**
+This is the honest one. Name the audience. Then honestly ask whether they are capable of giving you what you were seeking. Often the answer is no.
 
-Weekly: tag column 3 only (↑ / → / ↓) for honesty trend—no essay.
+**If you go over 90 seconds:** Stop. Start again with shorter answers. Shorter is better than thorough.
+
+**Weekly check:** Look at Question 3 only. Mark whether your honesty on that question went up, stayed flat, or slipped. No essay. One arrow.
+
+## Connects to
+
+- `../03-observer-loop/02-after-talk-reset-and-review.md`
+- `../09-daily-mechanics/01-universal-micro-ritual.md`

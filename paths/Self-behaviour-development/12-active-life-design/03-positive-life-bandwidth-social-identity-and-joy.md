@@ -1,33 +1,39 @@
-# Positive life bandwidth — friendships, hobbies, identity outside the feud
+# Protecting your life outside the conflict
 
-## What this settles
+## What this is
 
-Long conflict can **colonise identity** until every hobby, friendship spike, or future glance routes through courtroom gravity. Practical reclamation chooses **explicit bandwidth** for life not defined by adversarial narrative.
+When conflict goes on long enough, it starts to take over your whole identity. Every friendship, every hobby, every future plan starts to feel like it connects back to the conflict in some way. Without noticing, you stop being a full person and become someone whose entire life is defined by a fight.
 
-Touches **social rebuilding**, **friendship maintenance**, **hobby scaffolding**, **identity outside conflict**, **future planning**, **joy scheduling**, and **meaning anchors**—small enough to honour realistic custody/work load.
+This file is about deliberately carving out parts of your life that have nothing to do with the conflict. Not as a luxury, but as a practical requirement for staying functional.
 
-## Story / lens
+## When to use this
 
-This extends **[building-life offence overview](01-building-life-offensive-layer-overview.md)**—the offensive layer stalls if “offense” only means escalation muscles. Humans need reservoirs not optimized for hostility: warmth, novelty, competency elsewhere, horizons past the next procedural date.
+- When you realise you cannot remember the last time you did something just because you enjoyed it
+- When your sense of who you are is entirely defined by the conflict or the process around it
+- When friendships and hobbies have quietly disappeared over the past months
 
-Siege physiology still matters—pair joyous claims with **[recovery engineering](../02-regulation-and-recovery/)** honesty so schedules don’t become fantasy.
+## How to do it
 
-## Moves
+**Quarterly relational check:**
+Look at who you have actually been in contact with versus who you say you value. Pick one person you have drifted from and make one small reconnection gesture — a message, a coffee, a call. Do not force it. One gesture is enough.
 
-Quarterly **relational audit**: whom you actually texted vs whom you theoretically value—invite one humane reconnection gesture if drift shames without self-attack.
+**Weekly protected time for a hobby:**
+Block ninety minutes per week for something that is not work and not conflict. Low skill is fine. A walk with a camera, a book, cooking something, a physical craft. The point is that it is protected time and it actually happens.
 
-**Hobby mortar**: ninety-minute weekly protected slab—low skill welcome (walk + camera, paperback chunk, tactile craft).
+**Three identity sentences:**
+Write three sentences about who you are that contain no words related to the conflict, the process, or any of the people involved. Say them aloud occasionally. Example: "I am a good cook. I know a lot about mountains. I am reliable with people I care about." Keep them simple and true.
 
-Compose **three identity sentences** untouched by feud keywords (“teacher,” “neighbor,” “mountain nerd,”…) spoken aloud occasionally.
+**One future marker on the calendar:**
+Put one non-adversarial thing on the calendar at least 90 days from now. A trip deposit, a course, an event, a mundane upgrade you have been putting off. It does not need to be significant. It just needs to exist and to have nothing to do with the conflict.
 
-Calendar **micro future marker** ninety days ahead non-adversarial (trip deposit, certification, mundane upgrade).
+**Scheduled weekly joy:**
+Put one enjoyable thing on the calendar each week. Music, a meal you like, something that reliably makes you feel like yourself. Calendar it as a real appointment. If it is only an aspiration it will not happen.
 
-Weekly **scheduled joy** (music block, tactile meal, deliberate comedy)—calendar truth > aspiration.
+**If everything shrinks during a spike:**
+Temporarily reducing these things during an acute crisis is normal. Abandoning them for months without reassessment is not. If months pass and none of this is happening, talk to someone you trust or a therapist about it.
 
-Volunteer/service **meaning wedge** optionally—only if resentment-proof and logistically sane.
+## Connects to
 
-Friction check: shrinking everything when spike hits—OK temporarily; forbid **months-long** abandonment without reassessment dialogue with trusted ally or therapist.
-
-## Neighbours
-
-[Building-life offence overview](01-building-life-offensive-layer-overview.md) · [Conflict sequencing](02-conflict-decision-sequence-flag-pointers.md)
+- `01-building-life-offensive-layer-overview.md`
+- `02-conflict-decision-sequence-flag-pointers.md`
+- `../02-regulation-and-recovery/` — pair with recovery work so the schedule stays realistic

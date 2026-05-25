@@ -1,76 +1,56 @@
-# Self-work talk—filter, not catalogue
+# Answering "what are you doing to stay grounded?" — without performing
 
-## What this settles
+## What this is
 
-When someone authoritative asks what you do to stay grounded, **how you phrase it** decides whether you read as credible versus auditioning for approval. This sheet is an **internal filter**: not line-by-line theatre, not a slick exam answer, not self-promotion dressed as humility.
+In formal, evaluative, or court-adjacent settings, someone may ask what you are doing to work on yourself, stay stable, or be a better parent. How you answer this matters more than most people realise.
 
-You keep three bearings short:
+The instinct is to list things — apps, courses, books, coaches, frameworks. This reads as performance. It sounds like someone auditioning rather than someone who is actually grounded. Evaluators notice this.
 
-1. **What** you actually do toward stability in roles that matter (especially around a child when that applies).
-2. **How** it shows—calmer replies, clearer boundaries, fewer escalations—without unloading apps, coaches, acronyms, or your full reading stack.
-3. **Why** it serves the dependent or stakeholder context (child first when that is the room), **not** why you deserve to win a dispute.
+The right answer is short, behaviour-focused, and centred on how it helps you show up for the people who depend on you — especially children. No catalogue, no jargon, no self-promotion dressed up as humility.
 
-**Evaluator-facing**, **clinical**, and **court-oriented** channels shift tone slightly; shared rule stays: **compact, parental relevance, no backstage tour.**
+## When to use this
 
-See also **[Two registers — private vs outward](02-two-registers-internal-speech-vs-shareable.md)**.
+- You are asked in a formal or evaluative setting about your self-work or personal development
+- You are preparing for a custody evaluation, mediation, or any institutional review
+- You want to practise what you would actually say if asked this question
 
-## Story / lens
+## How to do it
 
-The persuasive unit remains **observable caregiving behaviour**, not rhetoric about your journey. Formal support (counselling, mediation, supervised services) deserves **accurate short labels only**—no dramatic chronology nobody asked for. When unsure whether to elaborate, **shorter beats clever**: one truthful general sentence, or only what is plainly verifiable and relevant.
+**Keep it to one answer, not a list.**
+Pick the one thing that is most true and most relevant to being a steady parent or dependable person. Say that.
 
-### Anchors you may weave sparingly
+**Make it behaviour-focused.**
+Not "I've been learning about emotional regulation" — but "I'm working on staying calmer when things get tense, especially around the kids."
 
-- **Parent-role aim:** clearer communication around conflict involving the child; **adult discord carried away from them** where reality allows; steadier tone; routines that are doable, not proclaimed perfection.
-- **Why it matters:** the child gains someone **predictable enough to trust**, not proof you are morally right about the dispute.
-- **Formal support:** if it exists and matches documentation—short accurate label only.
-- **Exercise / movement:** optional **single** temperate line when it genuinely supports stress stability—sleep and energy, not trophy talk.
-- **Weight / intimate health:** optional **only** when already on the agenda—otherwise silence usually wins.
-- **Breathing / short regulation:** grounded tone; skip spiritual branding if the room hears it as image-craft.
-- **Instead of jargon:** say **calmer wording under pressure**, **clearer framing**, **reading what questions are asking**—no packaged brand names.
-- **Communication as substance:** clearer requests, slower escalation, appropriate tone—not a bibliography.
+**Centre it on the child or dependent.**
+The evaluator wants to know what this means for the people who depend on you. Not what it means for your personal growth.
 
-## One-sentence bearings (adapt your words)
+**Say only what is true.**
+Do not claim practices you do not have. Do not add things to make the list sound more serious.
 
-Shapes only—omit anything untrue:
+**What to leave out:**
+- Apps and digital tools
+- Course completions or certificates
+- Books you have read
+- Therapy terminology or brand names
+- Anything that sounds like "I have a system"
+- Long personal history nobody asked for
 
-- “I push to stay calmer and clearer under pressure—especially whenever something touches the kids.”
-- “I try to carry adult clash away from the children and keep rhythm and wording steadier.”
-- “When stress ramps up I’m working toward shorter replies and firmer footing so I’m more reliable.”
+## Five example answers
 
-## Five compact answers to “What are you doing for yourself?”
+Pick the one that fits your situation and adapt it to your own words. Do not read all five aloud.
 
-Pick **one** line suited to the room—not a choral read-through:
+1. "I'm working on staying calmer and more consistent under pressure — especially when something involves the kids."
+2. "I try to keep adult conflict away from the children and keep our routines steady."
+3. "When things get stressful I'm practising shorter, clearer responses so I'm more reliable for them."
+4. "I'm focused on what the kids actually need from me day to day — predictability and a calm tone."
+5. "I do some physical activity to stay even — it helps me show up more steadily as a parent."
 
-1. “I’m practising calmer, more consistent wording in anything that surrounds the kids—particularly when stakes spike.”
-2. “Keeping kids out of friction between adults matters to me—I watch tone and keep routines realistic.”
-3. “Under strain I practise shorter clearer answers—so I’m steadier support around them.”
-4. “I’m sharpening what each question expects from me—and keeping my escalation low.” *(Only if the context already tolerates analytic language.)*
-5. Movement line—only if true: physical activity anchors my energy levels; wording work stays centred on parenting calm.
+## The short rule
 
-## What to omit (common credibility leaks)
+If you are stuck, ask yourself: is this answer true, relevant to the child, and free of self-promotion? If yes, say it. If not, cut it.
 
-- **Tool catalogues:** forums, habit apps, sprawling webinars paraded like credentials.
-- **Generative-chat confessional sessions** spun as substitutes for appointed counsel/specialists on case facts—never.
-- **Manifest-reading lists**, module-completion flex, influencer grammar that reads like marketing—not stability evidence out loud.
-- **Buzz labels** that sound tactical-combat-coded—prefer plain behavioural effects (“calmer phrasing”).
-- **Weight as vanity plot** unrelated to medically relevant threads.
-- **Sport swagger** unrelated to stamina for caregiving—skip unless asked.
-- **Long confessional autobiography** if nobody asked.
-- **Validation fishing** from anonymous panels instead of professional channels.
-- **Self-help identity theatre** (“deep work,” “systems,” “methodology”)—swap for **calm, concrete, child-forward phrasing.**
+## Connects to
 
-### Short rule when stuck
-
-True enough, parent-relevant, supports the child **today**—no catalogue, no cleverness contest, no making self-improvement the headline story.
-
-## Naturalness under observation
-
-Evaluators often care whether you **know the child as a person**—interests, ordinary time, small warmth without slogans. One **real** mini-story (situation → one feeling word → what you did → what the child needed), **under ~30–45 seconds**, then stop—no victory-lap tone; no “always perfect.” See **[Measurable stability and caregiving signals](03-measurable-stability-and-caregiving-signals-appendix.md)**.
-
-## Moves
-
-**Low-frequency voice check (optional):** at most twice weekly, record two variants—**stakeholder-safe** short line vs richer **trusted-friend** wording—and notice if the wider version adds recruiting or flex DNA.
-
-**Ban-list rehearsal:** name channels that tempt identity flex (assistant stacks, course receipts, meme therapy). Pair each temptation with **one factual effect sentence**: “fewer sarcastic pings,” “I cut threads before midnight escalation.”
-
-**Self-scan:** would a sceptical outsider still hear **factual stabilisation**—or stage presence?
+- [Two registers — private vs shareable](02-two-registers-internal-speech-vs-shareable.md)
+- [Measurable stability signals](03-measurable-stability-and-caregiving-signals-appendix.md)

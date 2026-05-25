@@ -1,23 +1,38 @@
-# Movement and nutrition — simple levers under stress
+# Movement and food — simple basics that affect how you handle stress
 
-## What this settles
+## What this is
 
-Behaviour under siege is partly **engineering**: movement and nourishment move nervous-system bandwidth more reliably than eloquence when reservoirs are drained. This sheet avoids ideology—only **minimal durable levers**.
+When you are under sustained stress, how you move, eat, and hydrate directly affects the quality of your thinking and your ability to stay even-tempered. This is not ideology or biohacking. It is a simple acknowledgment that your brain runs on a body, and a depleted body makes everything harder.
 
-## Story / lens
+This file sets a realistic floor — the minimum habits that are actually worth keeping — rather than an ambitious programme that falls apart in a difficult week.
 
-Nobody needs new identity as “biohacker”; you need repeatable defaults so **[communication](../05-communication-under-pressure/)** decisions are not made on blood-sugar fumes alone. Honour medical constraints individually; clinicians win arguments this sheet cannot adjudicate.
+## When to use this
 
-## Moves
+- You are in a high-pressure period and notice your responses getting worse
+- You are making decisions on an empty stomach or after hours without moving
+- You want to build a simple baseline that holds up even in hard weeks
 
-Define **movement floor** honestly (walk block count, stretching micro, stairs policy) + weekly completion hash marks—truth beats ambition.
+## How to do it
 
-Hydration + predictable meal timing checkpoints when history shows hanger-driven escalation.
+**Step 1 — Set an honest movement floor.**
 
-Prep **three grab meals** lawful for your constraints frozen or staple—decision avoidance when depleted.
+Not a fitness goal. A floor — the minimum you will actually do on a bad day. Examples: walk one block, take the stairs, do five minutes of stretching before bed. Be honest about what you will actually keep. Write it down. Track it with a simple hash mark (did it / didn't do it).
 
-Treat alcohol / sedative bargains under stress honestly: behavioural cost note line only—non-preach.
+Truth is more useful than ambition here.
 
-## Neighbours
+**Step 2 — Set hydration and meal timing checkpoints.**
 
-[Sleep guardrails](03-sleep-protection-fatigue-and-recovery-signals.md) · [Energy budget & overload](05-energy-budget-overload-scheduling-recovery.md)
+If you have a history of escalating arguments when you have not eaten — take that seriously. Set a few fixed points in the day where you drink water and eat something. They do not need to be elaborate. They need to happen.
+
+**Step 3 — Prepare three default meals.**
+
+When you are depleted, decision-making about food collapses. Have three simple meals you can make or grab without thinking — something frozen, something easy to cook, something you can buy nearby. Remove the decision when your capacity is lowest.
+
+**Step 4 — Be honest about alcohol under stress.**
+
+This file does not lecture. But if alcohol is a regular response to stress, note honestly what it costs behaviourally — not in general terms, but for you specifically. One line, no sermon.
+
+## Connects to
+
+- [Sleep and fatigue signals](03-sleep-protection-fatigue-and-recovery-signals.md)
+- [Decision fatigue and energy budgeting](05-energy-budget-overload-scheduling-recovery.md)

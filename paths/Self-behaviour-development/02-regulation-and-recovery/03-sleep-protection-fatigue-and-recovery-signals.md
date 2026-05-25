@@ -1,27 +1,43 @@
-# Sleep protection — fatigue awareness and recovery signals
+# Sleep and fatigue — how they affect your behaviour
 
-## What this settles
+## What this is
 
-Treat **sleep and fatigue** as behaviour inputs, not morality metrics. Chronic depletion bends tone, narrows empathy, exaggerates catastrophe reading, and makes **[distortion slips](../04-cognitive-distortion-literacy/)** statistically likely—before “character” enters the chat.
+Poor sleep does not just make you tired. It narrows your empathy, makes threats feel bigger than they are, sharpens your tone, and makes you more likely to misread situations. This happens before you consciously notice it.
 
-Recovery starts with **protection**: fewer predictable self-sabotage nights, clearer early-warning signals.
+This file is not about sleep hygiene ideology. It is about treating sleep and fatigue as inputs that directly affect how you behave — the same way fuel affects an engine. Know your signals. Set a few non-negotiable habits. Track the trend.
 
-## Story / lens
+## When to use this
 
-Institutional and relational arenas punish **wired-reactive versions** of you even when your reasons for sleeplessness are sympathetic. Labels like “fine” deny information; behavioural guardrails honour information without melodrama.
+- You are in a difficult or high-stakes period and need your behaviour to hold up
+- You notice your tone getting sharper or your thinking getting more catastrophic
+- You keep saying "I blew it again" at the end of difficult days
+- A heavy week is coming and you want to prepare
 
-## Moves
+## How to do it
 
-Inventory **seven fatigue tells** uniquely yours (verbal snapping, skim-reading, doom loops, sugary autopilot)—post visibly until automatic.
+**Step 1 — Know your personal fatigue signals.**
 
-Establish **three non-negotiable sleep hygiene knobs** realistic for your custody/work reality (timing anchor, phone boundary, caffeine cutoff—pick what you will keep).
+Write down seven things that happen to you specifically when you are sleep-depleted or running on empty. Generic examples to help you find yours: you snap at small things, you skim-read important messages, you spiral into worst-case thinking, you reach for sugar or caffeine compulsively, you feel vaguely angry at nothing specific.
 
-Weekly one line calendar note: average sleep trajectory (↑ / → / ↓)—no sermon, trend only.
+Post this list somewhere visible. The goal is to catch it early — before the behaviour is already happening.
 
-Pair repeated “I blew it again” bedtime shame with factual log: hours slept × stress spikes × next-day conflict risk—witness table not verdict.
+**Step 2 — Set three sleep habits you will actually keep.**
 
-Heavy week incoming → pre-place **recovery pad** on calendar smaller than fantasies bigger than zero.
+Not an ideal sleep protocol. Three realistic things you will do consistently given your actual life. Examples: a consistent wake time, no phone for 30 minutes before bed, no caffeine after 2pm. Choose what you will keep, not what sounds best.
 
-## Neighbours
+**Step 3 — Track the trend, not the number.**
 
-[Grounding capsule](01-grounding-micro-label-emotion.md) · [Movement & nutrition under strain](04-movement-nutrition-under-stress.md)
+Once a week, write one line in your calendar or notes: is your sleep trending up, flat, or down? That is all. No detailed logging, no self-judgment. Just the direction.
+
+**Step 4 — Log honestly when it correlates with conflict.**
+
+When you have a bad interaction or a difficult day, note alongside it: how many hours did you sleep? Was the previous week high-stress? This builds an honest picture over time — a witness table, not a verdict on your character.
+
+**Step 5 — Plan recovery before a hard week.**
+
+When you know something demanding is coming, put a recovery block on your calendar in advance. It does not need to be large. Even 45 minutes of genuine rest counts. The point is to do it intentionally rather than collapsing at the end.
+
+## Connects to
+
+- [Calm your body before you speak](01-grounding-micro-label-emotion.md)
+- [Movement and nutrition under stress](04-movement-nutrition-under-stress.md)

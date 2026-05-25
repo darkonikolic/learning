@@ -1,21 +1,47 @@
-# Professional relationships under stacked stress
+# Staying professional when private stress and work overlap
 
-## What this settles
+## What this is
 
-Hold **steady professional conduct** while private turbulence and asymmetric workplace risk coexist—leaning on **trace discipline**, **narrow channels**, and **task clarity** instead of improvised dominance theatre.
+When you are under serious private stress — legal proceedings, family conflict, major life disruption — it leaks into your work life whether you intend it to or not. The pressure to vent, to perform, to win small conversational battles at the office goes up. The cost of those small wins is usually higher than it looks.
 
-## Story / lens
+This file is about staying professionally functional when everything else is heavy. The tools are simple: stay calm in meetings, keep written records, avoid sharing personal drama at work, and use official channels for anything that needs escalating.
 
-Classic attractor: private overload + probing office dynamics + lopsided downside (income trajectory, reputational dossiers touching other processes). Winning the conversational trophy often costs more than it returns; the metric shifts to **calm channels**, ticketed written trails, and refusing motivational autobiographies for colleagues auditioning gossip.
+## When to use this
 
-After volatile meetings, draft **five-line factual bullets** first (*facts • commitments • delegated • timeline owners*) **before** any emotional appendix—ordering keeps artefacts legible weeks later.
+- When private stress is noticeably affecting how you show up at work
+- Before any meeting where emotions are likely to run high
+- When you notice you are sharing more personal information with colleagues than is wise
+- After any meeting that went badly or felt volatile
 
-If overload is mostly logistical, pair refusal language with **[operational stance](../01-operational-stance/)** pacing and **[audiences / channels](../07-audiences-channels-boundaries/)** routing; escalate through HR/policy paths aligned with your locality (non-specific legal advice here).
+## How to do it
 
-## Moves
+**In meetings:**
+Stay calm. If something provokes you, do not respond in the moment. Your goal is to be unremarkable — steady, factual, forgettable in the best sense.
 
-Harvest **five** concrete workplace behaviours to rotate weekdays—deferral wording, stakeholder map edits, restrained reputation habits, documentation triggers closing loops without CC theatre.
+**Keep written records:**
+After any important conversation or meeting, write five short factual bullet points within a few minutes of it ending:
+- What happened
+- What was decided
+- What was committed to
+- Who is doing what
+- The timeline
 
-Rough meeting closes → factual recap within minutes wherever appropriate—process emotion on a safer channel consciously.
+Do this before processing how you feel about it. The factual record needs to be written while it is fresh. The emotional processing can wait.
 
-Across a deliberate month-long watch (if reactive “reply-all adrenaline” historically leaked), visibly trend reactive broadcast downward.
+**Do not share personal drama with colleagues:**
+Not even with people you trust at work. The workplace is not the right container for it, and anything shared informally can travel in ways you did not intend.
+
+**Use official channels for escalation:**
+If something needs to be raised formally, use HR, your manager, or whatever official process applies. Do not escalate through side conversations, group chats, or informal alliances.
+
+**Reply-all adrenaline:**
+If you have a history of sending reactive broadcast messages when activated, watch that specifically. The impulse to CC everyone, reply-all, or escalate in writing when emotional is one of the most costly patterns in professional settings. Trend it down deliberately over a month.
+
+## Example
+
+A meeting turns hostile and you leave feeling activated. Before you do anything else — before you call someone to vent, before you send a follow-up email — write five factual bullet points about what happened. Then wait. Process the emotion later and on a safer channel.
+
+## Connects to
+
+- `../01-operational-stance/` — pacing and stance under pressure
+- `../07-audiences-channels-boundaries/` — choosing the right channel for the right message
