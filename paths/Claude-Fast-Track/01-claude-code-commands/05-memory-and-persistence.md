@@ -10,7 +10,7 @@ Claude Code has five distinct memory layers. Mixing them up is one of the most c
 | CLAUDE.md (project) | You | Yes — reloaded each session | Project instructions, conventions, constraints |
 | ~/.claude/CLAUDE.md | You | Yes — reloaded each session | Personal preferences across all projects |
 | Auto-memory | Claude | Yes — stored in ~/.claude/projects/ | Claude's learned facts about you and your projects |
-| GSD STATE.md | GSD + you | Yes — file on disk | Workflow state; last known good position |
+| STATE.md | You | Yes — file on disk | Workflow state; last known good position |
 
 **The most important rule:** decisions that matter must land in a file. Anything that exists only in the chat scrollback is gone after `/compact` or `/clear`.
 
@@ -147,9 +147,9 @@ Auto-memory is useful for personal preferences (communication style, review dept
 
 ---
 
-## GSD STATE.md — workflow memory
+## STATE.md — workflow memory
 
-STATE.md is the GSD artifact that tracks workflow state across sessions. It is not auto-generated in real time — GSD skills update it at phase boundaries, and you update it manually when a session ends unexpectedly.
+STATE.md is the artifact that tracks workflow state across sessions. Update it at phase boundaries, and update it manually when a session ends unexpectedly.
 
 A well-maintained STATE.md:
 ```yaml

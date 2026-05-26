@@ -4,7 +4,7 @@
 
 After completing this track you can:
 
-- Run a complete GSD loop (discuss → plan → execute → verify → ship) on a real project without referencing documentation mid-loop.
+- Run a complete workflow loop (discuss → plan → execute → verify → ship) on a real project without referencing documentation mid-loop.
 - Write a SPEC.md that constrains implementation scope before any code is written.
 - Configure Claude Code for a project: CLAUDE.md, settings.json, permissions, at least one hook.
 - Use /plan mode deliberately, not by accident.
@@ -48,13 +48,12 @@ task-api/
     PROJECT.md          # vision, stack, constraints
     ROADMAP.md          # phase list with status
     STATE.md            # last known workflow state
-    config.json         # GSD configuration
     milestones/
       v0.1/
         SPEC.md         # what the API does, what it does not
         PLAN.md         # executable task list with verification steps
         REQUIREMENTS.md # REQ-001 through REQ-00N
-        SECURITY.md     # /gsd:secure-phase output
+        SECURITY.md     # security verification output
   .claude/
     settings.json       # permissions, hooks
     agents/
@@ -95,31 +94,27 @@ When you return to a topic in real work, come back to the relevant file as refer
 
 | Module | Directory | Delivers |
 |--------|-----------|---------|
-| 00 | `00-orientation/` | Why GSD exists; why each artifact; mental model before tools |
+| 00 | `00-orientation/` | Why each artifact; mental model before tools |
 | 01 | `01-claude-code-commands/` | All slash commands, agents, MCP, permissions, memory — full reference |
 | 02 | `02-claude-code-workflow/` | Session ownership, plan-to-execute flow, context, tokens, iteration |
 | 03 | `03-prompt-layering-and-context/` | Instruction hierarchy, layering in practice, context engineering |
 | 04 | `04-claude-code-configuration/` | CLAUDE.md, settings.json, MCP config, rules, skills authoring |
-| 05 | `05-gsd-commands/` | All GSD commands — full reference with flags and decision tables |
-| 06 | `06-gsd-workflow/` | discuss→plan→execute→verify→ship; mid-flight changes; troubleshooting |
-| 07 | `07-gsd-configuration/` | .planning/ layout, PROJECT.md, ROADMAP.md, STATE.md, config.json |
-| 08 | `08-agent-orchestration-and-governance/` | Orchestration vs choreography, HITL, DAG, trust, observability — real terminology |
-| 09 | `09-specification-first/` | SPEC template, acceptance criteria, NFR, boundaries, drift and repair |
-| 10 | `10-spec-runtime/` | Executable specs, drift detection, audit procedure |
-| 11 | `11-graduation-project/` | End-to-end: Phases 2 and 3 with full GSD loop |
-| 12 | `12-sandbox-safe-execution/` | Worktree isolation, Docker sandbox, secret isolation, permissions |
-| 13 | `13-security-and-secrets/` | Secrets lifecycle, what not to show Claude, git security, AI tool security |
-| 14 | `14-test-engineering/` | Spec-backed testing, regression ownership, failure characterization, test triage |
-| 15 | `15-diff-refactor/` | Refactor template, incremental sequencing, rollback discipline |
-| 16 | `16-agent-reliability/` | Execute-phase failures, confidence scoring, hallucination recovery, retry bounds |
-| 17 | `17-spec-partitioning/` | Splitting SPECs across ownership domains, dependency graph, cross-SPEC consistency |
-| 18 | `18-context-compression/` | Context hierarchy, protected verbatim zones, checkpoint packets, /compact discipline |
-| 19 | `19-rule-conflicts/` | Priority ladder, conflict resolution, RULE_PRIORITY.md, time-bounded exceptions |
-| 20 | `20-cost-engineering/` | Token vs context budgets, cost per workflow stage, parallelization economics |
-| 21 | `21-gsd-project-lifecycle/` | /gsd:new-project flow, milestone lifecycle, bootstrapping from scratch |
-| 22 | `22-model-selection/` | Model tiers, decision rules, config.json model assignments |
+| 05 | `05-agent-orchestration-and-governance/` | Orchestration vs choreography, HITL, DAG, trust, observability — real terminology |
+| 06 | `06-specification-first/` | SPEC template, acceptance criteria, NFR, boundaries, drift and repair |
+| 07 | `07-spec-runtime/` | Executable specs, drift detection, audit procedure |
+| 08 | `08-graduation-project/` | End-to-end: Phases 2 and 3 with full workflow |
+| 09 | `09-sandbox-safe-execution/` | Worktree isolation, Docker sandbox, secret isolation, permissions |
+| 10 | `10-security-and-secrets/` | Secrets lifecycle, what not to show Claude, git security, AI tool security |
+| 11 | `11-test-engineering/` | Spec-backed testing, regression ownership, failure characterization, test triage |
+| 12 | `12-diff-refactor/` | Refactor template, incremental sequencing, rollback discipline |
+| 13 | `13-agent-reliability/` | Execute-phase failures, confidence scoring, hallucination recovery, retry bounds |
+| 14 | `14-spec-partitioning/` | Splitting SPECs across ownership domains, dependency graph, cross-SPEC consistency |
+| 15 | `15-context-compression/` | Context hierarchy, protected verbatim zones, checkpoint packets, /compact discipline |
+| 16 | `16-rule-conflicts/` | Priority ladder, conflict resolution, RULE_PRIORITY.md, time-bounded exceptions |
+| 17 | `17-cost-engineering/` | Token vs context budgets, cost per workflow stage, parallelization economics |
+| 18 | `18-model-selection/` | Model tiers, decision rules, model assignments |
 
-**Reading order:** Modules 00–04 are Claude Code fundamentals. Modules 05–07 are GSD. Module 08 is agent orchestration and governance — read after modules 05–07 so PLAN.md wave structure is already familiar. Modules 09–10 are specification-driven development. Module 11 is graduation. Modules 12–13 are safety and security — read anytime after module 04. Modules 14–20 are operational depth — read after graduation when working on real projects. Module 21 covers GSD project lifecycle — read before starting any real project, after module 07. Module 22 covers model selection — read after module 07.
+**Reading order:** Modules 00–04 are Claude Code fundamentals. Module 05 is agent orchestration and governance — read after module 04 so PLAN.md wave structure is already familiar. Modules 06–07 are specification-driven development. Module 08 is graduation. Modules 09–10 are safety and security — read anytime after module 04. Modules 11–17 are operational depth — read after graduation when working on real projects. Module 18 covers model selection — read after module 07.
 
 ---
 
@@ -130,9 +125,8 @@ You need:
 - Claude Code installed: `npm install -g @anthropic-ai/claude-code` (or verify with `claude --version`)
 - Go installed: `go version` should show 1.21+
 - Git initialized in your working directory
-- GSD installed: `npx get-shit-done-cc@latest` — verify with `/gsd-help` inside a Claude Code session
 
-If any of these fail, fix them before module 01. The labs assume all four are present.
+If any of these fail, fix them before module 01. The labs assume all three are present.
 
 ---
 
@@ -140,10 +134,9 @@ If any of these fail, fix them before module 01. The labs assume all four are pr
 
 - [ ] Claude Code installed and `claude --version` returns a version string.
 - [ ] Go 1.21+ installed and `go version` confirms.
-- [ ] GSD installed and `/gsd-help` works inside a Claude Code session.
 - [ ] I understand that the toy project (task-api) uses in-memory storage — no database to set up.
 - [ ] I understand that task-api builds across all modules — do not skip labs.
 - [ ] I understand that labs are not optional — they produce the artifact.
 - [ ] I have 20–40 minutes available to give each module proper attention.
 - [ ] I know what a `.planning/` directory is meant to contain (at least at the file-name level).
-- [ ] I can name the five GSD workflow steps: discuss → plan → execute → verify → ship.
+- [ ] I can name the five workflow steps: discuss → plan → execute → verify → ship.

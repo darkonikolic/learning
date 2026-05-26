@@ -54,11 +54,11 @@ Key decisions in this file:
 
 ## When Claude spawns agents automatically vs when you control it
 
-**Automatic:** GSD skills like `/gsd-execute-phase` spawn subagents per wave internally. `/batch` decomposes work and spawns agents in parallel worktrees. `/code-review` invokes a reviewer agent internally.
+**Automatic:** The execute-phase workflow spawns subagents per wave internally. `/batch` decomposes work and spawns agents in parallel worktrees. `/code-review` invokes a reviewer agent internally.
 
 **Manual:** You invoke an agent explicitly by prompting "use the code-reviewer agent on the current diff" or by configuring the `agent` field in settings for a session slice.
 
-For the GSD loop, most agent spawning is handled by GSD skills. Your job is to configure the agents those skills use, and to verify their output.
+For the structured workflow loop, you configure the agents used at each phase and verify their output.
 
 ---
 
