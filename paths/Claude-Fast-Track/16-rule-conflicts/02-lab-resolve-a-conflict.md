@@ -140,7 +140,7 @@ Write this as a time-bounded exception **scoped to Phase 4+** — the phase wher
 ## EXCEPTION: stdlib-only.md relaxed for id-generation (Phase 4+ only)
 
 Overridden rule: .claude/rules/stdlib-only.md
-Permitted by: PROJECT.md Phase 4 scope — production-readiness milestone permits audited packages
+Permitted by: `docs/project.md` Phase 4 scope — production-readiness milestone permits audited packages
 Scope: internal/id/ package only. No other packages may be added without a new exception record.
 Reason: at production scale, collision probability and URL-safety requirements exceed what
   a naive stdlib implementation provides without significant custom code.
@@ -202,12 +202,12 @@ Create `.claude/rules/scaffolding-order.md` with this content:
 # scaffolding-order
 
 For scaffolding tasks — creating new files with stub functions that will be
-filled in during execute-phase — write the stub first, tests after.
+filled in during execute — write the stub first, tests after.
 
-Rationale: plan-phase generates stubs so execute-phase can fill them.
-Writing tests before stubs exist causes plan-phase to generate malformed plans.
+Rationale: plan generates stubs so execute can fill them.
+Writing tests before stubs exist causes plan to generate malformed plans.
 
-Applies to: plan-phase scaffolding only. Does not apply during execute-phase.
+Applies to: plan scaffolding only. Does not apply during execute.
 ```
 
 Your global CLAUDE.md (`~/.claude/CLAUDE.md`) should already contain a TDD instruction. If it does not, you can simulate it by creating `.claude/rules/global-tdd.md` with:
@@ -289,7 +289,7 @@ Does Claude:
 - Follow the instruction but flag the conflict explicitly?
 - Refuse the instruction because of test-coverage.md?
 
-The expected behavior: Claude follows your instruction (you are the human) but flags the conflict: "Note: `test-coverage.md` requires tests before this task is complete. Proceeding without tests means STATE.md will record this task as incomplete."
+The expected behavior: Claude follows your instruction (you are the human) but flags the conflict: "Note: `test-coverage.md` requires tests before this task is complete. Proceeding without tests means `docs/state.md` will record this task as incomplete."
 
 If Claude follows the instruction silently, you have found a gap: the rule file is not being read or not being honored. Check that `.claude/rules/test-coverage.md` is at the correct path and that CLAUDE.md loads the rules directory.
 
@@ -386,7 +386,7 @@ Recorded by: <author> on <YYYY-MM-DD>
 - [ ] I created `.claude/rules/scaffolding-order.md` with the full rule content.
 - [ ] I wrote the conflict record with both rules and the exact contradiction.
 - [ ] I classified the conflict type correctly (Type 3 — scoped decision).
-- [ ] I explained where the loser rule (global TDD) still applies (execute-phase, not scaffolding).
+- [ ] I explained where the loser rule (global TDD) still applies (execute, not scaffolding).
 - [ ] I added the conflict resolution entry to `RULE_PRIORITY.md`.
 
 **Exercise 3 — Turn instruction vs project rule:**

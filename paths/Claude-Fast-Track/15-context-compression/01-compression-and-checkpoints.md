@@ -20,7 +20,7 @@ Wrong tier mistakes:
 
 L1 — "Implement Phase 1: CRUD task store (task-api). Success = AC-01 through AC-05 passing."
 
-L2 — The SPEC.md section for Phase 1: field list, ID type (integer, auto-increment), POST /tasks contract, error shapes.
+L2 — The Phase 1 section in `docs/specs/` (or phase plan): field list, ID type (integer, auto-increment), POST /tasks contract, error shapes.
 
 L3 — `internal/store/store.go` lines 1–40: `Task` struct and `Store` interface only. Not `internal/handlers/`.
 
@@ -62,7 +62,7 @@ One paraphrase, three potential drift points. In a CRUD API that is three failin
 A checkpoint packet is a structured context reset written at a stable milestone. It replaces the accumulated session narrative as the authoritative state of truth.
 
 **Write one when:**
-- An execute wave completes (all tasks in a PLAN.md wave are done and verified).
+- An execute wave completes (all tasks in a plan wave are done and verified).
 - Before running `/compact` — the packet survives; the chat does not.
 - Before handing off to another session or another agent.
 - When context has grown past 60% full and you are switching sub-problems.
@@ -91,7 +91,7 @@ Implement Phase 2: PATCH /tasks/:id (partial update). Load SPEC section 2 before
 - internal/store/store.go — Task struct, Store interface, in-memory implementation
 - internal/handlers/tasks.go — POST and GET handlers
 - main.go — router setup (chi)
-- SPEC.md — ground truth for all phases
+- Feature SPECs in `docs/specs/` — ground truth per endpoint
 ```
 
 **What makes a packet valid:**
@@ -112,15 +112,15 @@ Context that is true at session start can become false by session end. Three pat
 
 **3. Status drift** — AC-03 was failing at the start of the session. You fixed it. But context still contains the failure log. Claude treats it as still broken and attempts a second fix that reverts the first.
 
-### How STATE.md reduces stale context risk
+### How `docs/state.md` reduces stale context risk
 
-STATE.md is a checkpoint packet on disk. Update it after each execute wave. At session start you load STATE.md as L2 context — it reflects the current verified state, not what was true yesterday.
+`docs/state.md` is a checkpoint packet on disk. Update it after each execute wave. At session start you load it as L2 context — it reflects the current verified state, not what was true yesterday.
 
-Without STATE.md: you reconstruct current state from git log, chat history, and memory. All three are stale context risks.
+Without `docs/state.md`: you reconstruct current state from git log, chat history, and memory. All three are stale context risks.
 
-With STATE.md: one file, one load. The checkpoint is always at the most recent verified milestone.
+With `docs/state.md`: one file, one load. The checkpoint is always at the most recent verified milestone.
 
-**Still your responsibility:** STATE.md does not capture decisions made in chat. Open decisions — ID type, error shape choices, constraint interpretations — belong in your checkpoint packet or in SPEC.md. STATE.md tracks completion status, not design rationale.
+**Still your responsibility:** `docs/state.md` does not capture decisions made in chat. Open decisions — ID type, error shape choices, constraint interpretations — belong in your checkpoint packet or in the feature SPEC. It tracks completion status, not design rationale.
 
 ---
 
@@ -142,7 +142,7 @@ After `/compact`, before resuming execution work, ask:
 What does AC-02 require exactly — status code and response body?
 ```
 
-If the answer is "400 with an error message," that is paraphrase. Stop. Reload SPEC.md before continuing. Running an execute task on degraded SPEC context produces drift.
+If the answer is "400 with an error message," that is paraphrase. Stop. Reload the relevant feature SPEC before continuing. Running an execute task on degraded SPEC context produces drift.
 
 If the answer is "400 with body `{\"error\":\"title is required\"}`," the checkpoint is intact.
 
@@ -152,7 +152,7 @@ If the answer is "400 with body `{\"error\":\"title is required\"}`," the checkp
 
 For task-api, the full pipeline at the end of Phase 1 looks like this:
 
-**1. Retrieve** — identify what is currently in context: session chat, SPEC.md excerpt, store.go, handlers/tasks.go, test output.
+**1. Retrieve** — identify what is currently in context: session chat, feature SPEC excerpt, store.go, handlers/tasks.go, test output.
 
 **2. List protected zones** — before touching anything, write out: AC-01 through AC-05 exact text, field names (`title`, `status`, `created_at`, `id`), error bodies, constraint values (title max 200, status enum).
 
@@ -182,4 +182,4 @@ For task-api, the full pipeline at the end of Phase 1 looks like this:
 - [ ] I loaded the checkpoint packet (not session history) to resume the session after `/compact`.
 - [ ] I ran the three-question compression validation before resuming execution work.
 - [ ] My open decisions in the checkpoint are explicit — not references to "what we decided earlier."
-- [ ] I know that STATE.md tracks completion, not design decisions — those go in the checkpoint.
+- [ ] I know that `docs/state.md` tracks completion, not design decisions — those go in the checkpoint.

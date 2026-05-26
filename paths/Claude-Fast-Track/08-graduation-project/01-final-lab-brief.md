@@ -10,9 +10,9 @@ The graduation checklist at the end is the definition of done. Complete every it
 
 Ten modules of structured guidance end here. The following templates give you the skeleton — you fill in the substance.
 
-### CONTEXT.md template for Phase 2 (GET /tasks)
+### Frame brief template for Phase 2 (GET /tasks)
 
-Create `.planning/phases/02-get-tasks/CONTEXT.md` with this as your starting point:
+Create `docs/plans/02-get-tasks-context.md` with this as your starting point:
 
 ```markdown
 ## Goal
@@ -46,13 +46,13 @@ Implement GET /tasks endpoint that returns [fill in — what does it return? in 
 - [fill in — any data shape constraints from Phase 1?]
 ```
 
-Do not proceed to plan-phase 2 until every `[fill in]` is replaced with a specific, verifiable claim.
+Do not proceed to plan step 2 until every `[fill in]` is replaced with a specific, verifiable claim.
 
 ---
 
-### CONTEXT.md template for Phase 3 (POST /tasks — PATCH /tasks/:id/complete)
+### Frame brief template for Phase 3 (PATCH /tasks/:id/complete)
 
-Create `.planning/phases/03-complete-task/CONTEXT.md`:
+Create `docs/plans/03-complete-task-context.md`:
 
 ```markdown
 ## Goal
@@ -90,21 +90,20 @@ Implement PATCH /tasks/:id/complete endpoint that [fill in — what does it do t
 
 ---
 
-### Command sequence reminder
+### Workflow sequence (native Claude Code)
 
 Run these in order. Do not skip ahead.
 
 ```
-1. discuss-phase N       — generates CONTEXT.md draft; you edit it
-2. plan-phase N          — generates PLAN.md; you review it before approving
-3. execute-phase N       — runs the plan; you verify after each wave
-4. verify-work           — UAT against acceptance criteria
-5. code-review           — quality gate before PR
-6. create PR branch      — clean branch without .planning/ noise
-7. ship                  — PR creation + final ship step
+1. Frame   — you write `docs/plans/<phase>-context.md`; feature SPEC in `docs/specs/`
+2. Plan    — `/plan` using the SPEC; save to `docs/plans/<phase>-plan.md`; you edit before execute
+3. Execute — bounded messages from the approved `docs/plans/<phase>-plan.md`; verify build/tests after each chunk
+4. Verify  — curl/go test against SPEC acceptance; update `docs/state.md`
+5. Review  — `/code-review` on the diff
+6. Merge   — branch, PR, you merge (deny list keeps `git push` manual)
 ```
 
-The sequence is not optional. Skipping discuss means CONTEXT.md is missing and plan-phase will ask for it anyway. Skipping verify-work means you are shipping without evidence. Skipping code-review means you are shipping without a quality gate.
+Skipping the frame brief means `/plan` guesses scope. Skipping verification means you merge without evidence.
 
 ---
 
@@ -113,11 +112,11 @@ The sequence is not optional. Skipping discuss means CONTEXT.md is missing and p
 Before beginning, confirm this state is true:
 
 - Phase 1 (POST /tasks) is implemented and compiles: `go build ./...` passes
-- `.planning/` directory exists with PROJECT.md, REQUIREMENTS.md, ROADMAP.md
+- `docs/` workflow files exist with `project.md`, `requirements.md`, `roadmap.md`
 - CLAUDE.md exists at project root with stack constraints
 - `.claude/settings.json` exists with allow/deny lists
 - `.claude/rules/` has at minimum `spec-before-code.md` and `stdlib-only.md`
-- REQ-001 status in REQUIREMENTS.md is "satisfied"
+- REQ-001 status in `docs/requirements.md` is "satisfied"
 
 If any of these is false, return to the relevant module and complete it before proceeding.
 
@@ -125,15 +124,15 @@ If any of these is false, return to the relevant module and complete it before p
 
 ## Phase 2: GET /tasks
 
-If you completed the module 09 lab (`09-specification-first/04-lab-write-spec-for-feature.md`), you already have `docs/specs/get-tasks.md`. Skip Step 1 and use it as-is.
+If you completed the module 06 lab (`06-specification-first/04-lab-write-spec-for-feature.md`), you already have `docs/specs/get-tasks.md`. Skip Step 1 and use it as-is.
 
-If you did not complete the module 09 lab: write `docs/specs/get-tasks.md` now using the full template from `09-specification-first/01-spec-template-and-acceptance.md` before doing anything else. The SPEC is the PRD for plan-phase. Plan-phase cannot run without it.
+If you did not complete the module 06 lab: write `docs/specs/get-tasks.md` now using the full template from `06-specification-first/01-spec-template-and-acceptance.md` before doing anything else. `/plan` cannot run without a SPEC on disk.
 
 ---
 
 ### Phase 2, Step 1: review and finalize SPEC
 
-Open `docs/specs/get-tasks.md`. Work through this checklist before running plan-phase:
+Open `docs/specs/get-tasks.md`. Work through this checklist before running plan step:
 
 **Problem section:**
 - Is it one sentence? Does it state what is missing and why it matters now?
@@ -165,23 +164,25 @@ Open `docs/specs/get-tasks.md`. Work through this checklist before running plan-
 **Rollback section:**
 - Is it filled? "Revert handler.go" is acceptable.
 
-If any section is incomplete or weak: fix it now. Do not run plan-phase against a weak SPEC.
+If any section is incomplete or weak: fix it now. Do not run plan step against a weak SPEC.
 
 ---
 
-### Phase 2, Step 2: run plan-phase
+### Phase 2, Step 2: plan with `/plan`
 
-Ask Claude to run plan-phase for Phase 2 using the SPEC as the PRD:
+Use `/plan` — do not execute yet. Point Claude at the on-disk SPEC and target PLAN path:
 
 ```
-Run plan-phase for Phase 2 using docs/specs/get-tasks.md as the PRD.
+/plan Phase 2 GET /tasks — plan only, no code yet.
+Read docs/specs/get-tasks.md and docs/plans/02-get-tasks-context.md.
+Write the plan to docs/plans/02-get-tasks-plan.md with concrete file-level tasks and dependency order.
 ```
 
-Claude reads the SPEC and produces a PLAN.md with a dependency graph (DAG) of implementation tasks.
+Review and edit `docs/plans/02-get-tasks-plan.md` before any implementation.
 
-**Review PLAN.md before approving:**
+**Review the phase plan before approving:**
 
-Open the generated PLAN.md. For each task, check:
+Open the generated plan file. For each task, check:
 
 | Question | Expected | If wrong |
 |----------|----------|---------|
@@ -191,34 +192,36 @@ Open the generated PLAN.md. For each task, check:
 | Does any task mention external packages? | No — stdlib only | Reject — violates SPEC constraint |
 | Are tests a separate task after implementation? | Yes | Flag — tests mixed with implementation is harder to verify |
 
-If PLAN.md is weak: ask for a revision. Use specific feedback:
+If the plan is weak: ask for a revision. Use specific feedback:
 
 ```
-Revise PLAN.md:
+Revise docs/plans/02-get-tasks-plan.md:
 - Task 1 must name the specific file: store/store.go
 - Task 3 must come before Task 4 (store.List() must exist before handler calls it)
 - Remove Task 5 (integration test for pagination — pagination is out of scope per SPEC)
 ```
 
-Do not proceed to execute with a PLAN.md that has vague task descriptions or wrong dependency order.
+Do not proceed to execute with a plan that has vague task descriptions or wrong dependency order.
 
-**Pre-execute checklist (apply before every execute-phase):**
+**Pre-execute checklist (apply before every execution step):**
 
-- [ ] SPEC exists on disk and is referenced in PLAN.md
-- [ ] PLAN.md has specific file names in every task
+- [ ] SPEC exists on disk and is referenced in the phase plan
+- [ ] Phase plan has specific file names in every task
 - [ ] Dependency order is correct (no task depends on a later task)
 - [ ] No external packages referenced
-- [ ] Out-of-scope behavior is not in any PLAN.md task
+- [ ] Out-of-scope behavior is not in any plan task
 - [ ] `go build ./...` passes before execute (implementation baseline is clean)
 
 ---
 
 ### Phase 2, Step 3: execute and build-verify
 
-Ask Claude to run execute-phase for Phase 2:
+Run bounded execution from the approved plan:
 
 ```
-Run execute-phase for Phase 2.
+Implement Phase 2 using docs/plans/02-get-tasks-plan.md.
+Execute tasks 1–N only as listed. Do not touch files outside the plan.
+Run go test ./... after handler/store changes.
 ```
 
 After execute completes:
@@ -247,7 +250,7 @@ go run main.go
 
 Run each verification command from the SPEC acceptance criteria. Record results.
 
-For the six criteria from the module 09 SPEC:
+For the six criteria from the module 06 SPEC:
 
 ```bash
 # Criterion 1: empty list
@@ -281,7 +284,7 @@ curl -sI localhost:8080/tasks | grep -i content-type
 
 Mark each PASS or FAIL.
 
-For any FAIL: apply the drift repair procedure from `09-specification-first/03-spec-drift-and-repair.md`. Decide which is wrong (code or SPEC). Fix the wrong party. Re-verify.
+For any FAIL: apply the drift repair procedure from `06-specification-first/03-spec-drift-and-repair.md`. Decide which is wrong (code or SPEC). Fix the wrong party. Re-verify.
 
 ---
 
@@ -297,11 +300,11 @@ Read REVIEW.md. Address any HIGH findings. Decide on MEDIUM findings — not all
 
 Create a clean PR branch:
 
-This creates a branch with only phase implementation commits (excludes .planning/ commits). Review the diff on that branch before merging.
+This creates a branch with only phase implementation commits (excludes docs-only workflow commits). Review the diff on that branch before merging.
 
-Update STATE.md for Phase 2: mark as completed.
+Update `docs/state.md` for Phase 2: mark as completed.
 
-Update REQUIREMENTS.md: REQ-002 status = satisfied.
+Update `docs/requirements.md`: REQ-002 status = satisfied.
 
 ---
 
@@ -393,7 +396,7 @@ store.CompleteTask() stays — additive change, no breaking effect on existing b
 
 ### Phase 3, Step 2: self-review the SPEC
 
-Before running plan-phase, audit your SPEC:
+Before running plan step, audit your SPEC:
 
 **Acceptance criterion audit:**
 
@@ -429,13 +432,15 @@ All pass. If any failed the audit, rewrite before proceeding.
 
 ---
 
-### Phase 3, Step 3: run plan-phase
+### Phase 3, Step 3: plan with `/plan`
 
 ```
-Run plan-phase for Phase 3 using docs/specs/complete-task.md as the PRD.
+/plan Phase 3 PATCH /tasks/:id/complete — plan only, no code yet.
+Read docs/specs/complete-task.md and docs/plans/03-complete-task-context.md.
+Write the plan to docs/plans/03-complete-task-plan.md with concrete file-level tasks and dependency order.
 ```
 
-Review PLAN.md for Phase 3:
+Review `docs/plans/03-complete-task-plan.md` for Phase 3:
 
 | Check | What to look for |
 |-------|-----------------|
@@ -454,14 +459,16 @@ Task 1: add CompleteTask(id string) (Task, error) to store/store.go
       → Task 4: write tests for CompleteTask behavior
 ```
 
-If the DAG has handler before store: reject PLAN.md, request revision with correct order.
+If the DAG has handler before store: reject the plan, request revision with correct order.
 
 ---
 
 ### Phase 3, Step 4: execute
 
 ```
-Run execute-phase for Phase 3.
+Implement Phase 3 using docs/plans/03-complete-task-plan.md.
+Execute tasks 1–N only as listed. Do not touch files outside the plan.
+Run go test ./... after store/handler changes.
 ```
 
 Post-execute build check:
@@ -563,9 +570,9 @@ Read REVIEW.md. Address HIGH findings.
 
 Create a clean PR branch and ship:
 
-Update STATE.md: Phase 3 completed.
-Update REQUIREMENTS.md: REQ-003 status = satisfied.
-Update ROADMAP.md: all three phases marked completed.
+Update `docs/state.md`: Phase 3 completed.
+Update `docs/requirements.md`: REQ-003 status = satisfied.
+Update `docs/roadmap.md`: all three phases marked completed.
 
 ---
 
@@ -585,11 +592,11 @@ Complete every item. If any fails, return to the module indicated and resolve it
 
 ---
 
-### Planning directory setup
+### docs/ setup
 
-- [ ] `.planning/PROJECT.md` exists with: project vision, 3 measurable goals, explicit non-goals
-- [ ] `.planning/REQUIREMENTS.md` exists with REQ-001, REQ-002, REQ-003 each having acceptance criteria
-- [ ] `.planning/ROADMAP.md` exists with all 3 phases listed
+- [ ] `docs/project.md` exists with: project vision, 3 measurable goals, explicit non-goals
+- [ ] `docs/requirements.md` exists with REQ-001, REQ-002, REQ-003 each having acceptance criteria
+- [ ] `docs/roadmap.md` exists with all 3 phases listed
 
 ---
 
@@ -599,18 +606,18 @@ Complete every item. If any fails, return to the module indicated and resolve it
 - [ ] SPEC has ≥5 binary acceptance criteria
 - [ ] Tradeoff section has ≥2 options with explicit decision
 - [ ] SPEC was on disk before any implementation message was sent
-- [ ] Plan-phase run with `docs/specs/get-tasks.md` as PRD
-- [ ] PLAN.md was reviewed: every task names specific files
+- [ ] `/plan` run with `docs/specs/get-tasks.md` and `docs/plans/02-get-tasks-context.md`; plan saved and reviewed
+- [ ] `docs/plans/02-get-tasks-plan.md` was reviewed: every task names specific files
 - [ ] Pre-execute checklist was applied before execute
-- [ ] Execute-phase 2 completed
+- [ ] Phase 2 execution completed (bounded PLAN tasks)
 - [ ] `go build ./...` passes after execute
 - [ ] `go test ./...` passes after execute
 - [ ] All acceptance criteria verified with specific commands
 - [ ] Results recorded: every criterion is PASS (or drift was resolved)
-- [ ] Verification artifact exists in .planning/
+- [ ] Verification notes exist in docs/ (e.g. docs/state.md or docs/verification/)
 - [ ] Code review run: REVIEW.md exists
-- [ ] STATE.md shows Phase 2 completed
-- [ ] REQ-002 in REQUIREMENTS.md: status = satisfied
+- [ ] `docs/state.md` shows Phase 2 completed
+- [ ] REQ-002 in `docs/requirements.md`: status = satisfied
 
 ---
 
@@ -621,9 +628,9 @@ Complete every item. If any fails, return to the module indicated and resolve it
 - [ ] Tradeoff section: ≥2 options, explicit decision with rationale for return-body vs 204
 - [ ] Constraint section: idempotency is a named constraint
 - [ ] SPEC was on disk before any implementation message was sent
-- [ ] Plan-phase 3 run with SPEC as PRD
-- [ ] PLAN.md reviewed: store task before handler task
-- [ ] Execute-phase 3 completed
+- [ ] `/plan` for phase 3 with SPEC + `docs/plans/03-complete-task-context.md`; plan reviewed
+- [ ] `docs/plans/03-complete-task-plan.md` reviewed: store task before handler task
+- [ ] Phase 3 execution completed (bounded PLAN tasks)
 - [ ] `go build ./...` passes
 - [ ] `go test ./...` passes
 - [ ] All acceptance criteria verified with specific commands
@@ -633,9 +640,9 @@ Complete every item. If any fails, return to the module indicated and resolve it
 - [ ] Test coverage check run: gaps addressed
 - [ ] Security review run: findings addressed or documented
 - [ ] Code review run
-- [ ] STATE.md shows Phase 3 completed
-- [ ] REQ-003 in REQUIREMENTS.md: status = satisfied
-- [ ] ROADMAP.md: all 3 phases marked completed
+- [ ] `docs/state.md` shows Phase 3 completed
+- [ ] REQ-003 in `docs/requirements.md`: status = satisfied
+- [ ] `docs/roadmap.md`: all 3 phases marked completed
 
 ---
 
@@ -662,7 +669,7 @@ Complete every item. If any fails, return to the module indicated and resolve it
   # Expected: true
   ```
 
-- [ ] `.planning/` directory is structurally coherent — STATE.md, REQUIREMENTS.md, and ROADMAP.md all consistent
+- [ ] `docs/` workflow files are structurally coherent — `state.md`, `requirements.md`, and `roadmap.md` all consistent
 - [ ] `docs/specs/` contains at minimum: `get-tasks.md` and `complete-task.md`
 
 ---
@@ -686,7 +693,7 @@ Use this when stuck. Module numbers match the directory names in this track.
 
 | Stuck on | Module | File |
 |----------|--------|------|
-| PLAN.md tasks are vague | 05 | 02-orchestrator-worker-pattern.md |
+| Phase plan tasks are vague | 05 | 02-orchestrator-worker-pattern.md |
 | Execute failed mid-wave | 05 | 06-partial-failure-and-recovery.md |
 | Acceptance criteria not binary | 06 | 01-spec-template-and-acceptance.md |
 | NFR or Boundary section unclear | 06 | 02-boundaries-nfr-and-constraints.md |
@@ -708,7 +715,7 @@ If you completed all checklist items, you have demonstrated:
 
 - Claude Code configuration: CLAUDE.md, settings.json, rules that enforce SPEC-first behavior
 - Context management: SPEC on disk, file path references in implementation messages
-- Structured workflow: discuss → plan → execute → verify → ship for two phases
+- Structured workflow: frame → plan → execute → verify → merge for two phases
 - Spec engineering: full template with problem, acceptance, NFR, constraints, boundaries, tradeoff, risk, rollback
 - Drift detection and repair: acceptance verification with specific commands, three-case triage
 - Executable specs: verification mapping from criterion to command or test

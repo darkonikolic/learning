@@ -4,7 +4,7 @@ Module 09 showed you how to write a SPEC. This module shows you how to verify at
 
 A SPEC that cannot be verified is a wish list. A SPEC that can be verified is a runtime contract. The difference is not intent — it is whether every acceptance criterion has a corresponding check that can be run without human interpretation.
 
-"Executable" has a precise meaning here: for every acceptance criterion in the SPEC, a person picking up the project tomorrow can derive a verification step — a command, a test, a script — without asking what was meant. That verification step either passes or it does not.
+"Executable" has a precise meaning here: for every acceptance criterion in the SPEC, a person picking up the project tomorrow can derive a verification stage — a command, a test, a script — without asking what was meant. That verification stage either passes or it does not.
 
 ---
 
@@ -125,7 +125,7 @@ Each step is derived from the one above. If the chain breaks — if a test is wr
 
 ## Spec-to-test coverage check
 
-After running execute-phase, verify that every acceptance criterion has a corresponding test. The verify step maps implementation coverage to SPEC acceptance criteria and reports gaps. Gaps are either:
+After running execution stage, verify that every acceptance criterion has a corresponding test. The verify step maps implementation coverage to SPEC acceptance criteria and reports gaps. Gaps are either:
 
 1. Criteria with no test — implementation may be untested
 2. Criteria with tests not derived from the criterion — tests may not verify intent

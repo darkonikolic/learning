@@ -54,7 +54,7 @@ Key decisions in this file:
 
 ## When Claude spawns agents automatically vs when you control it
 
-**Automatic:** The execute-phase workflow spawns subagents per wave internally. `/batch` decomposes work and spawns agents in parallel worktrees. `/code-review` invokes a reviewer agent internally.
+**Automatic:** Use `/batch` or explicit subagent prompts for parallel work — there is no built-in wave runner. `/batch` decomposes work and spawns agents in parallel worktrees. `/code-review` invokes a reviewer agent internally.
 
 **Manual:** You invoke an agent explicitly by prompting "use the code-reviewer agent on the current diff" or by configuring the `agent` field in settings for a session slice.
 
@@ -108,7 +108,7 @@ Use parallel agents when:
 
 `/batch` handles this for large structured changes — it decomposes the work, creates git worktrees, and runs agents in parallel. Requires a git repo. Review the decomposition plan before approving — blast radius is multi-file.
 
-Manual parallelism: open multiple Claude Code sessions in separate terminals, each with a bounded task. Share context via files (STATE.md, notes/), not via chat.
+Manual parallelism: open multiple Claude Code sessions in separate terminals, each with a bounded task. Share context via files (`docs/state.md`, notes/), not via chat.
 
 ---
 

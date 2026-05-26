@@ -15,7 +15,7 @@ A session without an owner becomes a conversation. Conversations produce suggest
 | Accepts whatever Claude returns | Reviews output against explicit acceptance criteria |
 | Lets the session run until it feels done | Decides when the session is closed and captures what changed |
 | Treats context as Claude's responsibility | Manages context deliberately: what's in, what's out |
-| Asks "did you do it right?" | Maps each acceptance item to a verification step |
+| Asks "did you do it right?" | Maps each acceptance item to a verification stage |
 | Relies on chat memory | Writes decisions to CLAUDE.md and plan files |
 
 The model is stateless between sessions and degrading within a long session. You are the persistent layer.
@@ -154,6 +154,6 @@ A session that ends with "looks good!" and no capture is half a session.
 - [ ] I can name the artifact that will exist on disk when this session ends.
 - [ ] I have decomposed the problem into 3-7 steps in my own words.
 - [ ] I know which mode I am starting in: thinking, /plan, or execution.
-- [ ] I have a verification step for each acceptance item.
+- [ ] I have a verification stage for each acceptance item.
 - [ ] I will capture decisions to CLAUDE.md before closing the session.
 - [ ] I will open a new session for any problem that surfaces during this one.

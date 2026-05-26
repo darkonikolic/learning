@@ -1,5 +1,7 @@
 # Human-in-the-loop (HITL)
 
+For when to stop Claude, bypass AI, and calibrate trust, see `05-agent-orchestration-and-governance/09-human-authority-and-override.md`.
+
 Human-in-the-loop is the industry term for keeping a human in the approval chain for AI decisions. Not every decision requires human approval — but some decisions must never be made by an agent alone. The skill is knowing which is which.
 
 ---
@@ -52,14 +54,14 @@ Some situations require human approval regardless of agent confidence or conveni
 
 The structured Claude Code workflow encodes HITL as explicit approval gates. These are the checkpoints where human review is required before the next phase begins.
 
-**Gate 1: CONTEXT.md approval (before plan-phase).**
-You review what was gathered about the task — goals, constraints, non-goals, risks — and confirm it is correct before planning begins. Approving CONTEXT.md means: "this is the right problem and these are the right constraints."
+**Gate 1: frame brief approval (before plan).**
+You review `docs/plans/<phase>-context.md` — goals, constraints, non-goals, risks — and confirm it is correct before planning begins. Approving the frame brief means: "this is the right problem and these are the right constraints."
 
-**Gate 2: PLAN.md approval (before execute-phase).**
-You review the detailed plan — tasks, waves, acceptance criteria — and confirm it is the right plan before any code is written. Approving PLAN.md means: "these tasks, in this order, will correctly implement the goal."
+**Gate 2: phase plan approval (before execute).**
+You review `docs/plans/<phase>-plan.md` — tasks, waves, acceptance criteria — and confirm it is the right plan before any code is written. Approving the phase plan means: "these tasks, in this order, will correctly implement the goal."
 
 **Gate 3: Verification pass (before ship).**
-You run the verification step and confirm the implementation matches the SPEC before creating a PR. Approving verification means: "the code does what the SPEC says it should do."
+You run the verification stage and confirm the implementation matches the SPEC before creating a PR. Approving verification means: "the code does what the SPEC says it should do."
 
 These three gates mean no code ships without three human checkpoints. Skipping them speeds up the current session and increases the risk of wrong code reaching the codebase.
 
@@ -96,7 +98,7 @@ These are HITL moments. Answer them deliberately. Do not click through without r
 
 **Skipping verification.** Marking a task complete because the agent said "done" without verifying the output. The agent summary is not evidence of correctness.
 
-**Skipping PLAN.md review.** Starting execute-phase immediately after plan-phase because the plan "looks fine." The review is where you catch misunderstandings before they become wrong code.
+**Skipping phase plan review.** Starting execute immediately after plan because the plan "looks fine." The review is where you catch misunderstandings before they become wrong code.
 
 **Inconsistent HITL.** Applying HITL to some decisions and not others based on how busy you are. Risk does not vary with your schedule.
 
@@ -128,13 +130,13 @@ This is a mid-task escalation. Claude is surfacing an ambiguity that requires hu
 
 Your job: answer the question deliberately. "The SPEC is ground truth. Update the code to return 404." This is human-in-the-loop at the decision boundary — Claude identified the decision, you made it.
 
-**Scenario 4: The discuss-phase produces a CONTEXT.md that misunderstands the goal.**
+**Scenario 4: The frame step produces a context brief that misunderstands the goal.**
 
-CONTEXT.md says "implement a persistence layer for tasks." Your goal was "add in-memory sorting to the existing list."
+`docs/plans/<phase>-context.md` says "implement a persistence layer for tasks." Your goal was "add in-memory sorting to the existing list."
 
-If you approve CONTEXT.md without reading it: plan-phase plans a database migration. Execute-phase starts building a persistence layer. You notice three waves in and everything is wrong.
+If you approve the frame brief without reading it: plan step plans a database migration. Execute starts building a persistence layer. You notice three waves in and everything is wrong.
 
-If you read CONTEXT.md before approving: you catch the misunderstanding at Gate 1. You correct it. Plan-phase plans the right thing.
+If you read the frame brief before approving: you catch the misunderstanding at Gate 1. You correct it. Plan step plans the right thing.
 
 The gate's value: catching misunderstandings before they become wrong code.
 
@@ -162,8 +164,8 @@ The principle: blast radius and reversibility determine where the human-in-the-l
 ## Checklist
 
 - [ ] I know the four HITL modes and when each applies.
-- [ ] I know the three workflow approval gates: CONTEXT.md, PLAN.md, verification.
+- [ ] I know the three workflow approval gates: frame brief, phase plan, verification.
 - [ ] I know the four conditions that make HITL non-negotiable: irreversible, high blast radius, low confidence, trust boundary crossing.
 - [ ] My settings.json deny list reflects my human-in-the-loop decisions.
 - [ ] I never approve a permission prompt without reading what it's approving.
-- [ ] I review PLAN.md before running execute-phase, not after.
+- [ ] I review `docs/plans/<phase>-plan.md` before running execute, not after.

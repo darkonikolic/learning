@@ -115,7 +115,7 @@ If Cursor modified a file you didn't expect, do not accept and then investigate.
 
 ## Claude Code-specific
 
-After an `execute-phase` completes, run the git diff before moving to verify.
+After an `execution step` completes, run the git diff before moving to verify.
 
 ```bash
 git diff HEAD~1     # if the phase committed

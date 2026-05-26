@@ -1,8 +1,8 @@
 # Lab: spec vs implementation audit
 
-This lab performs a full spec audit for task-api GET /tasks. You will run every acceptance criterion against the live implementation, record the results, find at least one piece of behavior the implementation has that the SPEC does not describe, make an explicit decision about it, run a test coverage check, and update both the SPEC and REQUIREMENTS.md based on what you find.
+This lab performs a full spec audit for task-api GET /tasks. You will run every acceptance criterion against the live implementation, record the results, find at least one piece of behavior the implementation has that the SPEC does not describe, make an explicit decision about it, run a test coverage check, and update both the SPEC and `docs/requirements.md` based on what you find.
 
-Prerequisites: GET /tasks is implemented (from module 09 lab). `docs/specs/get-tasks.md` exists with ≥5 acceptance criteria. Server starts with `go run main.go` or equivalent.
+Prerequisites: GET /tasks is implemented (from module 06 lab). `docs/specs/get-tasks.md` exists with ≥5 acceptance criteria. Server starts with `go run main.go` or equivalent.
 
 ---
 
@@ -10,7 +10,7 @@ Prerequisites: GET /tasks is implemented (from module 09 lab). `docs/specs/get-t
 
 Open `docs/specs/get-tasks.md`. Write out every acceptance criterion as a numbered list. Do not work from memory.
 
-If your SPEC has these six criteria from the module 09 lab:
+If your SPEC has these six criteria from the module 06 lab:
 
 ```
 1. GET /tasks with no tasks returns HTTP 200 and body []
@@ -277,9 +277,9 @@ Do not delete acceptance criteria that are now satisfied. The SPEC is a living d
 
 ---
 
-## Step 9: update REQUIREMENTS.md
+## Step 9: update docs/requirements.md
 
-Open `.planning/REQUIREMENTS.md`. Find REQ-002.
+Open `docs/requirements.md`. Find REQ-002.
 
 If all acceptance criteria are now PASS and the SPEC is updated:
 ```markdown
@@ -296,7 +296,7 @@ Status: in-progress
 Blocked: criterion 3 (creation order) — fix in progress
 ```
 
-The status in REQUIREMENTS.md must reflect reality. An optimistic "satisfied" on a failing criterion creates false confidence for the next phase.
+The status in `docs/requirements.md` must reflect reality. An optimistic "satisfied" on a failing criterion creates false confidence for the next phase.
 
 ---
 
@@ -310,4 +310,4 @@ The status in REQUIREMENTS.md must reflect reality. An optimistic "satisfied" on
 - [ ] Test coverage check run — coverage gaps noted
 - [ ] Missing tests written for any gaps found
 - [ ] docs/specs/get-tasks.md updated: evolved criteria, nil-slice constraint, verification state
-- [ ] REQUIREMENTS.md REQ-002 status reflects verified state
+- [ ] `docs/requirements.md` REQ-002 status reflects verified state

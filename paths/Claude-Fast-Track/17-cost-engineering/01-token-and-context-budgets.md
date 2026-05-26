@@ -25,14 +25,14 @@ Each workflow stage has a different token profile. Knowing where cost concentrat
 
 | Stage | Token cost | Dominant input | Dominant output | Budget lever |
 |-------|-----------|---------------|----------------|-------------|
-| discuss-phase | Low | Questions + brief answers | Analysis text | Minimize answer verbosity |
-| spec-phase | Low–Medium | Requirements discussion | SPEC.md draft | Keep SPEC sections atomic |
-| plan-phase | Medium | SPEC.md + PROJECT.md + rules | PLAN.md + task list | Trim what Claude reads |
-| execute-phase | High | PLAN.md + SPEC.md + source files per task | Code commits | Scope tasks narrowly; pass only needed files |
-| code-review | Medium | Source files + SPEC.md | Review report | Limit files to changed scope |
-| verify-work | Low | Acceptance criteria + targeted output | Pass/fail assessment | Pass only the relevant SPEC section |
+| frame | Low | Questions + brief answers | Analysis text | Minimize answer verbosity |
+| spec (in `docs/specs/`) | Low–Medium | Requirements discussion | Feature SPEC draft | Keep SPEC sections atomic |
+| plan | Medium | feature SPEC + `docs/project.md` + rules | `docs/plans/<phase>-plan.md` + task list | Trim what Claude reads |
+| execute | High | phase plan + SPEC + source files per task | Code commits | Scope tasks narrowly; pass only needed files |
+| code-review | Medium | Source files + SPEC | Review report | Limit files to changed scope |
+| verify | Low | Acceptance criteria + targeted output | Pass/fail assessment | Pass only the relevant SPEC section |
 
-**Execute-phase dominates cost.** During execute, Claude reads PLAN.md at the start of every task (because each task re-establishes context), plus the source files relevant to that task. With 10 tasks in a wave, PLAN.md is read 10 times. A 400-line PLAN.md at ~300 tokens costs 3,000 tokens just in PLAN.md reads per wave — before any code is written.
+**Execute dominates cost.** During execute, Claude reads the phase plan at the start of every task (because each task re-establishes context), plus the source files relevant to that task. With 10 tasks in a wave, the plan file is read 10 times. A 400-line plan at ~300 tokens costs 3,000 tokens just in plan reads per wave — before any code is written.
 
 
 
@@ -63,7 +63,7 @@ A 20% context reduction that causes one retry costs more than no reduction would
 | Error handling requirements | Never | Silent removal causes runtime failures, not compile failures |
 | Existing file contents (if task modifies that file) | Never | Claude will invent the current state rather than read it |
 | Changelog / prior decision context | Sometimes | Safe to remove if the task does not depend on prior decisions |
-| Full PROJECT.md | Sometimes | Pass only the relevant sections per task |
+| Full `docs/project.md` | Sometimes | Pass only the relevant sections per task |
 
 ---
 
@@ -120,32 +120,32 @@ Parallelizing agents does not reduce token cost — it multiplies it. Fan-out of
 
 ## task-api phase cost estimates
 
-These are rough estimates for orientation — your actual spend will vary by PLAN.md size, source file size, and model version.
+These are rough estimates for orientation — your actual spend will vary by phase plan size, source file size, and model version.
 
 | Phase | Tasks | Estimated tokens | Where most tokens go |
 |-------|-------|-----------------|---------------------|
-| Phase 1 — project setup | 3 | 15,000–25,000 | SPEC.md creation during plan-phase |
-| Phase 2 — POST /tasks | 4 | 30,000–45,000 | PLAN.md reads during execute (×4 tasks) |
-| Phase 3 — GET /tasks + PATCH | 6 | 50,000–75,000 | Source file reads + PLAN.md reads (×6) |
+| Phase 1 — project setup | 3 | 15,000–25,000 | Feature SPEC creation during plan |
+| Phase 2 — POST /tasks | 4 | 30,000–45,000 | Phase plan reads during execute (×4 tasks) |
+| Phase 3 — GET /tasks + PATCH | 6 | 50,000–75,000 | Source file reads + plan reads (×6) |
 | Phase 4 — DELETE + error handling | 5 | 45,000–65,000 | Error handling rules + source file reads |
 
-**Most tokens are spent in execute-phase reading PLAN.md.** During a 6-task execute, PLAN.md is read once per task initialization. If PLAN.md is 500 lines (~400 tokens), that is 2,400 tokens in PLAN.md reads alone — before any file reads or code generation.
+**Most tokens are spent in execute reading the phase plan.** During a 6-task execute, the plan is read once per task initialization. If the plan is 500 lines (~400 tokens), that is 2,400 tokens in plan reads alone — before any file reads or code generation.
 
-**Optimisation target:** PLAN.md verbosity. A PLAN.md that describes each task in 10–15 lines costs roughly half the context of one that describes each task in 25–30 lines, with no quality loss if the task descriptions are precise.
+**Optimisation target:** plan verbosity. A plan that describes each task in 10–15 lines costs roughly half the context of one that describes each task in 25–30 lines, with no quality loss if the task descriptions are precise.
 
 ---
 
 ## Context budget anatomy
 
-The context window is shared by: system prompt + CLAUDE.md + rules files + PLAN.md + source files + task instruction + prior conversation turns.
+The context window is shared by: system prompt + CLAUDE.md + rules files + phase plan + source files + task instruction + prior conversation turns.
 
-Each component competes for the same space. During execute-phase with a complex task:
+Each component competes for the same space. During execute with a complex task:
 
 ```
 System prompt:              ~2,000 tokens  (fixed — not removable)
 CLAUDE.md:                  ~1,500 tokens  (semi-fixed — trim rarely)
 Rules files (loaded):       ~3,000 tokens  (control by selective loading)
-PLAN.md:                    ~2,000 tokens  (control by PLAN.md discipline)
+Phase plan:                 ~2,000 tokens  (control by plan discipline)
 Source files (task-relevant): ~4,000 tokens  (control by file selection)
 Task instruction:           ~500 tokens   (fixed per task)
 Prior turns (accumulated):  ~3,000 tokens  (grows as conversation continues)
@@ -155,7 +155,7 @@ Total:                     ~16,000 tokens per task in a long session
 
 In a 200,000-token context window, 16,000 tokens per task leaves substantial room. But in a 32,000-token window, a session with 10 prior turns and 5 loaded source files is near capacity before the task begins.
 
-**Context fill monitoring:** Claude Code shows context usage in the session header. Watch for it climbing past 70% during execute-phase. Above 70%, early instructions (SPEC, rules, CLAUDE.md) risk being displaced by accumulated output.
+**Context fill monitoring:** Claude Code shows context usage in the session header. Watch for it climbing past 70% during execute. Above 70%, early instructions (SPEC, rules, CLAUDE.md) risk being displaced by accumulated output.
 
 ---
 
@@ -179,10 +179,10 @@ Budget decisions that violate the floor are not optimisations. They are deferred
 ## Checklist
 
 - [ ] I can distinguish token budget (cost per request) from context budget (what fits in the window).
-- [ ] I know which workflow stage dominates token cost (execute-phase) and why (PLAN.md reads × task count).
+- [ ] I know which workflow step dominates token cost (execute) and why (phase plan reads × task count).
 - [ ] I understand the degradation spiral: over-trimming context → wrong output → retries → net higher cost.
 - [ ] I know which context elements are never removable (SPEC acceptance criteria, security rules, modified file contents).
 - [ ] I can define soft and hard ceilings for a phase and state what to do when each is crossed.
 - [ ] I know the parallelization cost multiplier: N agents = N× tokens, plus merge cost.
 - [ ] I know the two conditions that make parallelization not worth it: shared state and sequential dependencies.
-- [ ] I can estimate where most tokens are spent in a task-api execute-phase.
+- [ ] I can estimate where most tokens are spent in a task-api execute run.

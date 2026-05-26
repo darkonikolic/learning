@@ -4,6 +4,8 @@ Every implementation failure is a planning failure. Not a Claude failure. Not a 
 
 The flow enforces a checkpoint between understanding and action. Skipping it produces output that is locally correct and systemically wrong.
 
+**Claude-native lever:** in [Claude Code](https://claude.com/), the built-in gate is **`/plan`** (plan mode) — Claude proposes without executing until you approve. The FRAME and DECOMPOSE steps below are *your* discipline before you invoke `/plan`; they are not a separate product or CLI.
+
 ---
 
 ## The flow
@@ -109,7 +111,7 @@ Every execution message passes this check before you send it:
 
 - [ ] The scope is bounded to specific steps or files
 - [ ] Claude knows what NOT to touch
-- [ ] There is a verification step in the message
+- [ ] There is a verification stage in the message
 - [ ] This message matches what the approved plan authorizes
 
 If any item fails, edit the message.

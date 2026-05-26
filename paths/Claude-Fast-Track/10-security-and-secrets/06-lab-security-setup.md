@@ -260,7 +260,7 @@ git commit -m "verify: clean commit passes hook"
 
 ### Step 11 — Locate or create SPEC for Phase 1
 
-If you have `.planning/milestones/v0.1/SPEC.md`, open it. If not, create a minimal one at that path.
+If you have `docs/specs/`, open it. If not, create a minimal one at that path.
 
 Add this security section:
 
@@ -295,7 +295,7 @@ Add this security section:
 
 Commit:
 ```bash
-git add .planning/
+git add docs/
 git commit -m "add security acceptance criteria to Phase 1 SPEC"
 ```
 
@@ -358,10 +358,10 @@ if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 
 ### Step 14 — Run the security verification
 
-If you have completed Phase 1 execute-phase, ask Claude to run a security review:
+If you have completed Phase 1 execute, ask Claude to run a security review:
 
 ```
-Run a security review for Phase 1, checking the threat mitigations in PLAN.md and SPEC.md against the implementation.
+Run a security review for Phase 1, checking the threat mitigations in the phase plan and feature SPEC against the implementation.
 ```
 
 Read the output:
@@ -371,7 +371,7 @@ Read the output:
 
 For each MISSING item, either implement the mitigation or update the SPEC to defer it with documented rationale.
 
-If Phase 1 is not yet complete, bookmark this step and return here after execute-phase.
+If Phase 1 is not yet complete, bookmark this step and return here after execute.
 
 ---
 

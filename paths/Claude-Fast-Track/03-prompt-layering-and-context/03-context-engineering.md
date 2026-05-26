@@ -6,6 +6,10 @@ The surgeon's kit principle: a surgeon does not carry the entire hospital supply
 
 ---
 
+For source trust, citations, and grounded vs speculative output, see `03-prompt-layering-and-context/06-retrieval-and-grounding.md`.
+
+---
+
 ## What context engineering is not
 
 Pasting the entire codebase and asking Claude to "figure out what's relevant." This gives Claude the maximum surface area for distraction.

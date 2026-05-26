@@ -12,7 +12,7 @@ Claude models are not interchangeable. Picking the wrong model for a task either
 | Sonnet | claude-sonnet-4-6 | Balanced. Standard code generation, plan execution, typical structured workflow. Default for most work. |
 | Haiku | claude-haiku-4-5 | Fastest, cheapest. Narrow tasks: classification, summarization, short lookups. Limited reasoning depth. |
 
-Model IDs change as new versions are released. The tier names (Opus, Sonnet, Haiku) remain stable — the number suffix increments. When in doubt, check the Anthropic model page for the current IDs. What does not change is the tier hierarchy: Opus is always the most capable, Haiku is always the fastest.
+Model IDs change as new versions are released. The tier names (**Opus**, **Sonnet**, **Haiku**) on [claude.com](https://claude.com/) remain the product vocabulary — the slug suffix (`claude-sonnet-4-6`, etc.) increments. When in doubt, run **`/config`** in Claude Code or read current Anthropic developer docs; do not treat IDs in this track as permanent. What does not change is the tier hierarchy: Opus is the deepest reasoning tier, Haiku is the fastest narrow tier.
 
 ---
 
@@ -30,12 +30,12 @@ Model IDs change as new versions are released. The tier names (Opus, Sonnet, Hai
 
 Different agents benefit from different model tiers based on what they do:
 
-- **Research agents** (plan-phase with research mode, spec writing) — use Opus because they synthesize ambiguous inputs
-- **Executor agents** (execute-phase task execution, code writing) — use Sonnet because they implement clear specifications
+- **Research agents** (plan with research mode, spec writing) — use Opus because they synthesize ambiguous inputs
+- **Executor agents** (execute task execution, code writing) — use Sonnet because they implement clear specifications
 - **Reviewer agents** (code-review, security review) — use Opus for adversarial quality
 - **Summary/classification agents** (milestone summaries, status checks) — can use Haiku
 
-You can configure model assignments per agent type in `.planning/config.json` — see the lab in this module.
+You can configure model assignments per agent type in `.claude/settings.json` and agent definitions under `.claude/agents/` — see the lab in this module.
 
 ---
 
@@ -49,7 +49,7 @@ These are rough order-of-magnitude comparisons, not exact prices. Prices change;
 | Sonnet | baseline | baseline |
 | Haiku | ~0.1–0.2x Sonnet | ~3–5x faster than Sonnet |
 
-For a typical execute-phase run on task-api (5 tasks, moderate code), the cost difference between running all tasks on Opus vs all on Sonnet is significant over many phases. Over a 20-phase project, using Opus everywhere when Sonnet would suffice accumulates into a meaningful cost difference.
+For a typical execute run on task-api (5 tasks, moderate code), the cost difference between running all tasks on Opus vs all on Sonnet is significant over many phases. Over a 20-phase project, using Opus everywhere when Sonnet would suffice accumulates into a meaningful cost difference.
 
 ---
 

@@ -1,146 +1,93 @@
 # Lab: Audit your model assignments
 
-This lab walks through reading `.planning/config.json`, evaluating the current model assignments, and making one targeted change with documented reasoning.
+Review how Claude Code picks models for your project, adjust one assignment with documented reasoning, and record the decision on disk.
 
-**Prerequisite:** You have a `.planning/` directory with a `config.json` file.
+**Prerequisite:** `task-api/` has `.claude/settings.json` and at least one file under `.claude/agents/` (for example `code-reviewer.md` from module 04).
 
 ---
 
-## Step 1: Open config.json and find the model profile section
+## Step 1: Inspect current configuration
 
 ```bash
-cat .planning/config.json
+cat .claude/settings.json
+ls .claude/agents/
 ```
 
-Look for a section that controls model assignments. It will resemble one of these patterns:
+Note:
 
-```json
-{
-  "model_profile": {
-    "research": "claude-opus-4-7",
-    "planner": "claude-sonnet-4-6",
-    "executor": "claude-sonnet-4-6",
-    "reviewer": "claude-opus-4-7",
-    "summarizer": "claude-sonnet-4-6"
-  }
-}
-```
+- Default session model (if set in settings or your `/config` UI)
+- Any per-agent model hints in `.claude/agents/*.md` frontmatter or body
+- Whether subagents inherit the session default
 
-or
-
-```json
-{
-  "agents": {
-    "discuss": { "model": "claude-sonnet-4-6" },
-    "plan": { "model": "claude-sonnet-4-6" },
-    "execute": { "model": "claude-sonnet-4-6" },
-    "review": { "model": "claude-opus-4-7" },
-    "spec": { "model": "claude-opus-4-7" }
-  }
-}
-```
-
-If config.json does not have a model profile section, defaults are being used. Note that and continue to Step 2 — you will add a model profile section.
+Model choice lives in product config (`settings.json`, `/config`, optional agent files) — not in a separate planning-tool config file under the repo.
 
 ---
 
-## Step 2: Classify each assignment
+## Step 2: Classify each role
 
-For each agent type in the config, answer: is this assignment appropriate given the task type?
+Map roles you actually use in task-api to tiers using `18-model-selection/02-when-to-use-which.md`:
 
-Use the decision table from `22-model-selection/02-when-to-use-which.md` as your reference.
+| Role | Typical work | Suggested tier |
+|------|----------------|----------------|
+| Spec / frame | Writing or tightening `docs/specs/*.md` | Opus when ambiguous; Sonnet when template-driven |
+| Plan | `/plan` → `docs/plans/<phase>-plan.md` from SPEC | Sonnet |
+| Execute | Bounded implementation from approved plan | Sonnet |
+| Review | `/code-review`, security pass | Opus |
+| Summary / status | Short `docs/state.md` or checkpoint text | Haiku |
 
-Write your classification on paper or in a scratch note before touching the file. Example for a typical default config:
-
-| Agent | Current model | Appropriate? | Notes |
-|-------|-------------|-------------|-------|
-| research | claude-opus-4-7 | Yes | Synthesis of ambiguous inputs |
-| planner | claude-sonnet-4-6 | Yes | Clear requirements to PLAN.md structure |
-| executor | claude-sonnet-4-6 | Yes | Code generation from defined tasks |
-| reviewer | claude-opus-4-7 | Yes | Adversarial quality check |
-| summarizer | claude-sonnet-4-6 | Maybe | Could use Haiku — see step 3 |
+Write your current vs recommended table before editing anything.
 
 ---
 
-## Step 3: Identify one place to downgrade to Sonnet from Opus
+## Step 3: Make two targeted changes
 
-Look for an agent that is currently Opus but whose task type is clear-input, defined-output work. Common candidates:
+1. **One downgrade:** Opus → Sonnet where inputs are already explicit (planner or executor on task-api-sized work).
+2. **One Haiku candidate:** narrow classification or summary task only — not review or spec ambiguity.
 
-- A "spec" agent that writes SPEC.md for simple phases (GET /tasks is not complex — Sonnet suffices)
-- A "discuss" agent that gathers phase context through structured questions (adaptive questioning, clear inputs)
-- Any agent labeled "verify" or "check" that runs defined acceptance criteria — not open-ended judgment
-
-For task-api specifically: if your config uses Opus for the planner or executor, that is unnecessary — both phases have clear requirements and produce defined artifacts.
-
-Make note of the one change you will make.
+Apply changes in `.claude/settings.json` and/or the relevant `.claude/agents/*.md` file. Do not downgrade reviewer or security-review roles to Haiku.
 
 ---
 
-## Step 4: Identify one place where Haiku would be appropriate
-
-Look for an agent that produces a summary, a classification, or a short lookup response. Good candidates:
-
-- "summarizer" agent (milestone-summary, context summaries)
-- Any agent that classifies task status (complete/incomplete/blocked)
-- Any agent that generates a short status report from existing artifacts
-
-For task-api: the milestone-summary agent is a safe candidate for Haiku. Summarizing completed phase artifacts does not require multi-step reasoning.
-
----
-
-## Step 5: Make the changes and document reasoning
-
-Edit `.planning/config.json` to apply your two changes (one downgrade from Opus, one change to Haiku).
-
-Then create `docs/decisions/model-assignments.md`:
+## Step 4: Document reasoning
 
 ```bash
 mkdir -p docs/decisions
 ```
 
-Write the file with this structure:
+Create `docs/decisions/model-assignments.md`:
 
 ```markdown
 # Model assignment decisions
 
-## Date: [today's date]
+## Date: [today]
 
-## Changes made
+## Changes
 
-### [agent-name]: [old model] → [new model]
-**Reason:** [one sentence explaining why the old assignment was over-specified for this task type]
+### [role]: [old] → [new]
+**Reason:** one sentence — why the old tier was over-specified.
 
-### [agent-name]: [old model] → claude-haiku-4-5
-**Reason:** [one sentence explaining why this agent's task type is narrow enough for Haiku]
+### [role]: [old] → claude-haiku-4-5
+**Reason:** one sentence — narrow output, no multi-step reasoning.
 
-## Retained assignments
+## Unchanged (and why)
 
 ### reviewer: claude-opus-4-7
-**Reason:** Adversarial review requires deeper reasoning; Opus finds issues Sonnet misses.
-
-### [any others retained at current tier]
-**Reason:** [brief justification]
+**Reason:** adversarial review; keep highest tier.
 ```
-
-Fill in the actual agent names and models from your config.
 
 ---
 
 ## Deliverable
 
-Two files changed:
-- `.planning/config.json` — model assignments updated
-- `docs/decisions/model-assignments.md` — reasoning documented
-
-One sanity check: re-read your changes and verify the reviewer and security-audit agents are still on Opus. These should not be downgraded. If you changed them, revert those changes before committing.
+- Updated `.claude/settings.json` and/or `.claude/agents/*.md`
+- `docs/decisions/model-assignments.md`
 
 ---
 
 ## Checklist
 
-- [ ] I found the model profile section in config.json (or noted its absence).
-- [ ] I classified each assignment as appropriate or over-specified.
-- [ ] I identified and made one downgrade from Opus to Sonnet.
-- [ ] I identified and made one change to Haiku for a narrow task type.
-- [ ] I documented the reasoning in docs/decisions/model-assignments.md.
-- [ ] Reviewer and secure-phase agents are still on Opus.
+- [ ] I inspected settings and agent files — not a fictional external config path.
+- [ ] I classified roles against Opus / Sonnet / Haiku guidance.
+- [ ] I made one Sonnet downgrade and one Haiku change with justification.
+- [ ] Reviewer / security roles stayed on Opus (or equivalent top tier).
+- [ ] Reasoning is recorded in `docs/decisions/model-assignments.md`.

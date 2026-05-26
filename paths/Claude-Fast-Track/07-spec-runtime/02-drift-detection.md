@@ -12,7 +12,7 @@ These are ordered by frequency. Check after any of these events before proceedin
 
 Multi-wave execute sessions are the highest-risk scenario. Wave 1 and wave 2 implement the primary behavior — the core is close to the SPEC. Wave 3 is where agents "complete" the feature by filling in perceived gaps. The gaps they fill may not be in your SPEC. They may be reasonable improvements. They may also be scope additions that break a constraint.
 
-Signal: any file touched in wave 3 that was not mentioned in PLAN.md is a potential drift source.
+Signal: any file touched in wave 3 that was not mentioned in the phase plan is a potential drift source.
 
 **After a bug fix touching SPEC-covered behavior**
 
@@ -30,7 +30,7 @@ Another developer's implementation may have modified behavior your SPEC describe
 
 Claude's context was reset to a summary. Its next implementation turn is from a compressed version of the conversation — not the full SPEC. The file reference (`docs/specs/get-tasks.md`) survives if you include it in the next message. But if you do not reference it explicitly, Claude implements from the summary, and subtle SPEC details drop out.
 
-**After execute-phase with --gaps-only**
+**After execute with incomplete-only retry**
 
 A partial re-run implements only tasks that were previously skipped. Partial implementations can produce partial behavior — behavior that satisfies some acceptance criteria but not others, creating a mixed state that is harder to reason about than full drift.
 
@@ -91,7 +91,7 @@ Behavior changed. Either the change was intentional (update SPEC) or a regressio
 
 A function was added with no corresponding SPEC acceptance criterion. Is this behavior intentional? If yes: add to SPEC. If no: remove from code.
 
-**STATE.md says "completed" but verification fails items**
+**`docs/state.md` says "completed" but verification fails items**
 
 The phase was marked complete, but verification fails. The most common cause: verification was not run after execute, only after a partial implementation. Run full verification now.
 
@@ -108,7 +108,7 @@ A gap means an acceptance criterion has no corresponding test. This does not pro
 | Acceptance criterion verification | Acceptance items vs current behavior | After every execute session |
 | Test-to-SPEC coverage mapping | Test coverage vs SPEC acceptance criteria | After execute, before ship |
 | Security review | Security threat mitigations vs implementation | Before ship on any API |
-| Code review | Code quality vs PLAN.md intent | Before PR |
+| Code review | Code quality vs phase plan intent | Before PR |
 
 The acceptance criterion verification is interactive — walk through each acceptance item and confirm the behavior. Use it for quick post-execute sanity checks.
 
@@ -163,7 +163,7 @@ Medium drift deserves a decision, not just a note. "Extra field in response" —
 
 ## Drift in a live scenario — worked example for task-api
 
-Post-execute state after execute-phase 3 (PATCH /tasks/:id/complete):
+Post-execute state after Phase 3 execute (PATCH /tasks/:id/complete):
 
 Running verification:
 

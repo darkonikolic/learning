@@ -49,6 +49,6 @@ Use the non-lab files as reference. When a prompt fails, come back to module 04.
 
 ## What this path does not cover
 
-- Claude Code GSD workflow (discuss → plan → execute → verify → ship) → see Claude-Fast-Track path
+- Claude Code workflow (frame → plan → execute → verify → merge) → see Claude-Fast-Track path
 - Specification-driven development → see Claude-Fast-Track path
-- Agent orchestration, parallel agents → see Claude-Fast-Track path modules 05 and 16
+- Agent orchestration, parallel agents → see Claude-Fast-Track modules 05 (orchestration) and 08 (graduation capstone)

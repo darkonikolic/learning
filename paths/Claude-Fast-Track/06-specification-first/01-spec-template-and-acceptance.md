@@ -15,7 +15,7 @@ Pick the smallest artefact that still lets you verify "done". Over-engineering a
 | Trivial | Inline acceptance in chat | — | Typo, config knob, one-liner |
 | Small | Plan | `docs/plans/<slug>.md` | 1-2 files, clear steps, obvious verify |
 | Feature | SPEC | `docs/specs/<slug>.md` | Behaviour change, ≥3 acceptance checks, multiple files |
-| Programme | Phase SPEC | `.planning/phases/.../SPEC.md` | Multi-phase, REQ-IDs, team review |
+| Programme | Phase SPEC | `docs/specs/<slug>.md` | Multi-phase, REQ-IDs, team review |
 
 The ladder is not strictly hierarchical — a one-file change that touches user-visible behavior needs a SPEC, even though only one file changes. The signal is the behavior, not the file count alone.
 
@@ -285,7 +285,7 @@ database/sql; any handler code written in phases 1–2 that bypasses the store i
 boundary must be respected from the first line of phase 1 code.
 ```
 
-This ADR is referenced in SPEC.md for phase 1 (under Constraint: "store access must go through the interface defined in tasks/store.go, not through MemStore fields directly") and in PLAN.md for phase 3 (under context: "see ADR-001 for the interface contract that must not change").
+This ADR is referenced in the phase 1 feature SPEC (under Constraint: "store access must go through the interface defined in tasks/store.go, not through MemStore fields directly") and in the phase 3 plan (under context: "see ADR-001 for the interface contract that must not change").
 
 ---
 

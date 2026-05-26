@@ -91,21 +91,21 @@ Drawbacks:
 | Maximum throughput, simple tasks | Choreography |
 | Complex workflow with branching logic | Orchestration |
 | Loosely coupled, event-driven pipeline | Choreography |
-| Execute-phase workflow | Orchestration (orchestrator controls task waves) |
+| Multi-step execution workflow | Orchestration (orchestrator controls task waves) |
 | Multiple independent Claude agents in one message | Choreography-adjacent (no coordinator) |
 
 ---
 
 ## In Claude Code
 
-**Execute-phase = orchestrator pattern.**
+**You orchestrate waves; Claude executes bounded tasks.**
 
-During execute-phase, Claude Code acts as the orchestrator:
-1. It reads PLAN.md — the full task DAG.
+During execution, you assign bounded tasks (or use `/batch`); Claude executes:
+1. It reads `docs/plans/<phase>-plan.md` — the full task DAG.
 2. It identifies which tasks are in the current wave (no unmet dependencies).
 3. It spawns executor agents for each task in the wave (fan-out).
 4. It waits for all agents in the wave to complete (fan-in).
-5. It reads STATE.md — the shared state store — to assess results.
+5. It reads `docs/state.md` — the shared state store — to assess results.
 6. It moves to the next wave, or handles failures, based on results.
 7. It repeats until all tasks are complete or until a failure requires human intervention.
 
@@ -133,13 +133,13 @@ Using choreography for dependent tasks: Agent B starts based on old state before
 
 Using orchestration for independent tasks: unnecessary coordination overhead, slower execution, bottleneck where none was needed.
 
-The PLAN.md wave structure encodes this choice explicitly. Wave 1 tasks are independent — choreography is safe, parallel execution is correct. Wave 2 tasks depend on wave 1 — orchestration is required, sequential wave execution is necessary.
+The phase plan's wave structure encodes this choice explicitly. Wave 1 tasks are independent — choreography is safe, parallel execution is correct. Wave 2 tasks depend on wave 1 — orchestration is required, sequential wave execution is necessary.
 
 ---
 
 ## Mixing patterns
 
-Real systems often use both patterns. The outer workflow uses orchestration (the execute-phase orchestrator controls wave execution). Within a wave, the tasks run in a choreography-adjacent pattern (parallel agents, no coordination between them). This is appropriate because: the wave-level dependencies are handled by the orchestrator (ensuring wave 2 only starts after wave 1 completes), and the within-wave tasks are genuinely independent (handled by the choreography pattern — no coordinator needed).
+Real systems often use both patterns. The outer workflow uses orchestration (the execute step orchestrator controls wave execution). Within a wave, the tasks run in a choreography-adjacent pattern (parallel agents, no coordination between them). This is appropriate because: the wave-level dependencies are handled by the orchestrator (ensuring wave 2 only starts after wave 1 completes), and the within-wave tasks are genuinely independent (handled by the choreography pattern — no coordinator needed).
 
 The mistake to avoid: applying choreography where orchestration is needed. If two tasks within a wave have an implicit dependency (task B uses output from task A), they are in the wrong wave. Choreography between them will produce incorrect output. Move task B to a subsequent wave where orchestration ensures A completes before B starts.
 
@@ -148,7 +148,7 @@ The mistake to avoid: applying choreography where orchestration is needed. If tw
 ## Checklist
 
 - [ ] I can explain orchestration and choreography to someone who hasn't read this module.
-- [ ] I know when execute-phase uses orchestration (always — it's the orchestrator).
+- [ ] I know when execute uses orchestration (always — it's the orchestrator).
 - [ ] I know when parallel agents in one message are safe (independent tasks only).
 - [ ] I can identify whether a set of tasks has dependencies before choosing a pattern.
 - [ ] I know the failure mode of using choreography for dependent tasks (race condition / stale state).

@@ -1,6 +1,6 @@
 # Lab: write SPEC for GET /tasks and implement against it
 
-This lab produces a complete SPEC for GET /tasks using the unified template, implements the feature against that SPEC, verifies all acceptance criteria, and runs the drift repair procedure on anything that fails. By the end, REQ-002 is updated in REQUIREMENTS.md.
+This lab produces a complete SPEC for GET /tasks using the unified template, implements the feature against that SPEC, verifies all acceptance criteria, and runs the drift repair procedure on anything that fails. By the end, REQ-002 is updated in `docs/requirements.md`.
 
 Prerequisites: Phase 1 (POST /tasks) is complete. `docs/specs/` does not yet exist. Go project compiles with `go build ./...`.
 
@@ -18,13 +18,13 @@ Verify it exists:
 ls docs/specs/
 ```
 
-This is the permanent home for all feature SPECs in task-api. Do not put SPECs in `.planning/` for single-phase feature work — `.planning/` is for phase-level SPECs. `docs/specs/` is for feature-level contracts.
+This is the permanent home for all feature SPECs in task-api. Phase briefs and plans live under `docs/plans/`; session checkpoints in `docs/state.md`.
 
 ---
 
 ## Step 2: write docs/specs/get-tasks.md
 
-Create the file using the full template from `09-specification-first/01-spec-template-and-acceptance.md`. Fill every section. Do not leave any section empty. If a section truly does not apply, write "N/A — [reason]".
+Create the file using the full template from `06-specification-first/01-spec-template-and-acceptance.md`. Fill every section. Do not leave any section empty. If a section truly does not apply, write "N/A — [reason]".
 
 The content to write:
 
@@ -219,7 +219,7 @@ curl -s -I localhost:8080/tasks | grep -i content-type
 # Expected line containing: application/json
 ```
 
-Record each result in the SPEC file. Update each `- [ ]` to `- [x]` for PASS. Mark FAIL for anything that does not match. Mark CANNOT VERIFY if the verification step itself is unclear.
+Record each result in the SPEC file. Update each `- [ ]` to `- [x]` for PASS. Mark FAIL for anything that does not match. Mark CANNOT VERIFY if the verify step itself is unclear.
 
 ---
 
@@ -252,9 +252,9 @@ Common failures and their typical resolutions:
 
 ---
 
-## Step 7: update REQUIREMENTS.md
+## Step 7: update docs/requirements.md
 
-Open REQUIREMENTS.md. Find REQ-002.
+Open `docs/requirements.md`. Find REQ-002.
 
 If all acceptance criteria pass: update status to `satisfied`.
 
@@ -262,7 +262,7 @@ If any criterion failed and was resolved: update status to `satisfied` with a no
 
 If any criterion is still failing: update status to `in-progress` with a note on what remains.
 
-The REQUIREMENTS.md is the phase-level record. The SPEC is the feature-level contract. Both must reflect reality.
+`docs/requirements.md` is the phase-level record. The feature SPEC is the contract. Both must reflect reality.
 
 ---
 
@@ -277,4 +277,4 @@ The REQUIREMENTS.md is the phase-level record. The SPEC is the feature-level con
 - [ ] Results recorded in SPEC — each criterion marked PASS, FAIL, or CANNOT VERIFY
 - [ ] Any FAIL resolved: drift repair procedure applied, explicit decision on which party was wrong
 - [ ] Any CANNOT VERIFY rewritten as a binary criterion
-- [ ] REQ-002 status updated in REQUIREMENTS.md
+- [ ] REQ-002 status updated in `docs/requirements.md`

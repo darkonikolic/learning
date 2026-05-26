@@ -137,7 +137,7 @@ What belongs here: reference to the approved spec or plan that bounds this task.
 
 Example:
 ```
-Implement step 2 from .planning/phases/01-endpoints/01-01-PLAN.md.
+Implement step 2 from docs/plans/01-post-tasks-plan.md.
 
 SPEC contract: docs/specs/post-tasks.md — acceptance section is the contract.
 ```

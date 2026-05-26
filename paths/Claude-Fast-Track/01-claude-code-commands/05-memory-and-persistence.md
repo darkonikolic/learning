@@ -10,7 +10,7 @@ Claude Code has five distinct memory layers. Mixing them up is one of the most c
 | CLAUDE.md (project) | You | Yes — reloaded each session | Project instructions, conventions, constraints |
 | ~/.claude/CLAUDE.md | You | Yes — reloaded each session | Personal preferences across all projects |
 | Auto-memory | Claude | Yes — stored in ~/.claude/projects/ | Claude's learned facts about you and your projects |
-| STATE.md | You | Yes — file on disk | Workflow state; last known good position |
+| docs/state.md | You | Yes — file on disk | Workflow checkpoint; last known good position |
 
 **The most important rule:** decisions that matter must land in a file. Anything that exists only in the chat scrollback is gone after `/compact` or `/clear`.
 
@@ -22,9 +22,9 @@ Claude Code has five distinct memory layers. Mixing them up is one of the most c
 |--------------|---------------|
 | Project stack, language, key paths | CLAUDE.md (project root) |
 | Global personal preferences | ~/.claude/CLAUDE.md |
-| Current phase and last completed task | .planning/STATE.md |
-| Requirements and acceptance criteria | .planning/REQUIREMENTS.md |
-| Implementation plan for current phase | .planning/PLAN.md |
+| Current phase and last completed task | docs/state.md |
+| Requirements and acceptance criteria | docs/requirements.md |
+| Implementation plan for current phase | docs/plans/<phase>-plan.md |
 | Multi-step procedure or workflow | .claude/skills/<name>.md |
 | Module-specific conventions | .claude/rules/<subpath>/ |
 | Claude's observed preferences | Auto-memory (auto-managed) |
@@ -49,7 +49,7 @@ CLAUDE.md is loaded at session start. It is context, not hard enforcement — bu
 
 ### What NOT to put in CLAUDE.md
 
-- Full specification text — put in SPEC.md
+- Full specification text — put in `docs/specs/<slug>.md`
 - Implementation history — put in git log or ADRs
 - Long procedures (more than 10 steps) — put in .claude/skills/
 - Module-specific rules that don't apply to the whole project — put in .claude/rules/
@@ -60,35 +60,32 @@ CLAUDE.md is loaded at session start. It is context, not hard enforcement — bu
 ```markdown
 # task-api
 
-Go 1.22 HTTP API for task management. No frameworks — stdlib net/http only.
-SQLite via database/sql with github.com/mattn/go-sqlite3.
+Go HTTP API for task management. stdlib net/http only. In-memory store — no database in this track.
 
 ## Build and test
 
 go build ./...
-go test ./... -race
+go test ./...
 go vet ./...
 
 ## Structure
 
-main.go         — server setup, router, graceful shutdown
+main.go         — server setup, route registration
 tasks/
   handler.go    — HTTP handlers
-  store.go      — database operations
-  store_test.go — integration tests against a test DB
-schema.sql      — database schema (run once on init)
+  store.go      — in-memory store
+  store_test.go — store and handler tests
 
 ## Conventions
 
 - Handlers receive (w http.ResponseWriter, r *http.Request) only.
-- Store methods return (T, error) — never panic on DB errors.
-- Tests use a separate in-memory SQLite DB, not the app DB.
+- Store methods return (T, error) — never panic.
 - Error responses use {"error": "message"} JSON, not plain text.
+- Feature contracts: docs/specs/*.md — load before implementing endpoints.
 
 ## Constraints
 
-- No external HTTP router packages (chi, gorilla, etc.)
-- No ORM — raw SQL only
+- No external packages beyond stdlib
 - Tests must pass before any commit
 ```
 
@@ -138,8 +135,8 @@ Auto-memory is useful for personal preferences (communication style, review dept
 | Active plan if you pass it as an instruction | Chat-only working notes |
 
 **Before running /compact on work-in-progress:**
-1. Write the current plan to PLAN.md on disk.
-2. Update STATE.md with current status and next action.
+1. Write the current plan to `docs/plans/<phase>-plan.md` on disk.
+2. Update `docs/state.md` with current status and next action.
 3. Capture any important decisions in a file.
 4. Then compact.
 
@@ -147,27 +144,27 @@ Auto-memory is useful for personal preferences (communication style, review dept
 
 ---
 
-## STATE.md — workflow memory
+## docs/state.md — workflow checkpoint
 
-STATE.md is the artifact that tracks workflow state across sessions. Update it at phase boundaries, and update it manually when a session ends unexpectedly.
+`docs/state.md` is the file that tracks workflow state across sessions. Update it at phase boundaries, and update it manually when a session ends unexpectedly.
 
-A well-maintained STATE.md:
+A well-maintained `docs/state.md`:
 ```yaml
 phase: v0.1-api-core
 status: in-progress
-last_completed: PLAN.md task 3 (CreateTask handler)
-next_action: Implement GetTasks handler (PLAN.md task 4)
+last_completed: plan task 3 (CreateTask handler)
+next_action: Implement GetTasks handler (plan task 4)
 blockers: none
 last_session: 2026-05-24
 ```
 
-A STATE.md that misleads you:
+A `docs/state.md` that misleads you:
 ```yaml
 phase: v0.1-api-core
 status: complete
 ```
 
-When a session ends mid-task, update STATE.md before closing. The 90 seconds this takes prevents 20 minutes of context reconstruction next session.
+When a session ends mid-task, update `docs/state.md` before closing. The 90 seconds this takes prevents 20 minutes of context reconstruction next session.
 
 ---
 
@@ -178,7 +175,7 @@ When a session ends mid-task, update STATE.md before closing. The 90 seconds thi
 | Putting everything in CLAUDE.md | Context bloat; important rules lost in noise | Under 200 lines; use path rules for module content |
 | Relying on chat memory across sessions | Lost context; Claude re-derives wrong conclusions | Important decisions land in files |
 | Stale auto-memory | Wrong "facts" influence new work | Review auto-memory monthly; delete stale entries |
-| STATE.md not updated before session end | Next session starts with wrong context | Update STATE.md as last action of every session |
+| `docs/state.md` not updated before session end | Next session starts with wrong context | Update `docs/state.md` as last action of every session |
 | Global CLAUDE.md with project-specific rules | Rules apply to wrong projects; confusing | Project-specific content in project CLAUDE.md only |
 
 ---
@@ -190,6 +187,6 @@ When a session ends mid-task, update STATE.md before closing. The 90 seconds thi
 - [ ] Long procedures are in .claude/skills/, not CLAUDE.md.
 - [ ] Module-specific rules are in .claude/rules/ path-scoped files.
 - [ ] I have reviewed auto-memory at least once with `/memory`.
-- [ ] STATE.md is honest about what is incomplete (not optimistically "done").
+- [ ] `docs/state.md` is honest about what is incomplete (not optimistically "done").
 - [ ] I understand what survives `/compact` and what does not.
 - [ ] I run `/context` to check memory footprint when sessions feel bloated.

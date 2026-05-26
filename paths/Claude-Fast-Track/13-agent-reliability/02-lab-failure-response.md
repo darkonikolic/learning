@@ -1,8 +1,8 @@
 # Lab — failure response on task-api
 
-This lab simulates a real execute-phase failure: Claude adds out-of-scope filtering to `GET /tasks`. You classify the failure, run the recovery procedure, update STATE.md, and verify. Estimated time: 30–40 minutes.
+This lab simulates a real execute failure: Claude adds out-of-scope filtering to `GET /tasks`. You classify the failure, run the recovery procedure, update `docs/state.md`, and verify. Estimated time: 30–40 minutes.
 
-Prerequisites: task-api with a working `GET /tasks` endpoint, `.planning/milestones/v0.1/phases/01-endpoints/` directory with `SPEC.md`, `PLAN.md`, and `STATE.md`.
+Prerequisites: task-api with a working `GET /tasks` endpoint, `docs/specs/get-tasks.md`, and `docs/plans/` with `02-get-tasks-plan.md` and `docs/state.md`.
 
 ---
 
@@ -135,7 +135,7 @@ kill $SERVER_PID
 Open your SPEC:
 
 ```bash
-cat .planning/milestones/v0.1/phases/01-endpoints/SPEC.md
+cat docs/specs/get-tasks.md
 ```
 
 Find the `GET /tasks` section. It should contain something like:
@@ -218,7 +218,7 @@ The revert restored the original `GET /tasks` handler. If that handler already s
 If the original handler was also incomplete (missing fields, wrong status codes), now is the time to implement correctly. Prompt Claude with the specific gap and an explicit scope constraint:
 
 ```
-Implement GET /tasks as specified in .planning/milestones/v0.1/phases/01-endpoints/SPEC.md.
+Implement GET /tasks as specified in docs/specs/get-tasks.md.
 
 The handler must satisfy these acceptance criteria:
 - Returns HTTP 200
@@ -232,11 +232,11 @@ The SPEC section "Out of scope (v0.1)" lists these exclusions.
 
 ---
 
-## Part 3 — Update STATE.md
+## Part 3 — Update docs/state.md
 
-### Step 10 — Record the incident in STATE.md
+### Step 10 — Record the incident in docs/state.md
 
-Open `.planning/milestones/v0.1/phases/01-endpoints/STATE.md`.
+Open `docs/state.md`.
 
 Find the entry for the `GET /tasks` task (it may show `status: complete` from the bad execute run). Update it to record what happened:
 
@@ -255,7 +255,7 @@ tasks:
       Date: 2026-05-25
 ```
 
-If STATE.md does not have a `note` field in its schema, add the incident as a comment below the task entry:
+If docs/state.md does not have a `note` field in its schema, add the incident as a comment below the task entry:
 
 ```yaml
   - id: implement-get-tasks
@@ -265,10 +265,10 @@ If STATE.md does not have a `note` field in its schema, add the incident as a co
     # INCIDENT: reverted d7e4b91 — out-of-scope filtering removed 2026-05-25
 ```
 
-Commit the STATE.md update:
+Commit the docs/state.md update:
 
 ```bash
-git add .planning/milestones/v0.1/phases/01-endpoints/STATE.md
+git add docs/state.md
 git commit -m "docs: record scope-creep incident and recovery for GET /tasks"
 ```
 
@@ -341,13 +341,13 @@ a3f9c12 feat: add POST /tasks handler
 ...
 ```
 
-The history is honest: you can see the bad commit, the revert, and the STATE.md update. No force-push, no squash. The revert is the record.
+The history is honest: you can see the bad commit, the revert, and the docs/state.md update. No force-push, no squash. The revert is the record.
 
 ---
 
-## Reference — STATE.md incident format
+## Reference — docs/state.md incident format
 
-Use this format for any execute-phase incident you record in STATE.md:
+Use this format for any execute incident you record in docs/state.md:
 
 ```yaml
 # INCIDENT LOG
@@ -371,7 +371,7 @@ Use this format for any execute-phase incident you record in STATE.md:
 - [ ] I used `git revert` for the clean single-commit isolation (not `git reset --hard`).
 - [ ] I verified the revert removed filtering AND preserved correct behavior.
 - [ ] I confirmed the scope boundary: `?completed=true` param is now silently ignored.
-- [ ] I updated STATE.md with the incident log entry and committed it.
+- [ ] I updated docs/state.md with the incident log entry and committed it.
 - [ ] All six acceptance criteria from the SPEC pass after recovery.
 - [ ] `go test ./...` passes after recovery.
-- [ ] `git log` shows the revert commit and the STATE.md update commit.
+- [ ] `git log` shows the revert commit and the docs/state.md update commit.

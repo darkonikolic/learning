@@ -2,6 +2,8 @@
 
 Rules enforce constraints. Skills encode repeated workflows. Both extend Claude's behavior beyond CLAUDE.md, but they serve different purposes and have different lifecycles.
 
+Anthropic exposes **Skills** as a first-class product feature on [claude.com](https://claude.com/). In Claude Code, project skills live under **`.claude/skills/<name>/SKILL.md`** — same idea: repeatable procedures you invoke with `/skill-name` instead of retyping a long prompt every session.
+
 ---
 
 ## Rules

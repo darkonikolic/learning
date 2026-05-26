@@ -1,5 +1,7 @@
 # Refactor ownership
 
+For diff review on every change (not only refactors), see `12-diff-refactor/03-diff-review-discipline.md`. For edit anchors, allowed zones, and minimal-diff discipline, see `12-diff-refactor/04-idempotent-refactoring-discipline.md`.
+
 Refactoring without a template fails the same way every time: you tell Claude "make it cleaner" and it rewrites three files, renames four symbols, and changes error handling in a way you did not ask for. Tests break. You do not know which change broke them. You roll back everything and lose the work that was actually good. The cause is a vague instruction that gave Claude no target state, no scope, and no success criterion.
 
 The fix is a template you fill before you type a single instruction to Claude.

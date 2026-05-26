@@ -106,7 +106,7 @@ I want to put the task model in tasks/model.go separately from the store.
 
 Note how Claude responds to the edit in plan mode. It should adjust without executing anything.
 
-You are practicing the plan-then-approve workflow. The plan lives in the chat for now. In module 03, you will write plans to PLAN.md before executing.
+You are practicing the plan-then-approve workflow. The plan lives in the chat for now. In module 02, you will write plans to `docs/plans/<phase>-plan.md` before executing.
 
 ---
 
@@ -142,36 +142,33 @@ In your `task-api` directory (outside of Claude Code — in a regular text edito
 ```markdown
 # task-api
 
-Go 1.22 HTTP API for task management. No external frameworks — stdlib net/http only.
-SQLite storage via database/sql + github.com/mattn/go-sqlite3.
+Go HTTP API for task management. stdlib net/http only. In-memory store for the whole track — no database.
 
 ## Build and test
 
 go build ./...
-go test ./... -race
+go test ./...
 go vet ./...
 
 ## Structure
 
-main.go           — server setup, router registration, graceful shutdown
+main.go           — server setup, route registration
 tasks/
   handler.go      — HTTP handlers (POST /tasks, GET /tasks, PATCH /tasks/:id/complete)
-  store.go        — all database operations
-  store_test.go   — integration tests using in-memory SQLite
-schema.sql        — schema DDL, run once at startup
+  store.go        — in-memory store
+  store_test.go   — handler and store tests
 
 ## Conventions
 
-- Handlers: func(w http.ResponseWriter, r *http.Request) only, no extra args
-- Store methods: always return (T, error), never panic on DB errors
-- Tests: use a separate in-memory DB, never the app DB
-- JSON errors: {"error": "message"} format, not plain text
+- Handlers: func(w http.ResponseWriter, r *http.Request) only
+- Store methods: return (T, error); never panic
+- JSON errors: {"error": "message"}
+- Verifiable contracts live in docs/specs/ — not only in chat
 
 ## Constraints
 
-- No external router packages (no chi, gorilla/mux, httprouter)
-- No ORM — raw SQL only
-- All tests must pass before committing
+- No external packages beyond stdlib
+- All tests pass before commit
 - Never commit .env files
 ```
 

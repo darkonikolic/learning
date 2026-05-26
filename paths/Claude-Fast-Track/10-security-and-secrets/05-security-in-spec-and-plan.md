@@ -54,7 +54,7 @@ Mark "N/A for this phase" explicitly rather than omitting. An omitted NFR looks 
 
 ## SPEC template — security section
 
-Insert this section into every SPEC.md between functional requirements and implementation notes:
+Insert this section into every feature SPEC in `docs/specs/` between functional requirements and implementation notes:
 
 ```markdown
 ## Security requirements
@@ -99,13 +99,13 @@ For each threat, identify: does it apply to this system? If yes, what is the mit
 | Denial of service | Flood POST /tasks with large bodies | Unlimited body size would exhaust memory | Mitigation: 10KB body limit via `http.MaxBytesReader` |
 | Elevation of privilege | Mark any task complete, not just user's own | No per-user isolation in Phase 1–3 | Out of scope; single-user store |
 
-Add this table to your SPEC.md or to a SECURITY.md that lives alongside it.
+Add this table to the feature SPEC or to a `docs/decisions/security.md` record if you keep threats separate.
 
 ---
 
 ## Security verification pass
 
-A security verification pass runs after execute-phase. It reads the threat mitigations documented in PLAN.md and SPEC.md and verifies they exist in the implemented code.
+A security verification pass runs after execute. It reads the threat mitigations documented in the phase plan and feature SPEC and verifies they exist in the implemented code.
 
 **When to run it:**
 - After any phase that handles user input
@@ -138,9 +138,9 @@ A MISSING status means: the SPEC required this mitigation, the code was searched
 
 ---
 
-## Encoding security in PLAN.md tasks
+## Encoding security in phase plan tasks
 
-Security mitigations need to appear as explicit PLAN.md tasks, not as implicit expectations:
+Security mitigations need to appear as explicit plan tasks, not as implicit expectations:
 
 ```markdown
 ## Wave 2 — Task storage
@@ -171,5 +171,5 @@ Without explicit tasks, security mitigations depend on the implementer rememberi
 - [ ] I can explain the STRIDE model and apply it to task-api.
 - [ ] task-api SPEC includes security acceptance criteria: UUID IDs, body size limit, no stack traces in responses.
 - [ ] I know when to run a security verification pass and what it produces.
-- [ ] I know how to encode security mitigations as explicit PLAN.md tasks with verification steps.
+- [ ] I know how to encode security mitigations as explicit plan tasks with verification steps.
 - [ ] I understand that "N/A for this phase" is an explicit, documented decision — not an omission.

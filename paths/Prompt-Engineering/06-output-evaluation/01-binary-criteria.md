@@ -113,7 +113,7 @@ Three is the floor, not the ceiling. Large requests need more. But if you can't 
 
 ## Connection to SPEC acceptance criteria
 
-If you use GSD or Fast-Track, the acceptance criteria in your SPEC.md are exactly this. The spec-first workflow forces you to write binary criteria before any code is generated — that's the mechanism that makes it work.
+If you use Claude-Fast-Track, the acceptance criteria in your SPEC.md are exactly this. The spec-first workflow forces you to write binary criteria before any code is generated — that's the mechanism that makes it work.
 
 If you're not using a spec workflow, the pre-prompt checklist above is the minimal equivalent. Same concept, applied at the prompt level instead of the phase level.
 

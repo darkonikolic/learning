@@ -66,7 +66,7 @@ Saying "But you said you created the file — why didn't you?" does not help. Th
 
 Ground the agent in specific files before asking it to implement. "Read internal/store/store.go first, then implement GetAll in internal/handler/task.go." Reading the file grounds Claude in actual current state — it cannot hallucinate a file it just read.
 
-Executor agents read PLAN.md (ground truth for the task) before acting, and their output is verified via git commits (ground truth for completion).
+Executor agents read `docs/plans/<phase>-plan.md` (ground truth for the task) before acting, and their output is verified via git commits (ground truth for completion).
 
 ---
 

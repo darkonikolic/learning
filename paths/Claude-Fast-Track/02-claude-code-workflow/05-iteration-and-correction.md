@@ -1,5 +1,7 @@
 # Iteration and correction
 
+For repair loops, prompt debt, and when to replan instead of retry, see `02-claude-code-workflow/07-prompt-repair-discipline.md`.
+
 Each correction you send is a signal. Vague corrections train Claude to produce vague improvements. Specific corrections produce specific fixes. The correction is as important as the original prompt.
 
 ---

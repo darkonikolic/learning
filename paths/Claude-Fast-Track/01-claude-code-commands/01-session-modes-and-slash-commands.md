@@ -2,6 +2,8 @@
 
 ## Claude Code is a CLI, not a chat
 
+Claude Code is Anthropic's **coding agent** product ([claude.com](https://claude.com/) → Claude Code). It is not the same surface as browser chat or Cowork, though it shares models and account.
+
 The distinction matters for how you work. In a chat interface, context accumulates passively and you navigate by scrolling. In Claude Code:
 
 - Context is a finite resource you actively manage.
@@ -125,7 +127,7 @@ Claude: [writes 15 files without asking a single question]
 
 **Do this instead:**
 ```
-You: /plan implement the three endpoints for the task-api based on the SPEC.md in .planning/
+You: /plan implement the three endpoints for the task-api based on docs/specs/ and docs/plans/
 Claude: [proposes approach — you review and approve or correct]
 You: proceed with task 1
 ```
@@ -141,11 +143,11 @@ You: proceed with task 1
 **When to use it:**
 - You are 60-70% through context window (check with `/context`)
 - You are switching from exploration/discussion to execution
-- You have been iterating in chat but the plan now lives in PLAN.md
+- You have been iterating in chat but the plan now lives in `docs/plans/<phase>-plan.md`
 
 **Before running /compact on multi-step work:**
-- Ensure the current plan is written to PLAN.md on disk
-- Ensure STATE.md reflects current phase and last completed task
+- Ensure the current plan is written to `docs/plans/<phase>-plan.md` on disk
+- Ensure `docs/state.md` reflects current phase and last completed task
 - Ensure any decisions made in chat are captured in a file
 
 Running `/compact` without writing decisions to disk is how you lose irreplaceable context.

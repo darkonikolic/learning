@@ -1,6 +1,6 @@
 # Lab: test the spec
 
-Prerequisites: `docs/specs/get-tasks.md` exists (written in module 09 lab). Phase 2 GET /tasks is implemented and `go build ./...` passes. You have not written any tests for GET /tasks yet.
+Prerequisites: `docs/specs/get-tasks.md` exists (written in module 06 lab). Phase 2 GET /tasks is implemented and `go build ./...` passes. You have not written any tests for GET /tasks yet.
 
 ---
 

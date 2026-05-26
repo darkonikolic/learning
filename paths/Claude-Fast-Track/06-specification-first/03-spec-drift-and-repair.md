@@ -70,7 +70,7 @@ Be skeptical after:
 
 Drift shows up in specific patterns:
 
-- A verification step fails on an item that "definitely works" — meaning the item passes a manual check but the SPEC criterion describes something slightly different
+- A verification stage fails on an item that "definitely works" — meaning the item passes a manual check but the SPEC criterion describes something slightly different
 - Implementation has behavior the SPEC does not mention (excess behavior)
 - SPEC acceptance criteria cannot be verified because the implementation does something the criterion doesn't describe
 - A new team member reads the SPEC and expects different behavior than what is deployed
@@ -203,7 +203,7 @@ Drift is not:
 - A test failing (that is a test failure — may or may not indicate drift)
 - An improvement to internal code structure (implementation strategy differs from SPEC — Low severity, no drift)
 - A bug fix that does not change user-observable behavior (internal repair — not drift)
-- A SPEC update during plan-phase (SPEC is being written, not drifting)
+- A SPEC update during plan stage (SPEC is being written, not drifting)
 
 Drift requires both: a SPEC that describes behavior, and implementation that contradicts that description. If the SPEC never described the behavior, there is nothing to drift from.
 

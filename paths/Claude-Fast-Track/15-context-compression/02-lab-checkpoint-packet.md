@@ -13,15 +13,15 @@
 You need:
 - task-api Phase 1 complete (all five acceptance criteria passing)
 - An active Claude Code session that has been running for this phase
-- SPEC.md open for reference
+- docs/specs/get-tasks.md open for reference
 
-Do not use STATE.md as your checkpoint source. This lab trains manual checkpoint writing — the skill that makes STATE.md comprehensible when you read it back.
+Do not use `docs/state.md` as your checkpoint source. This lab trains manual checkpoint writing — the skill that makes `docs/state.md` comprehensible when you read it back.
 
 ---
 
 ## Step 1: Write the checkpoint packet
 
-Before running `/compact`, write the checkpoint in a new file: `task-api/.planning/checkpoint-phase1.md`.
+Before running `/compact`, write the checkpoint in a new file: `task-api/docs/checkpoints/phase1.md`.
 
 Use this exact format — do not abbreviate, paraphrase, or summarise protected zones:
 
@@ -47,20 +47,20 @@ Use this exact format — do not abbreviate, paraphrase, or summarise protected 
 
 ### Next action
 
-Implement Phase 2: PATCH /tasks/:id partial update. Load SPEC.md Phase 2 section before starting. Do not begin until SPEC is in context.
+Implement Phase 2: PATCH /tasks/:id partial update. Load docs/specs/get-tasks.md Phase 2 section before starting. Do not begin until SPEC is in context.
 
 ### File paths that matter
 
 - `internal/store/store.go` — Task struct, Store interface, MemStore implementation
 - `internal/handlers/tasks.go` — POST /tasks and GET /tasks/:id handlers
 - `main.go` — router initialisation, server start
-- `SPEC.md` — ground truth; load Phase 2 section for next session
+- `docs/specs/get-tasks.md` — ground truth; load Phase 2 section for next session
 - `task-api_test.go` (or `internal/handlers/tasks_test.go`) — integration tests for AC-01 through AC-05
 ```
 
 **Fill in your actual values.** AC results must be PASS or FAIL, not "probably passing" or "looks good." Run `go test ./...` and record the actual output.
 
-**Time box:** 10 minutes. If writing the checkpoint reveals you cannot state the AC conditions verbatim, that is a finding — open SPEC.md and copy the text exactly.
+**Time box:** 10 minutes. If writing the checkpoint reveals you cannot state the AC conditions verbatim, that is a finding — open docs/specs/get-tasks.md and copy the text exactly.
 
 ---
 
@@ -91,7 +91,7 @@ Do not add anything to context after `/compact`. Move directly to Step 3.
 Load the checkpoint packet as Claude's context for the next step. Do not load any source files, do not paste test output, do not summarise what you remember. Load only:
 
 ```
-Read task-api/.planning/checkpoint-phase1.md
+Read task-api/docs/checkpoints/phase1.md
 ```
 
 Then say: "Resume from this checkpoint. We are about to begin Phase 2."
@@ -169,7 +169,7 @@ Any of:
 |---|---|
 | 3/3 | Checkpoint is production quality. Use this format for all future phases. |
 | 2/3 | One protected zone was lost. Review the failing question, identify which section of the packet was incomplete, repair the format. |
-| 1/3 | Checkpoint was mostly description. Rewrite the AC table with verbatim text from SPEC.md and repeat the test. |
+| 1/3 | Checkpoint was mostly description. Rewrite the AC table with verbatim text from docs/specs/get-tasks.md and repeat the test. |
 | 0/3 | The checkpoint was not loaded, or was loaded alongside session history. Repeat with only the checkpoint in context. |
 
 ---
@@ -200,14 +200,14 @@ This is a complete, passing checkpoint for task-api Phase 1. Use it as a templat
 
 ### Next action
 
-Implement Phase 2: PATCH /tasks/:id partial update. Load SPEC.md lines for Phase 2 before writing any code.
+Implement Phase 2: PATCH /tasks/:id partial update. Load docs/specs/get-tasks.md lines for Phase 2 before writing any code.
 
 ### File paths that matter
 
 - `internal/store/store.go` — Task struct, Store interface, MemStore
 - `internal/handlers/tasks.go` — HandleCreate (POST), HandleGet (GET)
 - `main.go` — chi router setup, ListenAndServe on :8080
-- `SPEC.md` — load Phase 2 section next
+- `docs/specs/get-tasks.md` — load Phase 2 section next
 - `internal/handlers/tasks_test.go` — AC-01 through AC-05 integration tests
 ```
 

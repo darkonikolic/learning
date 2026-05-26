@@ -1,6 +1,6 @@
 # Orchestrator-worker pattern
 
-The orchestrator-worker pattern is the core architecture of execute-phase and any multi-agent system with dependent tasks. Understanding the vocabulary — fan-out, fan-in, DAG, wave — is prerequisite to reading PLAN.md, understanding execute-phase behavior, and debugging multi-agent failures.
+The orchestrator-worker pattern is the core architecture of execute and any multi-agent system with dependent tasks. Understanding the vocabulary — fan-out, fan-in, DAG, wave — is prerequisite to reading `docs/plans/<phase>-plan.md`, understanding execute behavior, and debugging multi-agent failures.
 
 ---
 
@@ -8,9 +8,9 @@ The orchestrator-worker pattern is the core architecture of execute-phase and an
 
 **Orchestrator:** the agent that plans, assigns, monitors, and recovers. It understands the full workflow. It does not do implementation work — it delegates.
 
-**Worker (executor agent):** the agent that executes one specific task. It receives a task description and context from the orchestrator. It produces a result. It does not understand the broader workflow. These are the executor agents spawned per task in execute-phase.
+**Worker (executor agent):** the agent that executes one specific task. It receives a task description and context from the orchestrator. It produces a result. It does not understand the broader workflow. These are the executor agents spawned per task during execute.
 
-**Supervisor:** a variant of the orchestrator that also monitors worker health and intervenes when a worker stalls or produces invalid output. Execute-phase functions as a supervisor: it checks agent output and can spawn correction agents.
+**Supervisor:** a variant of the orchestrator that also monitors worker health and intervenes when a worker stalls or produces invalid output. You function as supervisor between waves: it checks agent output and can spawn correction agents.
 
 The orchestrator knows everything. The worker knows its task. The supervisor watches both and intervenes when the system deviates.
 
@@ -38,7 +38,7 @@ Worker C result ──┘
 
 **Wave:** one fan-out / fan-in cycle. Fan-out all tasks in the wave, wait for fan-in (all complete), advance.
 
-Execute-phase executes one wave at a time:
+You run one wave at a time at a time:
 - Wave 1: fan-out all wave-1 tasks, fan-in, verify all complete.
 - Wave 2: fan-out all wave-2 tasks (now that wave-1 dependencies are satisfied), fan-in.
 - Continue until all waves are complete or a failure halts execution.
@@ -55,7 +55,7 @@ A DAG is the mathematical structure underlying any dependency-aware task plan. T
 
 **Why DAG matters for parallelism:** a DAG exposes which tasks can run simultaneously (no dependencies between them) and which must run sequentially (one depends on the other). Maximum parallelism is achieved by running all tasks at the same DAG level simultaneously.
 
-The levels of a DAG correspond to waves in a PLAN.md:
+The levels of a DAG correspond to waves in a phase plan:
 - DAG level 0 (no dependencies): Wave 1
 - DAG level 1 (depends on level 0): Wave 2
 - DAG level 2 (depends on level 1): Wave 3
@@ -92,7 +92,7 @@ Wave structure:
 - Wave 3: C (depends on B completing)
 - Wave 4: D (depends on C completing)
 
-In PLAN.md format:
+In phase plan format:
 ```markdown
 ## Wave 1 (parallel)
 - A: define Task struct and Store interface
@@ -139,7 +139,7 @@ In Claude Code, this means:
 4. If output is wrong: supervisor spawns a correction agent with specific error context.
 5. If output is correct: supervisor moves to next task.
 
-Execute-phase implements a version of this: after each executor completes, it checks STATE.md and git commits. If the task produced no commit (nothing changed), the task may have failed silently. The orchestrator can detect this and flag it.
+You implement a version of this: after each executor completes, it checks `docs/state.md` and git commits. If the task produced no commit (nothing changed), the task may have failed silently. The orchestrator can detect this and flag it.
 
 The manual version: after each agent completes, run `go build ./...` and `go test ./...`. If they fail, the worker's output is wrong. Report the specific failure back to the agent as a correction.
 

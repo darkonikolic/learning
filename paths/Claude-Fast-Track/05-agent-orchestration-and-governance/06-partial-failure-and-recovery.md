@@ -40,7 +40,7 @@ Designing tasks to be idempotent is the prerequisite for safe retry. If retrying
 
 **Executor convention:** each task makes an atomic git commit. If a task fails mid-execution, no commit is made. The next retry starts from the last clean commit. Running the task again overwrites the partial (uncommitted) work with a complete implementation.
 
-This makes tasks idempotent: running a completed task again (with `--gaps-only` off) re-writes the file and re-makes the commit. Running a failed task again starts from clean state.
+This makes tasks idempotent: running a completed task again (when not using incomplete-only retry) re-writes the file and re-makes the commit. Running a failed task again starts from clean state.
 
 ---
 
@@ -54,7 +54,7 @@ Not all failures warrant the same retry approach:
 | Network error (MCP server down) | Backoff retry (wait, then retry) | Resource contention — wait helps |
 | Agent produced wrong output | No retry — fix prompt first | Logic failure — retrying produces same wrong output |
 | Partial file write (corruption) | Restore from last commit, then retry | Bad state — clean slate needed |
-| Wave 1 partial failure | Retry only failed tasks (--gaps-only) | Idempotent tasks — safe to re-run |
+| Wave 1 partial failure | Re-run only failed tasks (incomplete-only retry) | Idempotent tasks — safe to re-run |
 
 **Maximum retries:** always set a limit. An infinite retry loop on a logic failure will run forever generating wrong output and burning tokens. Three retries is typical. If it fails three times, escalate to human review.
 
@@ -74,25 +74,25 @@ In all three cases: stop, diagnose, fix the root cause, then retry.
 | Agent timeout | Retry the specific task with the same prompt |
 | Agent wrong output (logic failure) | Diagnose: which constraint was violated? Fix prompt. Retry. |
 | Partial file write / corruption | `git checkout <file>` to restore last clean state. Retry task. |
-| Wave 1 partial failure | Use --gaps-only flag: re-run only tasks not in STATE.md as complete |
-| STATE.md inconsistent | Manual STATE.md repair: mark only genuinely-complete tasks. |
-| Multiple waves partially complete | Audit STATE.md manually. Re-run from the earliest incomplete wave. |
+| Wave 1 partial failure | Incomplete-only retry: re-run only tasks not marked complete in `docs/state.md` |
+| `docs/state.md` inconsistent | Manual repair: mark only genuinely-complete tasks. |
+| Multiple waves partially complete | Audit `docs/state.md` manually. Re-run from the earliest incomplete wave. |
 
 ---
 
-## The --gaps-only retry pattern
+## Incomplete-only retry pattern
 
-When partial failure occurs during execute-phase, use `--gaps-only` mode to re-run only tasks not marked complete in STATE.md.
+When partial failure occurs during execute, re-run only tasks not marked complete in `docs/state.md`.
 
 How it works:
-1. Read STATE.md.
+1. Read `docs/state.md`.
 2. Tasks marked as complete are skipped.
 3. Tasks not marked complete are re-run.
-4. STATE.md is updated as tasks complete.
+4. `docs/state.md` is updated as tasks complete.
 
 This works safely because tasks are designed to be idempotent. A task that was already completed and is re-run will overwrite its own correct output — which is safe because it produces the same correct output again.
 
-Precondition for --gaps-only to be safe: tasks in STATE.md marked "complete" must actually be complete. If a task was marked complete prematurely (agent said "done" but work was wrong), --gaps-only will skip it. Manual STATE.md repair is needed: remove the "complete" marker for the incorrectly-completed task.
+Precondition for incomplete-only retry to be safe: tasks in `docs/state.md` marked "complete" must actually be complete. If a task was marked complete prematurely (agent said "done" but work was wrong), incomplete-only retry will skip it. Manual `docs/state.md` repair is needed: remove the "complete" marker for the incorrectly-completed task.
 
 ---
 
@@ -115,7 +115,7 @@ The best partial failure handling is preventing it in the first place.
 Scenario: wave 2 has three tasks. Task A (write handler) succeeds. Task B (write tests) fails with a timeout. Task C (update CLAUDE.md) succeeds.
 
 **State after partial failure:**
-- STATE.md shows: A complete, B not present, C complete.
+- `docs/state.md` shows: A complete, B not present, C complete.
 - Git log shows: two commits (one for A, one for C). No commit for B.
 - go test ./...: fails because tests don't exist.
 
@@ -123,9 +123,9 @@ Scenario: wave 2 has three tasks. Task A (write handler) succeeds. Task B (write
 
 Step 1: Identify what failed.
 ```bash
-cat .planning/phases/01-endpoints/STATE.md
+cat docs/state.md
 ```
-Task B is not in STATE.md as complete.
+Task B is not in `docs/state.md` as complete.
 
 Step 2: Confirm the failure type.
 ```bash
@@ -146,7 +146,7 @@ Step 5: Verify.
 ```bash
 go test ./...
 ```
-Tests pass. STATE.md now shows B complete.
+Tests pass. `docs/state.md` now shows B complete.
 
 Note what did NOT happen: you did not re-run tasks A and C. They were complete and correct. Retrying them would have been wasteful and potentially harmful (if re-running C added duplicate entries to CLAUDE.md).
 
@@ -184,6 +184,6 @@ Fix: clarify the SPEC or constraint before retrying.
 - [ ] I know what idempotency means for agent tasks and why it enables safe retry.
 - [ ] I know the four failure types and their correct retry policies.
 - [ ] I know when NOT to retry: logic failure, ambiguous SPEC, wrong prior-wave output.
-- [ ] I know how --gaps-only works and its precondition (STATE.md accuracy).
+- [ ] I know how incomplete-only retry works and its precondition (`docs/state.md` accuracy).
 - [ ] I can design a task to be idempotent: one file, one commit, deterministic output.
 - [ ] I run go build and go test after each wave to catch partial failures before advancing.

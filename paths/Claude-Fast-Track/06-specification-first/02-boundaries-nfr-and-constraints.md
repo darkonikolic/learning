@@ -165,7 +165,7 @@ When a new SPEC needs to reference Task, it points to the ledger. If the Task st
 
 **Consistency check before execute:**
 
-Before running execute-phase, if multiple SPECs are in scope, scan for noun divergence:
+Before running execution stage, if multiple SPECs are in scope, scan for noun divergence:
 - Same field name across SPECs? (title vs task_title vs taskTitle)
 - Same field type? (id as UUID vs id as integer)
 - Same status code conventions? (201 Created for POST vs 200 OK)

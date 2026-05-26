@@ -114,14 +114,14 @@ Your project-level `.claude/rules/scaffolding-order.md` contains:
 ```markdown
 # scaffolding-order
 For scaffolding tasks — creating new files with stub functions that will be
-filled in during execute-phase — write the stub first, tests after.
-Rationale: plan-phase generates stubs so execute-phase can fill them.
-Writing tests before stubs exist causes plan-phase to generate malformed plans.
+filled in during execute — write the stub first, tests after.
+Rationale: plan generates stubs so execute can fill them.
+Writing tests before stubs exist causes plan to generate malformed plans.
 ```
 
-**The conflict:** You are running plan-phase 2 for GET /tasks. Claude starts by writing a test file before writing the handler stub. But plan-phase needs the stub to exist so it can plan around it.
+**The conflict:** You are running plan for Phase 2 GET /tasks. Claude starts by writing a test file before writing the handler stub. But plan needs the stub to exist so it can plan around it.
 
-**Classify it:** This is Type 3 — rule vs SPEC constraint. The project rule (`scaffolding-order.md`) is a scoped decision: for scaffolding tasks specifically, stubs come before tests. The global TDD rule is not wrong — it applies in execute-phase when you are filling in stubs. It does not apply to plan-phase scaffolding setup.
+**Classify it:** This is Type 3 — rule vs SPEC constraint. The project rule (`scaffolding-order.md`) is a scoped decision: for scaffolding tasks specifically, stubs come before tests. The global TDD rule is not wrong — it applies during execute when you are filling in stubs. It does not apply to plan scaffolding setup.
 
 **Apply the ladder:** Both rules could be considered Correctness tier (test coverage) and Reliability tier (plan stability). But the scoping is the key: the project rule explicitly scopes itself to "scaffolding tasks". The global rule has no scope restriction.
 
@@ -132,10 +132,10 @@ Writing tests before stubs exist causes plan-phase to generate malformed plans.
 
 Conflict type: Type 3 — rule vs scoped project decision
 Winner: scaffolding-order.md (project scope)
-Loser: global TDD rule (deferred to execute-phase)
-Scope: plan-phase scaffolding tasks only
-Rationale: global TDD applies during execute-phase when stubs are being filled;
-  scaffolding-order.md applies during plan-phase stub creation. No actual contradiction
+Loser: global TDD rule (deferred to execute)
+Scope: plan scaffolding tasks only
+Rationale: global TDD applies during execute when stubs are being filled;
+  scaffolding-order.md applies during plan stub creation. No actual contradiction
   when scopes are respected.
 ```
 
@@ -165,7 +165,7 @@ task complete without at least one passing test.
 **Resolution path:**
 
 1. Claude should follow your turn instruction — you are the human in the loop.
-2. Claude should flag the conflict explicitly, not silently comply: "Following your instruction to stop here. Note: `test-coverage.md` requires tests before this task is marked complete. Stopping without tests means STATE.md will record this task as incomplete, and running execute-phase with --gaps-only will re-run it."
+2. Claude should flag the conflict explicitly, not silently comply: "Following your instruction to stop here. Note: `test-coverage.md` requires tests before this task is marked complete. Stopping without tests means `docs/state.md` will record this task as incomplete, and incomplete-only retry will re-run it."
 3. The right response from you: decide whether to update the rule for this phase (write a scoped exception) or to add the tests after verifying the handler works.
 
 **When to escalate:** If the project rule is in the Security tier (e.g., "all authentication handlers must have tests") and the turn instruction is asking to skip tests for an auth handler, Claude should decline the instruction and explain why. Security rules are not turn-overridable — they are organizational constraints, not preferences.
@@ -179,8 +179,8 @@ Overridden rule: .claude/rules/test-coverage.md
 Permitted by: author decision — turn instruction during Phase 2 execute
 Scope: task 2-02 (GetTasks handler) only
 Reason: manual test addition planned after handler verification
-Expiry: Phase 2 complete — tests must be added before verify-work runs
-Cleanup: add TestGetTasksEmpty, TestGetTasksWithTasks before running the verification step
+Expiry: Phase 2 complete — tests must be added before verification stage runs
+Cleanup: add TestGetTasksEmpty, TestGetTasksWithTasks before running the verification stage
 Recorded by: [your name] on [date]
 ```
 
@@ -203,7 +203,7 @@ The following template captures the four-level hierarchy for task-api. Place thi
    - Cannot override Security-tier project rules
    - Expires at end of turn
 
-2. Session-level context — CONTEXT.md, session flags, discuss-phase output
+2. Session-level context — `docs/plans/<phase>-context.md`, session flags, frame output
    - Scoped to the current phase
    - Can narrow or tighten project rules for this phase
    - Expires when the session ends or phase changes
@@ -232,11 +232,11 @@ The following template captures the four-level hierarchy for task-api. Place thi
 | no-plaintext-secrets.md | Project | Security | Hard stop — no exceptions |
 | stdlib-only.md | Project | Correctness | Supply-chain integrity |
 | test-coverage.md | Project | Correctness | Handler completeness gate |
-| scaffolding-order.md | Project | Reliability | Plan-phase scaffolding scope only |
+| scaffolding-order.md | Project | Reliability | Plan stage scaffolding scope only |
 | no-global-state.md | Project | Reliability | Test isolation requirement |
 | error-wrapping.md | Project | Maintainability | Diagnostic quality |
 | readable-ids.md | Project | Maintainability | Operator ergonomics |
-| Global TDD rule | Global | Correctness | Applies in execute-phase; deferred for scaffolding |
+| Global TDD rule | Global | Correctness | Applies in execute; deferred for scaffolding |
 
 ## Active exceptions
 
@@ -278,7 +278,7 @@ Suggestion: github.com/google/uuid or similar.
 ## EXCEPTION: stdlib-only.md overridden for id-generation
 
 Overridden rule: .claude/rules/stdlib-only.md
-Permitted by: PROJECT.md decision — Phase 4+ allows audited third-party packages
+Permitted by: `docs/project.md` decision — Phase 4+ allows audited third-party packages
 Scope: internal/id/ package only
 Reason: home-rolled ID generation has collision risk at scale
 Expiry: Phase 4 complete + security review of chosen package

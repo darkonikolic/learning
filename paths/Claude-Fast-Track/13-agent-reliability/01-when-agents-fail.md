@@ -1,20 +1,20 @@
 # When agents fail
 
-Agent failures in execute-phase are not exceptional. They are operational. The skill is not avoiding failure — it is classifying it fast and recovering without losing your bearings.
+Agent failures in execute are not exceptional. They are operational. The skill is not avoiding failure — it is classifying it fast and recovering without losing your bearings.
 
 ---
 
 ## The reliability template
 
-Every failure you encounter during execute-phase should map to these seven fields. Do not diagnose from memory. Fill in the template.
+Every failure you encounter during execute should map to these seven fields. Do not diagnose from memory. Fill in the template.
 
 | Field | What to record |
 |-------|----------------|
 | **FAILURE MODE** | What class of failure? Scope creep, acceptance mismatch, execution loop |
-| **DETECTION SIGNAL** | What told you it failed? Test output, SPEC comparison, STATE.md anomaly |
+| **DETECTION SIGNAL** | What told you it failed? Test output, SPEC comparison, `docs/state.md` anomaly |
 | **CONFIDENCE LEVEL** | High / Medium / Low / Stop — does the output warrant trust? |
 | **VERIFY STEP** | The independent check you run — not "Claude says it's correct" |
-| **RETRY DECISION** | Retry same prompt / replan / repair STATE.md — with reason |
+| **RETRY DECISION** | Retry same prompt / replan / repair `docs/state.md` — with reason |
 | **FALLBACK** | What partial behavior survives while you repair |
 | **ESCALATION TRIGGER** | When you stop autonomous work and make a human decision |
 
@@ -22,11 +22,15 @@ Fill this template before touching any code. Diagnosing mid-recovery without the
 
 ---
 
-## Three execute-phase failure modes
+For the full classification catalog (ambiguity, context pressure, tool misuse, and others), see `13-agent-reliability/03-claude-failure-taxonomy.md`.
+
+---
+
+## Three execute failure modes
 
 ### Failure 1 — Claude adds out-of-scope code
 
-**What happens:** execute-phase produces a commit that implements something not in the SPEC. Common example: SPEC says `GET /tasks` returns all tasks with no filtering. Claude adds `?completed=true` query parameter filtering because it seems useful.
+**What happens:** execute produces a commit that implements something not in the SPEC. Common example: SPEC says `GET /tasks` returns all tasks with no filtering. Claude adds `?completed=true` query parameter filtering because it seems useful.
 
 **Detection signal:** diff review reveals a feature branch not described in SPEC. Verification shows green on core criteria but surfaces unexpected behavior. Excess behavior in the response or routing logic.
 
@@ -38,7 +42,7 @@ Fill this template before touching any code. Diagnosing mid-recovery without the
 
 ### Failure 2 — Code compiles but fails acceptance
 
-**What happens:** execute-phase produces a commit. `go build ./...` succeeds. `go test ./...` fails — or tests pass but manual verification of acceptance criteria fails.
+**What happens:** execute produces a commit. `go build ./...` succeeds. `go test ./...` fails — or tests pass but manual verification of acceptance criteria fails.
 
 **Detection signal:** test failure output, or running the verification commands from SPEC and seeing wrong HTTP status codes / response shapes / missing fields.
 
@@ -50,7 +54,7 @@ Fill this template before touching any code. Diagnosing mid-recovery without the
 
 ### Failure 3 — Claude stuck in a loop
 
-**What happens:** execute-phase does not complete. Claude cycles through the same actions without producing a commit. Or produces a commit, you flag it as wrong, Claude "fixes" it, produces the same wrong output again.
+**What happens:** execute does not complete. Claude cycles through the same actions without producing a commit. Or produces a commit, you flag it as wrong, Claude "fixes" it, produces the same wrong output again.
 
 **Detection signal:** two or more commits with the same acceptance failure. Retry count at 2 with no improvement. No new commit after 10+ minutes of apparent execution.
 
@@ -71,13 +75,13 @@ Apply this rubric before deciding to advance a wave or retry a task.
 | **Low** | Output contradicts a SPEC criterion, or a prior-wave output it depends on is wrong, or SPEC section is missing and output is inferred. | Do not advance. Diagnose root cause. Fix SPEC or prior output first. |
 | **Stop** | Loop detected (2+ retries with no improvement). SPEC ambiguity that produces different wrong output each retry. Human decision required to resolve. | Stop autonomous execution. Make an explicit call. |
 
-One rule: the agent that produced the output cannot assign its own confidence level. You assign confidence after independent verification. Self-attestation ("this implementation looks correct") is not a verification step.
+One rule: the agent that produced the output cannot assign its own confidence level. You assign confidence after independent verification. Self-attestation ("this implementation looks correct") is not a verification stage.
 
 ---
 
 ## Hallucination recovery — three-step procedure
 
-Hallucination in execute-phase does not mean invented facts. It means the implementation includes behavior that is not grounded in the SPEC. The code may be high quality. It is still wrong relative to the contract.
+Hallucination in execute does not mean invented facts. It means the implementation includes behavior that is not grounded in the SPEC. The code may be high quality. It is still wrong relative to the contract.
 
 ### Step 1 — Identify
 
@@ -147,7 +151,7 @@ In a structured Claude Code workflow, verification ownership works like this:
 
 | Role | Who does it |
 |------|-------------|
-| Implementation | Claude (execute-phase agent) |
+| Implementation | Claude (execute agent) |
 | Verification | You — running acceptance criterion commands |
 | Confidence assignment | You — after running verification |
 | Retry decision | You — based on confidence level and failure type |
@@ -166,38 +170,37 @@ The verification procedure is: you read the SPEC acceptance criterion, you run t
 | Output wrong due to ambiguous SPEC | Do not retry — fix SPEC first, then retry |
 | Output wrong due to wrong prior-wave output | Do not retry current wave — fix prior wave, then rerun |
 | Loop detected (2 retries, same failure) | Stop. Replan the task. Narrow scope or rephrase constraint. |
-| Wave partially complete (some tasks done, some not) | Use `--gaps-only` to rerun only incomplete tasks |
-| STATE.md shows task complete but output is wrong | Manual STATE.md repair first — remove the false "complete" marker, then `--gaps-only` |
+| Wave partially complete (some tasks done, some not) | Incomplete-only retry: re-run only tasks not marked complete in `docs/state.md` |
+| `docs/state.md` shows task complete but output is wrong | Manual `docs/state.md` repair first — remove the false "complete" marker, then incomplete-only retry |
 
 **Hard cap: three retries per task.** If a task fails three times, the problem is not transient. Either the prompt has an unresolved ambiguity, the SPEC has a gap, or prior-wave output is the wrong foundation. Stop retrying and diagnose.
 
-### When to repair STATE.md vs when to replan
+### When to repair `docs/state.md` vs when to replan
 
-**Repair STATE.md and rerun:** task output was wrong but the task itself is correctly defined. The SPEC is clear. The failure was execution quality, not specification quality. Fix: remove the false "complete" marker, rerun with `--gaps-only`.
+**Repair `docs/state.md` and rerun:** task output was wrong but the task itself is correctly defined. The SPEC is clear. The failure was execute quality, not specification quality. Fix: remove the false "complete" marker, then incomplete-only retry.
 
-**Replan:** the task failed because it was specified wrongly in PLAN.md, or the SPEC has a gap that makes the task ambiguous. Fix: update the PLAN.md task definition or fill the SPEC gap, then regenerate the plan.
+**Replan:** the task failed because it was specified wrongly in the phase plan, or the SPEC has a gap that makes the task ambiguous. Fix: update the plan task definition or fill the SPEC gap, then regenerate the plan.
 
 ```bash
-# STATE.md repair — remove false complete marker
-# Example STATE.md entry to edit:
+# docs/state.md repair — remove false complete marker
+# Example entry to edit:
 # tasks:
 #   - id: write-get-handler
 #     status: complete    ← remove this line or change to: status: pending
 #
-# Then rerun:
-Run execute-phase with the --gaps-only flag.
+# Then rerun execute for incomplete tasks only.
 ```
 
 ---
 
 ## Checklist
 
-- [ ] I know the three execute-phase failure modes: scope creep, acceptance mismatch, execution loop.
+- [ ] I know the three execute failure modes: scope creep, acceptance mismatch, execution loop.
 - [ ] I can fill in all seven fields of the reliability template before touching code.
 - [ ] I apply the four-level confidence rubric (High / Medium / Low / Stop) after verification.
 - [ ] I assign confidence myself — not based on Claude's self-assessment.
 - [ ] I know the hallucination recovery procedure: identify → isolate → replace.
 - [ ] I use `git revert` for clean commits and manual removal for mixed commits.
 - [ ] I know the retry hard cap (three attempts) and the two reasons to replan instead of retry.
-- [ ] I know when to repair STATE.md vs when to replan the task.
+- [ ] I know when to repair `docs/state.md` vs when to replan the task.
 - [ ] I never verify Claude's output by asking Claude.

@@ -14,7 +14,7 @@ A well-structured message has three explicit layers on top of the implicit base 
 
 A message that uses all three layers:
 ```
-Implement step 3 from .planning/phases/01-task-endpoints/01-01-PLAN.md.
+Implement step 3 from docs/plans/01-post-tasks-plan.md.
 
 SPEC contract: docs/specs/post-tasks.md — acceptance section is the contract.
 Do not expand scope beyond listed acceptance items.
@@ -26,9 +26,36 @@ Constraints for this turn:
 ```
 
 What each section does:
-- The task reference (`step 3 from PLAN.md`) bounds execution to a known work unit.
+- The task reference (`step 3 from docs/plans/<phase>-plan.md`) bounds execution to a known work unit.
 - The SPEC block (`docs/specs/post-tasks.md`) points Claude at approved truth. Claude uses the acceptance section — not its own invention — to define what "done" means.
 - The per-turn constraints narrow this specific execution: no scope creep, specific error format, stop condition stated explicitly.
+
+**Edit scope (Layer 3)** — repeat or tighten when the task touches multiple files or refactors:
+
+```text
+Only modify explicitly requested scope.
+
+Do not rename symbols unless requested.
+
+Do not reformat unrelated code.
+
+Do not optimize unrelated code.
+
+Preserve architecture boundaries.
+
+Minimize diff size.
+
+If required changes exceed requested scope:
+STOP and explain why.
+
+List touched files before changes.
+
+Explain blast radius before large refactors.
+
+Preserve public contracts unless explicitly approved.
+```
+
+Same block belongs in `CLAUDE.md` for every session (`04-claude-code-configuration/01-claude-md-authoring.md`). Full workflow: `12-diff-refactor/04-idempotent-refactoring-discipline.md`.
 
 ---
 

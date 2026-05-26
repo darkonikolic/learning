@@ -100,7 +100,7 @@ git worktree add ../task-api-agent-branch feature/get-handler
 git worktree remove ../task-api-agent-branch
 ```
 
-Claude Code can execute phases in worktrees, providing natural blast radius containment.
+Claude Code can execution stages in worktrees, providing natural blast radius containment.
 
 ---
 

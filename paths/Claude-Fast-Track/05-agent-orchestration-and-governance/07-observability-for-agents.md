@@ -16,7 +16,7 @@ Logs answer: "what did the system do?"
 
 In Claude Code:
 - Git commits are logs — each commit records what was written and when.
-- STATE.md updates are logs — each update records a task completion event.
+- `docs/state.md` updates are logs — each update records a task completion event.
 - Agent output text is a log — it describes what the agent did.
 
 **Traces: the execution path.**
@@ -26,8 +26,8 @@ A trace is a record of one complete workflow from start to finish. It shows whic
 Traces answer: "how did the system execute?" and "where did it go wrong?"
 
 In Claude Code:
-- A trace of one execute-phase run: which wave ran first, which agents were spawned, what each produced, which succeeded and which failed.
-- The chain of files produced: CONTEXT.md → PLAN.md → source files (one per task) → test files → STATE.md updates.
+- A trace of one execute run: which wave ran first, which agents were spawned, what each produced, which succeeded and which failed.
+- The chain of files produced: frame brief → phase plan → source files (one per task) → test files → `docs/state.md` updates.
 
 **Metrics: aggregate behavior.**
 
@@ -35,17 +35,17 @@ Metrics are aggregate measurements over time: success rate, average latency, tok
 
 Metrics answer: "is the system healthy?" and "is it getting better or worse?"
 
-In Claude Code: harder to measure directly without tooling. Approximate metrics: pass rate on first execute-phase run, frequency of --gaps-only retries, frequency of manual corrections.
+In Claude Code: harder to measure directly without tooling. Approximate metrics: pass rate on first execute run, frequency of incomplete-only retries, frequency of manual corrections.
 
 ---
 
 ## Distributed tracing terminology
 
-**Trace:** a record of one complete workflow execution. Example: one execute-phase run from start to finish.
+**Trace:** a record of one complete workflow execution. Example: one execute run from start to finish.
 
 **Span:** one unit of work within a trace. Example: one agent executing one task. The span records: task description, start time, end time, success/failure, files changed, output summary.
 
-**Parent-child relationship:** orchestrator spans contain worker spans. The execute-phase run (parent span) contains all executor agent runs (child spans). If a child span fails, it is visible as a failure inside the parent.
+**Parent-child relationship:** orchestrator spans contain worker spans. The execute run (parent span) contains all executor agent runs (child spans). If a child span fails, it is visible as a failure inside the parent.
 
 **Correlation ID:** an identifier that links all spans in one trace. This is implicitly the phase identifier — all activity for a phase is linked by that identifier.
 
@@ -66,13 +66,13 @@ In Claude Code today, this vocabulary applies conceptually. Explicit distributed
 - Wave number and tasks included.
 - Completion order: did any agent take significantly longer?
 - Failures: which agents failed, what error?
-- STATE.md delta: what changed in STATE.md after this wave?
+- `docs/state.md` delta: what changed after this wave?
 
 **Per-phase:**
 - Total tasks, success count, failure count.
-- First-run pass rate (how often execute-phase completes without retries).
+- First-run pass rate (how often execute completes without retries).
 - Time elapsed.
-- Final STATE.md vs initial PLAN.md: are all tasks accounted for?
+- Final `docs/state.md` vs initial phase plan: are all tasks accounted for?
 
 ---
 
@@ -82,13 +82,13 @@ Every agent action should be traceable: who did what, when, with what result. Th
 
 **The audit trail:**
 - **Git commits:** atomic per task. Each commit message identifies the task and agent that wrote it. `git log --oneline` is a timeline of agent actions.
-- **STATE.md:** records task completion events with timestamps and results.
-- **REQUIREMENTS.md:** records satisfaction markers — which requirements were addressed by which implementation.
+- **`docs/state.md`:** records task completion events with timestamps and results.
+- **`docs/requirements.md`:** records satisfaction markers — which requirements were addressed by which implementation.
 
-When something breaks after an execute-phase run, this audit trail tells you:
+When something breaks after an execute run, this audit trail tells you:
 1. Which agent made the change (git log — commit message identifies the task).
 2. Exactly what changed (git diff on that commit).
-3. Whether the requirement was marked satisfied (REQUIREMENTS.md).
+3. Whether the requirement was marked satisfied (`docs/requirements.md`).
 
 Without an audit trail: "something broke and I don't know what agent did it or when."
 
@@ -98,21 +98,21 @@ With an audit trail: "wave 3, task C (implement complete handler) made this chan
 
 ## Observability for debugging agent failures
 
-Systematic approach when an execute-phase fails or produces wrong output:
+Systematic approach when execute fails or produces wrong output:
 
 **Step 1: Identify which agent failed (trace).**
 
-Check STATE.md: which tasks are complete? Which are missing?
+Check `docs/state.md`: which tasks are complete? Which are missing?
 
 ```bash
-cat .planning/phases/01-endpoints/STATE.md
+cat docs/state.md
 ```
 
-The missing task in STATE.md is the one that failed.
+The missing task in `docs/state.md` is the one that failed.
 
 **Step 2: Find what it produced (log).**
 
-Check git log for the period of the execute-phase run:
+Check git log for the period of the execute run:
 ```bash
 git log --oneline --since="1 hour ago"
 ```
@@ -144,7 +144,7 @@ Check: did wave N+1 agents have access to wave N output? If yes and wave N was w
 |------|--------------|
 | `git log --oneline` | Timeline of agent commits (audit trail) |
 | `git diff <commit>` | Exact changes made by a specific agent action |
-| `cat STATE.md` | Current task completion status |
+| `cat docs/state.md` | Current task completion status |
 | `go build ./...` | Build-time errors introduced by agent changes |
 | `go test ./...` | Test failures (agent implementation vs test expectations) |
 
@@ -156,8 +156,8 @@ These are your observability tools. Using them systematically after each wave is
 
 - [ ] I know the three pillars of observability: logs, traces, metrics.
 - [ ] I can explain trace, span, and parent-child relationship in agent context.
-- [ ] I know the audit trail components: git commits, STATE.md, REQUIREMENTS.md.
+- [ ] I know the audit trail components: git commits, `docs/state.md`, `docs/requirements.md`.
 - [ ] I follow the four-step debugging sequence: trace → log → state → propagation.
 - [ ] I run go build and go test after each wave and treat failures as observability signals.
-- [ ] I read git log after execute-phase to understand what each agent did.
-- [ ] I check STATE.md to identify which tasks completed and which failed.
+- [ ] I read git log after execute to understand what each agent did.
+- [ ] I check `docs/state.md` to identify which tasks completed and which failed.

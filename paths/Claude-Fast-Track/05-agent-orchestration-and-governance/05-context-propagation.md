@@ -23,25 +23,25 @@ Pros: agent gets exactly what it needs. Context is isolated — no irrelevant in
 
 Cons: the orchestrator must know exactly what each agent needs. As tasks grow complex, crafting accurate context becomes the bottleneck.
 
-Use when: most single-agent Claude interactions. The orchestrator (you) assembles context from SPEC, PLAN.md, and relevant source files before writing the agent prompt.
+Use when: most single-agent Claude interactions. The orchestrator (you) assembles context from the feature SPEC, `docs/plans/<phase>-plan.md`, and relevant source files before writing the agent prompt.
 
 **Pattern 2: Shared state**
 
 Agents read from and write to a shared state store. One agent writes its result; the next agent reads it and adds its result.
 
-In the workflow: STATE.md, REQUIREMENTS.md, ROADMAP.md, and the source code files themselves are shared state.
+In the workflow: `docs/state.md`, `docs/requirements.md`, `docs/roadmap.md`, and the source code files themselves are shared state.
 
 ```
 Wave 1 agent writes: internal/store/store.go (the implementation)
 Wave 2 agent reads: internal/store/store.go (uses it as context to write handler)
-STATE.md updated by wave 1: wave 2 orchestrator reads STATE.md to know wave 1 succeeded
+docs/state.md updated by wave 1: wave 2 orchestrator reads docs/state.md to know wave 1 succeeded
 ```
 
 Pros: agents don't need the orchestrator to hand them all context explicitly. They read current state directly.
 
 Cons: write conflicts if two agents write to the same file simultaneously. Agent must know where to find state, not just what its task is.
 
-Use when: wave execution — agents read files written by prior waves. Shared documents (PLAN.md, SPEC files) that multiple agents reference.
+Use when: wave execution — agents read files written by prior waves. Shared documents (phase plan, SPEC files in `docs/specs/`) that multiple agents reference.
 
 **Pattern 3: Event-driven**
 
@@ -123,15 +123,15 @@ This context is approximately 200 tokens. It is complete. The agent can implemen
 
 ---
 
-## Context propagation in execute-phase
+## Context propagation in execute
 
-Execute-phase uses message passing + shared state together.
+Parallel work uses message passing + shared state together.
 
-**Message passing:** each executor agent receives a slice of PLAN.md (its task) + the relevant portions of CONTEXT.md. The orchestrator assembles this per-agent context before spawning each agent.
+**Message passing:** each executor agent receives its task from `docs/plans/<phase>-plan.md` plus relevant portions of `docs/plans/<phase>-context.md`. The orchestrator assembles this per-agent context before spawning each agent.
 
-**Shared state:** CONTEXT.md, SPEC files, and source code files are shared. Wave 2 agents read files written by wave 1 agents. STATE.md is updated after each task completes, so the orchestrator knows the current state before spawning the next wave.
+**Shared state:** frame brief, SPEC files, and source code files are shared. Wave 2 agents read files written by wave 1 agents. `docs/state.md` is updated after each task completes, so the orchestrator knows the current state before spawning the next wave.
 
-**Wave isolation:** wave 2 agents do not start until wave 1 STATE.md updates are written and read by the orchestrator. This prevents wave 2 agents from reading stale state (pre-wave-1) or conflicting state (mid-wave-1).
+**Wave isolation:** wave 2 agents do not start until wave 1 `docs/state.md` updates are written and read by the orchestrator. This prevents wave 2 agents from reading stale state (pre-wave-1) or conflicting state (mid-wave-1).
 
 The boundary between message passing and shared state:
 - Task-specific context (what this agent specifically needs to do): message passing.
@@ -162,7 +162,7 @@ Fix: ensure parallel agents (within a wave) write to different files. If two age
 ## Checklist
 
 - [ ] I can name the three context propagation patterns: message passing, shared state, event-driven.
-- [ ] I know which components are shared state: STATE.md, REQUIREMENTS.md, source files.
+- [ ] I know which components are shared state: `docs/state.md`, `docs/requirements.md`, source files.
 - [ ] I know what to include in a subagent prompt: task, interface, constraints, stop condition.
 - [ ] I know what to exclude from a subagent prompt: full history, unrelated files, parent session state.
 - [ ] I can explain why wave isolation prevents stale state reads.

@@ -8,6 +8,8 @@ Without MCP, Claude can only use built-in tools: Read, Write, Edit, Bash, Grep, 
 
 MCP does not make Claude smarter. It gives Claude a broader set of actions. Your job is to configure which servers Claude connects to, with what permissions.
 
+On [claude.com](https://claude.com/), integrations are marketed as **connectors** (Slack, Google Workspace, remote MCP, and similar). In Claude Code the same mechanism is **MCP servers** in `.mcp.json` or `settings.json` — one protocol, two names depending on surface.
+
 ---
 
 ## How MCP servers extend Claude's capabilities

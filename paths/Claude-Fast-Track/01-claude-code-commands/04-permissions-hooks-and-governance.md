@@ -179,7 +179,7 @@ exit 0
 |----------|------------|--------|
 | Block `git push --force` to main | `PreToolUse` on `Bash(git push *)` | Check args; exit 1 if `--force` |
 | Audit all file edits | `PostToolUse` on `Edit\|Write` | Append to audit log |
-| Update STATE.md after phase tasks | `PostToolUse` on `Edit` | Script that updates last-modified timestamp |
+| Update `docs/state.md` after phase tasks | `PostToolUse` on `Edit` | Script that updates last-modified timestamp |
 | Run linter after every Go file edit | `PostToolUse` on `Edit(*.go)` | Run `go vet` on changed file |
 | Inject dynamic context at session start | `SessionStart` | Write current git branch and open issues to a temp file |
 | Alert when Claude hits an error | `PostToolUseFailure` | Send notification to Slack webhook |
