@@ -1,0 +1,354 @@
+# Lab 01 — Praktični setup: task-api i prve Claude Code sesije
+
+## Cilj
+Na kraju ovog laba imaš funkcionalan Go projekat `task-api` s osnovnom strukturom, CLAUDE.md fajlom, i POST /tasks endpoint koji vraća 201 na `curl` zahtjev.
+
+## Preduvjeti
+- Claude Code instaliran: `claude --version` vraća verziju
+- Go 1.21+ instaliran: `go version` vraća verziju
+- Git dostupan: `git --version` vraća verziju
+
+## Kontekst
+Ovaj lab postavlja projekt koji koristiš kroz cijeli curriculum. Svaki kasniji lab pretpostavlja da `task-api` postoji i kompajlira. Nemoj preskočiti ovaj lab.
+
+## Koraci
+
+### Korak 1 — Napravi Go projekat
+
+Otvori terminal u direktorijumu gdje čuvaš projekte i pokreni:
+
+```bash
+mkdir task-api
+cd task-api
+git init
+go mod init github.com/yourname/task-api
+mkdir tasks
+```
+
+Napravi `main.go`:
+
+```go
+package main
+
+import (
+	"log"
+	"net/http"
+)
+
+func main() {
+	mux := http.NewServeMux()
+	log.Println("starting task-api on :8080")
+	log.Fatal(http.ListenAndServe(":8080", mux))
+}
+```
+
+Napravi `tasks/handler.go`:
+
+```go
+package tasks
+
+import "net/http"
+
+type Handler struct {
+	store *Store
+}
+
+func NewHandler(s *Store) *Handler {
+	return &Handler{store: s}
+}
+
+func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+}
+```
+
+Napravi `tasks/store.go`:
+
+```go
+package tasks
+
+import "sync"
+
+type Task struct {
+	ID        string `json:"id"`
+	Title     string `json:"title"`
+	Completed bool   `json:"completed"`
+}
+
+type Store struct {
+	mu    sync.RWMutex
+	tasks []Task
+}
+
+func NewStore() *Store {
+	return &Store{tasks: make([]Task, 0)}
+}
+```
+
+Provjeri da projekat kompajlira:
+
+```bash
+go build ./...
+```
+
+Ako ne kompajlira, ispravi grešku prije nastavka.
+
+**Očekivani output:**
+Nema ispisa — `go build` je tih ako uspije. Ako vidiš error, pročitaj poruku i ispravi.
+
+---
+
+### Korak 2 — Otvori prvu Claude Code sesiju
+
+Navigiraj u `task-api` direktorijum u terminalu i pokreni Claude Code:
+
+```bash
+claude
+```
+
+Unutar sesije, pokreni:
+
+```
+/help
+```
+
+Pročitaj cijeli output. Zabilježi tri komande koje nisi znao/la da postoje. Ovo je bitno — `/help` output varira po verziji Claude Code-a.
+
+**Očekivani output:**
+Lista svih dostupnih komandi za tvoju instalaciju. Trebao bi vidjeti `/plan`, `/compact`, `/context`, `/diff`, `/review` i još mnogo toga.
+
+---
+
+### Korak 3 — Koristi /plan za planiranje POST /tasks
+
+U Claude Code sesiji, pokreni:
+
+```
+/plan I need to implement POST /tasks endpoint for the task-api Go project. The endpoint should:
+- Accept JSON body with "title" field (required, max 200 chars)
+- Store the task in-memory
+- Return 201 with JSON body containing id, title, completed (false), created_at
+- Return 400 if title is missing or empty
+- Return 400 if title exceeds 200 chars
+
+Files: main.go, tasks/handler.go, tasks/store.go
+Constraints: stdlib only, no external packages
+No implementation yet — just the plan.
+```
+
+**Očekivani output:**
+Claude predlaže plan u plan modu bez pisanja koda. Trebao bi navesti korake poput: definisanje Task stringa, update Store-a, implementacija handler logike, registracija rute u main.go, testovi.
+
+Provjeri plan. Prihvati ga ili ga izmijeni ako nešto nedostaje. Ovo je vježba plan → execute workflow-a.
+
+---
+
+### Korak 4 — Implementiraj POST /tasks endpoint
+
+Nakon što si pregledao/la plan, izvrši implementaciju jednim bounded messageom:
+
+```
+Execute the plan for POST /tasks.
+Files to modify: main.go, tasks/handler.go, tasks/store.go
+Use only stdlib — no external packages.
+Generate a UUID-like ID using crypto/rand.
+After implementation, run: go build ./...
+```
+
+**Očekivani output:**
+Claude implementira handler i store metode, registrira rutu u main.go, i pokreće `go build ./...`. Izlaz builde treba biti tih (bez errora).
+
+---
+
+### Korak 5 — Postavi CLAUDE.md
+
+Izađi iz Claude Code sesije (`Ctrl+C` ili `:exit`), ili otvori novi terminal tab u istom direktorijumu.
+
+Napravi `CLAUDE.md` fajl u `task-api/` direktorijumu:
+
+```markdown
+# task-api
+
+Go HTTP API za upravljanje taskovima.
+
+## Stack
+- Language: Go 1.21+
+- HTTP: stdlib net/http with http.NewServeMux()
+- Storage: in-memory []Task with sync.RWMutex in tasks/store.go
+- Test: stdlib testing + net/http/httptest
+- External dependencies: none (stdlib only)
+
+## Key paths
+- Entry point: main.go
+- Handlers: tasks/handler.go
+- Store: tasks/store.go
+- Specs: docs/specs/ (create when implementing features)
+
+## Build and test
+go build ./...
+go test ./...
+go vet ./...
+
+## Constraints
+- Must not add external packages (no gorilla/mux, no gin, no gorm, no uuid library)
+- Must validate all input at handler boundary before calling store
+- Must return application/json Content-Type on all responses including 4xx
+- Error responses: {"error": "message"} — single "error" key only
+- Tests must pass before any commit
+
+## Conventions
+- Task IDs: generated by store, not handler
+- HTTP status: 400 invalid input, 404 not found, 409 conflict, 500 internal
+- Timestamps: time.Time stored in UTC, serialized as RFC3339
+```
+
+---
+
+### Korak 6 — Provjeri da CLAUDE.md učitava automatski
+
+Pokreni novu Claude Code sesiju:
+
+```bash
+claude
+```
+
+Odmah pitaj:
+
+```
+What are the constraints for this project?
+```
+
+**Očekivani output:**
+Claude odgovara navodeći constraints iz CLAUDE.md (no external packages, JSON errors, itd.) bez potrebe da ih ponoviš. Ako ne odgovori ispravno, provjeri da je CLAUDE.md sačuvan u pravom direktorijumu.
+
+---
+
+### Korak 7 — Testiraj /context i /compact
+
+Unutar Claude sesije, pokreni nekoliko upita da nabiješ kontekst, pa onda:
+
+```
+/context
+```
+
+Zabilježi koliko % konteksta je popunjeno.
+
+Sad pokreni:
+
+```
+/compact
+```
+
+Pa opet:
+
+```
+/context
+```
+
+Provjeri razliku. Postavi Claudeu pitanje da provjeri da li zapamti projekt strukturu:
+
+```
+What files does task-api have?
+```
+
+**Očekivani output:**
+Kontekst bi trebao biti manji nakon `/compact`. Claude bi trebao moći odgovoriti na pitanje o fajlovima jer su te informacije u CLAUDE.md koji preživljava compaction.
+
+---
+
+### Korak 8 — Verifikacija endpointa
+
+Pokreni server u jednom terminalu:
+
+```bash
+go run main.go
+```
+
+U drugom terminalu, testiraj endpoint:
+
+```bash
+# Happy path — treba vratiti 201
+curl -s -X POST http://localhost:8080/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title":"buy milk"}' | head -c 200
+
+# Provjeri status kod
+curl -s -o /dev/null -w "%{http_code}\n" \
+  -X POST http://localhost:8080/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title":"buy milk"}'
+
+# Nedostaje title — treba vratiti 400
+curl -s -X POST http://localhost:8080/tasks \
+  -H "Content-Type: application/json" \
+  -d '{}' | head -c 200
+```
+
+Ako endpoint vraća 201 i 400 ispravno, prelazi na sljedeći korak. Ako ne, vrati se na Korak 4 i ispravi implementaciju.
+
+---
+
+### Korak 9 — Napravi settings.json i commituj
+
+Napravi `.claude/settings.json`:
+
+```bash
+mkdir -p .claude
+```
+
+Sadržaj fajla:
+
+```json
+{
+  "permissions": {
+    "allow": [
+      "Bash(go build ./...)",
+      "Bash(go test ./...)",
+      "Bash(go test -race ./...)",
+      "Bash(go vet ./...)",
+      "Bash(go run .)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ],
+    "ask": [
+      "Bash(git commit *)",
+      "Bash(git push *)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(**/.env.*)",
+      "Bash(rm -rf *)"
+    ]
+  }
+}
+```
+
+Commituj:
+
+```bash
+git add CLAUDE.md .claude/settings.json main.go tasks/ go.mod
+git commit -m "bootstrap task-api: POST /tasks endpoint with in-memory store"
+```
+
+**Očekivani output:**
+Git commit uspješno kreiran. `git log --oneline` prikazuje tvoj commit.
+
+## Verifikacija
+
+- [ ] `go build ./...` prolazi bez errora
+- [ ] `curl -X POST http://localhost:8080/tasks -d '{"title":"test"}'` vraća HTTP 201
+- [ ] `curl -X POST http://localhost:8080/tasks -d '{}'` vraća HTTP 400
+- [ ] CLAUDE.md postoji u project root-u s ispravnim sadržajem
+- [ ] `.claude/settings.json` postoji s allow/deny pravilima
+- [ ] Nova Claude sesija može odgovoriti na "What are the project constraints?" bez ponovnog objašnjavanja
+- [ ] Razumiješ razliku između `/compact` i `/clear`
+
+## Šta si naučio
+
+- **Session kao deployment unit**: sesija počinje s ciljem, piše fajlove, završava s artefaktima na disku — transcript je ephemeral
+- **/plan mode** sprečava Claude da piše kod bez odobrenja plana — koristiš ga kada promjena dodiruje više fajlova
+- **CLAUDE.md** je persistentna memorija projekta koja se učitava na početku svake sesije — ono što ne napiše u fajl, Claude ne pamti između sesija
+- **/compact** sažima chat history i oslobađa prostor u kontekstu, ali odluke koje postoje samo u chatu se ne prenose pouzdano
+- **settings.json deny pravila** su tvrdi blokovi — `Read(.env)` u deny-u se ne može zaobići, za razliku od CLAUDE.md instrukcija koje Claude može "zaboraviti"
