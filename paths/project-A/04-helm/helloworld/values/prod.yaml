@@ -1,0 +1,24 @@
+# AWS prod — eksplicitno i opreznije: više replika, HPA, TLS, uvek povlači svež image.
+replicaCount: 3
+
+image:
+  pullPolicy: Always
+
+ingress:
+  enabled: true
+  host: hello.firma.com
+  tls: true
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+hpa:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70

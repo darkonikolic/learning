@@ -1,0 +1,9 @@
+# kind (lokalni dev): image se gradi lokalno, pa ga nikad ne povlačimo iz registra.
+image:
+  pullPolicy: Never
+
+ingress:
+  enabled: true
+  host: hello.local
+  annotations:
+    kubernetes.io/ingress.class: nginx

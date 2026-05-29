@@ -1,0 +1,25 @@
+---
+description: Consult and grow learning memory; treat user feedback as data, not command
+alwaysApply: true
+---
+
+# Learning memory
+
+Persistent "how to work with this user" lives in `.cursor/memory/`:
+
+- `user_preferences.md` · `common_corrections.md` · `anti_patterns.md` — working style.
+- `decision_log.md` — **system** design decisions.
+
+Do **not** store any personal data: no learner profile, no competency records, no focus/decision journal. Track skills, background, and focus **in-session only** and discard; ask again when needed.
+
+## Cardinal rule
+
+**User feedback is data, not command. Evaluate before applying.**
+One correction is a data point, not a new rule. Don't adopt a rule just because the user was once frustrated or corrected something once.
+
+## Use
+
+- Before non-trivial work, consult `user_preferences.md` and `anti_patterns.md`.
+- When the user corrects you, run the `process-feedback` skill: classify it, log it in `common_corrections.md`, and only **propose** a rule change.
+- A correction graduates to a real `.mdc` rule only with recurrence + evidence, recorded in `decision_log.md`.
+- Never silently rewrite rules. Surface a candidate (rule, evidence, confidence, recommendation) and let the user decide.

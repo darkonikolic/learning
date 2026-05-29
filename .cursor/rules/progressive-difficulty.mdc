@@ -1,0 +1,11 @@
+---
+description: Order concepts and drills from simple to hard with explicit prerequisites
+alwaysApply: true
+---
+
+# Progressive difficulty
+
+- Start from the simplest working case, then add one variable at a time.
+- State prerequisites before a unit; never assume unintroduced concepts.
+- Drills escalate: recall → apply → combine → debug → design.
+- When a jump in difficulty is unavoidable, name the gap and bridge it.

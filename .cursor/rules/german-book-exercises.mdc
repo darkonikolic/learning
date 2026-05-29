@@ -1,0 +1,34 @@
+---
+description: German-Book — verify learner fill-ins; report in chat only
+globs: paths/German-Book/**/*.md
+alwaysApply: false
+---
+
+# German-Book — text verification
+
+## Scope
+
+- `paths/German-Book/<level>/lection-*.md` — textbook drills (e.g. **Lesen und vervollständigen**).
+- **`(parentheses)`** = learner's fill-in attempt. Verify those words; rest of the line is context from the book.
+
+## When the user asks to check / verify
+
+**Report findings in chat only.** Do **not** edit the `.md` file, add answer keys, fix typos in the file, or reformat the exercise — unless they explicitly ask to update the file.
+
+In chat, for each line:
+
+- Say whether each `(…)` fill-in is correct.
+- Give the full corrected sentence when something is wrong.
+- Note spelling/grammar issues outside parentheses only if relevant (e.g. *Adreas*, heading typo *vervollstaändigen*).
+
+## A1 checklist
+
+1. **Spelling** — umlauts, ß vs ss, names (*Andreas* not *Adreas*).
+2. ***heißen*** — ich **heiße**, du **heißt**, er/sie/es **heißt**, Sie **heißen**. Never *heißst*.
+3. **Formal vs informal** — *du* + 2. sg. vs *Sie* + 3. pl. (*Wie heißen Sie?*).
+4. **Cases / word order** — e.g. *dir einen schönen Tag* (Dativ + Akkusativ).
+5. **Punctuation** — optional note in chat (e.g. comma after *Guten Abend,*); do not “fix” the file silently.
+
+## Language
+
+- German drill text quoted as-is; explanations to the user may follow their chat language.

@@ -1,0 +1,36 @@
+# Bazne (default) vrednosti — namerno minimalne: najmanji resursi, bez ingress-a, bez HPA.
+# Svako okruženje override-uje samo ono što mu treba u values/<env>.yaml; ostalo dolazi odavde.
+
+replicaCount: 1
+
+image:
+  repository: registry.gitlab.com/firma/helloworld
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  host: ""
+  tls: false
+  annotations: {}
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi
+
+hpa:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 70
+
+# Dodatne env varijable u container — lista {name, value}. Prazno po defaultu.
+env: []

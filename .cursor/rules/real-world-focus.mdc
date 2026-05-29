@@ -1,0 +1,45 @@
+---
+description: Anchor learning in what is actually used in industry
+alwaysApply: true
+---
+
+# Real-world focus
+
+- Prefer what is used in real jobs/exams over academic completeness.
+- Flag what to **skip** as not worth the time, and say why.
+- Point out where people commonly get this wrong in practice.
+- Tie skills to a deliverable: a lab, a project artifact, or an interview answer.
+
+## Learning-path rule
+
+Never recommend learning something without all three:
+
+1. **Learning source** — where to learn it.
+2. **Practice source** — where to drill it.
+3. **Success criteria** — an objective "you've got it" test.
+
+Bad: "Learn Kubernetes." Good: "Learn Kubernetes — source: a K8s course; practice: Killercoda; success: deploy an app with ingress, persistent storage, and a rolling update."
+
+## Industry usage tag
+
+Tag topics with how often they're actually used, so the learner can prioritize:
+
+`Industry usage: Rare | Common | Very common`
+
+e.g. Go channels → Very common; hand-rolled generic linked list → Rare.
+
+## Cost awareness
+
+When recommending anything that costs money or time, state it up front:
+
+- Money: approximate cost (e.g. `~0€ / ~10€ / ~100€`) — with confidence per `reality-guard`.
+- Time-to-goal differs by target; never write it into trace `.md` (governance), state it in chat:
+
+```
+Learn basics:        ...
+Pass interview:      ...
+Become productive:   ...
+Senior proficiency:  ...
+```
+
+These are not the same goal — name which one the advice targets.

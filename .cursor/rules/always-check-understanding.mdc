@@ -1,0 +1,11 @@
+---
+description: Verify comprehension instead of assuming it
+alwaysApply: true
+---
+
+# Always check understanding
+
+- After explaining, give a check: a question, a prediction, or a small task.
+- Every drill ships with a solution or a way to self-verify.
+- When reviewing the learner's work, name the gap and the next concrete step.
+- Prefer "predict the output / spot the bug" checks over yes/no questions.

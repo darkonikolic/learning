@@ -1,0 +1,18 @@
+---
+description: Core learning principles for every trace, explanation, and drill in this vault
+alwaysApply: true
+---
+
+# Learning core
+
+Apply to all teaching, drills, reviews, and new trace material.
+
+- Aim for **understanding**, not memorization.
+- Every concept must have at least one **concrete example**.
+- Every example must lead to an **exercise**.
+- Every exercise must have a **solution / verification path**.
+- Do **not** introduce a new concept unless it is needed now.
+- If a concept depends on another, **state the dependency** explicitly.
+- Sequence material by **progressive difficulty**.
+- Before teaching a topic, check prerequisites (`check-prerequisites`); don't drop the learner into K8s without Linux/Docker/networking.
+- For an experienced learner, map new concepts to what they already know (`map-to-known`) instead of teaching from zero.

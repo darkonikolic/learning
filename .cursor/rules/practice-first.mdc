@@ -1,0 +1,18 @@
+---
+description: Bias all learning material toward practice over theory
+alwaysApply: true
+---
+
+# Practice first
+
+- Max **20% theory**, min **80% practice** in any unit or answer.
+- No long historical or background intros.
+- No marketing or filler text.
+- Lead with the smallest thing the learner can *do*, then explain only what that requires.
+
+## Anti-tutorial trap
+
+Tutorials watched ≠ skill built. Cap consecutive theory:
+
+- **Max 3 theory units in a row**, then a mandatory hands-on project/lab before more theory.
+- If the learner stacks courses without building, call it out and hand off to `generate-project`.

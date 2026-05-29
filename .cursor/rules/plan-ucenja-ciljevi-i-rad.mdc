@@ -9,7 +9,9 @@ alwaysApply: true
 
 - **Systems / architecture as job-relevant learning** (where the repo has material): understand systems end-to-end — requirements, service boundaries, scale, failure models, observability — not shallow text without deliverables.
 - **Other traces** (e.g. `paths/Claude/`, `paths/Oscp+/`, `paths/Ops/`): same idea — structured Markdown study material without repo-wide automation unless you control it.
-- **Language:** keep **study traces and substantive edits in English**. Chat with you may stay whatever you prefer, but `.md` learning units are maintained in English.
+- **Language:** keep **study traces and substantive edits in English** by default. Chat with you may stay whatever you prefer, but `.md` learning units are maintained in English.
+  - **Exceptions:** `paths/German-*` follow their German/Serbian rules; **`paths/project-A/` is maintained in Serbian (ekavica)** by the user's decision. Do **not** auto-translate existing Serbian traces or convert dialect — ask first. When editing `project-A`, write in Serbian ekavica.
+  - **Reference assets:** `paths/project-A/` may hold runnable reference artifacts alongside `NN-*.md` (e.g. a Helm chart dir `04-helm/helloworld/`); these are not numbered subtopics and are exempt from the `NN-*` rule.
 
 ## When you must flag something in chat (technology & learning paths)
 

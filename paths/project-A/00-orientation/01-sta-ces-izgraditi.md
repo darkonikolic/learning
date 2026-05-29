@@ -78,35 +78,6 @@ build:go:
     - changes: [services/go-service/**/*]
 ```
 
-## Redosled modula
-
-Svaki modul gradi na prethodnom. Princip: **ručno → Terraform → pipeline**.
-
-```
-00-orientation              ← razumiješ šta gradiš i zašto ovako
-01-docker-fundamenti        ← svih 5 servisa u Docker lokalno
-02-gitlab-ci-osnove         ← push image-a u GitLab registry
-03-kubernetes-fundamenti    ← multi-service na kind klaster (lokalno)
-04-helm                     ← svih 5 servisa u jedan Helm chart
-05-terraform-fundamenti     ← IaC, state, destroy workflow
-06-aws-za-devopsa           ← AWS koncepti za DevOps
-06b-aws-konzola-i-rucno    ← RUČNO kreiraj/uništi AWS env (konzola)
-07-terraform-aws            ← isti env kao 06b, ali Terraform kodom
-08-gitlab-pipelines         ← isti deploy kao 07, ali automatizovano
-09-monitoring               ← Prometheus + Grafana + Loki
-10-ai-assisted-devops       ← AI workflow za Terraform, K8s, debug
-12-aplikacija-arhitektura   ← Vue+PHP+Go Dockerfiles, Compose, Helm
-13-aws-rds-i-elasticache    ← MySQL master/replica, Redis, Terraform
-14-aws-secrets-manager      ← SM + External Secrets Operator
-15-sigurnost                ← container security, NetworkPolicy, RBAC
-16-db-kopija-okruzenja      ← mysqldump workflow, pipeline integracija
-17-ssh-i-produkcija         ← SSM, kubectl exec, self-service deploy
-18-load-balancer-prakticno  ← ALB konzola + K8s Ingress, SSL
-19-testiranje               ← Go/PHP unit+integration, Playwright E2E
-19b-xdebug-i-delve          ← radeći debug setup PHP i Go
-20-graduation-project       ← kompletan krug: od koda do produkcije
-```
-
 ## Tri ne-pregovaračka principa
 
 ### 1. Docker everywhere — nula bare metal
@@ -157,7 +128,9 @@ prod               → trajan, ali Terraform-managed (nikad klikanjem u konzoli)
 - **Review environments**: `mr-{broj}.dev.firma.com` sa sopstvenom DB kopijom, auto-destroy na MR close
 - **Infrastruktura kao kod**: `terraform apply` u dev → identično okruženje u stagingu i produ
 
-## Redosled modula (finalni)
+## Redosled modula
+
+Svaki modul gradi na prethodnom. Princip: **ručno → Terraform → pipeline**.
 
 ```
 00  Orientation — šta gradiš, principi, redosled

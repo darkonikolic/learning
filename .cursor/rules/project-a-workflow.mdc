@@ -1,0 +1,50 @@
+---
+description: Mandatory build workflow for project-A — every module also sets up/updates its agents, rules, and skills; plan, discuss, execute, validate, capture
+globs: paths/project-A/**
+alwaysApply: false
+---
+
+# project-A — build workflow (baseline)
+
+Every module's work has two outputs: the DevOps result **and** the AI tooling that supports it. No module starts without an approved plan, and no module is "done" until its agents/rules/skills are set up or updated. Never skip this loop.
+
+## 0. Tooling setup / update (part of planning, before code)
+
+- Identify which **agents** (`.cursor/commands/`), **rules** (`.cursor/rules/`), and **skills** (`.cursor/skills/`) this module needs.
+  - e.g. Helm/K8s/Terraform → `/devops-engineer` + matching validation; AppSec → `/security-trainer`.
+- If something is missing or stale, set it up or update it **first**.
+- **Anti-sprawl guard:** do not create a rule/agent/skill per module by reflex. Most modules reuse existing ones. Use `/system-maintainer` + `process-feedback` to decide: new rule · update rule · new skill · update skill · nothing. Need is data, not reflex (`reality-guard`, `learning-memory`).
+
+## 1. Plan (Plan mode, before any edit)
+
+- One module/step at a time. State: goal, files touched, prerequisites (`check-prerequisites`), risks, **acceptance criteria**, and the tooling change from step 0.
+
+## 2. Discuss + adapt
+
+- Present the plan as a candidate with an explicit "Open questions / assumptions" section. No code until approved; revise the plan, not the code.
+
+## 3. Execute (only after approval)
+
+- Small steps, atomic commit per step (`/devops-engineer`). Don't start the next step until the current one is validated.
+
+## 4. Validate (objective, by module type)
+
+| Type | Validation |
+|------|-----------|
+| Helm | `helm lint` + `helm template -f values/<env>.yaml` |
+| Terraform | `terraform validate` + `terraform plan` |
+| Kubernetes | `kubectl apply --dry-run=server` |
+| Tests | unit/integration + Playwright E2E |
+| Full loop | smoke test on the deployed URL |
+
+Validation = the plan's acceptance criteria. "Looks fine" is not validation.
+
+## 5. Capture (close the loop)
+
+- Fold learnings back into config: update rules/skills/memory (new validation commands, recurring corrections, patterns) via `process-feedback`. Graduate to a real rule only on recurrence + evidence.
+- Record notable tooling changes in `.cursor/memory/decision_log.md`.
+
+## Notes
+
+- project-A content stays Serbian (ekavica).
+- Convention reinforced by Plan mode; honor it rather than route around it (`reality-guard`).

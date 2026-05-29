@@ -1,0 +1,11 @@
+# AWS staging — bliže produkciji nego dev: dve replike, veći limiti.
+replicaCount: 2
+
+ingress:
+  enabled: true
+  host: hello.staging.firma.com
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 256Mi

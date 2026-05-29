@@ -1,0 +1,8 @@
+apiVersion: v2
+name: helloworld
+description: Nginx hello world app za project-A
+type: application
+# version — verzija samog chart-a; menja se kad se menja struktura templates/values.
+version: 0.3.1
+# appVersion — verzija aplikacije (image tag); informativno, Helm ga ne koristi za logiku.
+appVersion: "1.2.0"

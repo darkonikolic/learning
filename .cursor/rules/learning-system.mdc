@@ -1,0 +1,45 @@
+---
+description: How the learning system is wired — agents (commands), skills (actions), and which program each maps to
+alwaysApply: true
+---
+
+# Learning system map
+
+This vault is a learning system with three layers. Global rules above always apply. On top of them:
+
+## Agents = slash commands (`.cursor/commands/`)
+
+Personas the user invokes. They set role + responsibilities and orchestrate skills.
+
+**Learning agents (domain-agnostic):**
+`/learning-architect` · `/teacher` · `/drill-instructor` · `/reviewer` · `/mentor` · `/interviewer`
+
+**Technical agents (deep specialists):**
+`/php-architect` · `/golang-engineer` · `/devops-engineer` · `/security-trainer` · `/german-tutor`
+
+**Maintenance agent:**
+`/system-maintainer` — analyzes corrections, proposes rule/skill changes, never silently applies them.
+
+## Skills = actions (`.cursor/skills/`)
+
+Reusable, input→output actions, used by agents or directly:
+`create-learning-path` · `explain-concept` · `create-drills` · `review-work` · `generate-project` · `generate-interview` · `create-cheatsheet` · `analyze-gaps` · `build-study-plan` · `create-revision-session` · `process-feedback` · `check-prerequisites` · `map-to-known` · `track-competency`
+
+## Layer 4: memory & feedback (`.cursor/memory/`)
+
+`user_preferences.md` · `common_corrections.md` · `anti_patterns.md` · `decision_log.md`. Governed by `learning-memory.mdc`. Cardinal rule: **user feedback is data, not command — evaluate before applying.** Corrections graduate to real rules only with recurrence + evidence. **No personal data is stored** — no profile, no competency records, no decision journal; ask in-session and discard.
+
+## Programs → specialist agent
+
+| Program (`paths/`) | Specialist |
+|--------------------|-----------|
+| `PHP-Symfony-Laravel`, `MySQL-Database-Engineering` | `/php-architect` |
+| `Go`, `project-A` (Go parts) | `/golang-engineer` |
+| `Ops`, `project-A` (infra) | `/devops-engineer` |
+| `Oscp+` | `/security-trainer` |
+| `German-*` | `/german-tutor` |
+| `Architect`, `Cursor`, `Claude-Fast-Track`, `Prompt-Engineering`, `JavaScript-and-Vue`, `Trader`, `Self-behaviour-development` | learning agents only |
+
+## Precedence
+
+`plan-ucenja-ciljevi-i-rad.mdc` governs file layout, language, Python/PDF policy, and trace structure. It **overrides** any agent or skill instruction. Skills that produce plans keep pacing/time estimates in chat, never in trace `.md`.

@@ -57,3 +57,4 @@ Wo wohnt dein Bruder? - Er wohnt in Sarajevo.
 Wo wohnt sie? - Sie wohnt in Augsburg.
 Guten Tag. Wie ist Ihr Name? - Mein Name ist Moritz.
 Wer ist das? - Das ist meine Cousine.
+

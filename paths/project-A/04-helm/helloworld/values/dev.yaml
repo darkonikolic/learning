@@ -1,0 +1,9 @@
+# AWS dev — override-uje samo razliku od baze: uključi ingress, malo veći CPU/memory limit.
+ingress:
+  enabled: true
+  host: hello.dev.firma.com
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
