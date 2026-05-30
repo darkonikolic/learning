@@ -1,56 +1,156 @@
-# 08 — Vežba: priprema AI-okvira i sync (AppSec)
+# 08 — Vežba: AppSec
 
-Pripremaš AI-okvir za bezbednost aplikacije (SAST, dependency scan, DAST, security headers), pa pokrećeš provere.
+Ugradiš AppSec provere (SAST, dependency scan, DAST, security headers) u CI pipeline i verifikuješ da build pada na critical nalazima.
 
-## Cilj
+---
 
-- okvir koji ugrađuje AppSec u pipeline (shift-left)
-- dokazano: SAST/dependency/DAST bez critical nalaza, headers postavljeni
+## 1. Diskusija
 
-## Deo A — Priprema AI-okvira za AppSec
+Pre nego počneš, razjasni sa AI-om:
 
-### A1 — Mapiraj
+**Šta tačno radimo:**
+Dodajemo AppSec fazu u GitLab CI — semgrep za SAST, trivy za dependency CVE scan, ZAP baseline za DAST — i postavljamo security headers na aplikaciji. Build mora da padne na critical nalazima.
 
-| Potreba | Postoji? | Gde |
-|---------|----------|-----|
-| Security persona | da | `/security-trainer` |
-| CI/secrets checklist | da | `gitlab-ci-checks`, `secrets-hygiene` |
+**Pretpostavke za potvrdu:**
+- Semgrep, trivy i ZAP dostupni kao Docker slike ili GitLab CI komponente
+- Aplikacija je dostupna na review URL-u za ZAP baseline sken
+- Postoji makar jedan endpoint koji vraća HTTP response (za header proveru)
 
-### A2 — Odluka (anti-sprawl)
+**Van opsega:**
+- Pentest / ručni security audit
+- Upravljanje CVE izuzecima (samo svesno prihvatanje)
+- Konfiguracija WAF-a
 
-`/system-maintainer` + `process-feedback`: kandidat rule `appsec-checks` (SAST + dependency scan u CI; security headers; OWASP Top 10 svest). Uvedi — bezbednost aplikacije je presečna briga.
-
-### A3 — Minimalni dodatak (primer)
-
+**Prompt za diskusiju:**
 ```
-# kandidat: appsec-checks
-- CI faza za SAST (semgrep) i dependency scan; build pada na critical.
-- Security headers: CSP, HSTS, X-Content-Type-Options, X-Frame-Options.
-- Validacija/escaping inputa po OWASP Top 10 (injection, XSS).
+Evo CI konfiguracije i app endpoint-a. Dodaj SAST (semgrep) i dependency scan (trivy) fazu
+koja obara build na critical nalazima. Predloži minimalan set security headers (CSP, HSTS,
+X-Content-Type-Options, X-Frame-Options) i gde ih postaviti u Go/nginx konfiguraciji.
+Koji OWASP Top 10 rizici su relevantni za ovaj servis? Objasni svaki korak.
 ```
 
-## Deo B — Praktičan rad (sync)
+---
 
-### Pokretanje provera
+## 2. Plan
+
+> **Cursor:** uključi Plan mode pre bilo koje izmene
+> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+
+**Cilj:** AppSec provere integrisane u CI, build pada na critical, security headers prisutni.
+
+**Fajlovi koji se diraju:**
+- `.gitlab-ci.yml` — nova `security` faza
+- `nginx.conf` ili middleware fajl — security headers
+- `.semgrep/` — opciona lokalna konfiguracija
+
+**Fajlovi koji se NE diraju:**
+- `go.sum` / `go.mod` — dependency verzije menja samo vlasnik
+- `Dockerfile` — samo ako je CVE u base image (poseban task)
+
+**AI okvir za ovu oblast:**
+
+> **Cursor:** napravi/ažuriraj `.cursor/rules/appsec-checks.mdc`
+> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/appsec-checks.md`
+
+Sadržaj pravila (isti za oba alata):
+```
+- CI faza za SAST (semgrep) i dependency scan (trivy); build pada na critical.
+- Security headers obavezni: CSP, HSTS, X-Content-Type-Options, X-Frame-Options.
+- DAST (ZAP baseline) pokreće se na review app; high-risk alarm blokira merge.
+- Validacija i escaping inputa po OWASP Top 10 (injection, XSS) — review pri svakom PR-u.
+- Nikad ne commit-ovati tajne; koristiti CI/CD variables ili vault.
+```
+
+**Acceptance criteria:**
+- [ ] `semgrep` prolazi bez critical nalaza (ili su svesno prihvaćeni sa komentarom)
+- [ ] `trivy fs` prolazi bez critical CVE (ili su svesno prihvaćeni)
+- [ ] ZAP baseline ne prijavljuje high-risk alarme
+- [ ] Security headers prisutni u HTTP response-u (`curl -I`)
+- [ ] CI security faza blokira build pri critical nalazu (exit code != 0)
+- [ ] Sync zapisan
+
+**AI pregled plana:**
+```
+Evo plana pre egzekucije:
+1. Dodati security fazu u .gitlab-ci.yml (semgrep + trivy + ZAP)
+2. Dodati security headers u nginx.conf / middleware
+3. Lokalno verifikovati svaku alatku pre push-a
+
+Da li su acceptance criteria merljivi i testabilni?
+Šta fali ili je nejasno u CI konfiguraciji za ovaj servis?
+```
+
+---
+
+## 3. Egzekucija
+
+> **Cursor:** koristiš relevantnog agenta
+> **Claude Code:** direktno u terminalu
+
+Pokreni lokalne provere pre nego što push-uješ na GitLab:
 
 ```bash
+# SAST — statička analiza koda
 docker run --rm -v "$PWD":/src returntocorp/semgrep semgrep --config=auto /src
-docker run --rm -v "$PWD":/src aquasec/trivy fs /src      # dependency CVE
+
+# Dependency scan — CVE provera
+docker run --rm -v "$PWD":/src aquasec/trivy fs /src
+
+# DAST — baseline sken pokrenute aplikacije
 docker run --rm -t owasp/zap2docker-stable zap-baseline.py -t https://<host>
+
+# Security headers — proveri response
+curl -I https://<host> | grep -E "Strict-Transport|Content-Security|X-Content-Type|X-Frame"
 ```
 
-## Validacija — acceptance kriterijumi
+GitLab CI push:
 
-- [ ] odluka A2 doneta preko `/system-maintainer`
-- [ ] `semgrep` bez critical nalaza
-- [ ] dependency scan bez critical CVE (ili svesno prihvaćeno)
-- [ ] ZAP baseline bez high-risk alarma
-- [ ] security headers prisutni
-- [ ] sync zapisan u `decision_log.md`
+```bash
+git add .gitlab-ci.yml nginx.conf
+git commit -m "feat: add appsec stage (semgrep, trivy, ZAP)"
+git push origin feature/appsec
+glab ci view   # prati security fazu u GitLab-u
+```
 
-## AI workflow
+---
+
+## 4. AI validacija
 
 ```
-Evo CI konfiguracije i app endpoint-a. Dodaj SAST + dependency scan fazu
-koja obara build na critical i predloži minimalan set security headers. Objasni.
+Evo acceptance criteria iz plana:
+- semgrep bez critical nalaza
+- trivy bez critical CVE
+- ZAP baseline bez high-risk alarma
+- Security headers prisutni u HTTP response-u
+- CI security faza blokira build pri critical nalazu
+
+Evo outputa semgrep / trivy / ZAP i curl -I odgovora:
+[ovde lepiš stvarni output]
+
+Za svaki acceptance kriterijum: da ✓ ili ne ✗.
+Ako ne — šta tačno fali i kako popraviti?
+```
+
+---
+
+## 5. UAT — ručna validacija
+
+| # | Akcija | Očekivani rezultat |
+|---|--------|--------------------|
+| 1 | `glab ci run` pa otvori Security tab u GitLab-u | Security stage zelen; nema HIGH/CRITICAL nalaza u Security dashboard-u |
+| 2 | `curl -I https://<host>` | Response sadrži `Strict-Transport-Security`, `Content-Security-Policy`, `X-Content-Type-Options`, `X-Frame-Options` |
+| 3 | Ubaci intentionalnu ranjivost (npr. `eval(input)`) i push-uj na feature granu | CI security faza pada, merge blokiran |
+| 4 | Otvori GitLab Security Dashboard | Dependency scan prikazuje pinned verzije bez critical CVE |
+| 5 | Ukloni ranjivost, push-uj ponovo | Security faza prolazi, merge dozvoljen |
+
+**Sync — zatvori petlju:**
+
+> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
+> **Claude Code:** zapiši u `docs/decisions/appsec-tooling.md` ili `CLAUDE.md`
+
+```
+## [datum] — AppSec sync
+- Urađeno:
+- Naučeno:
+- Šta bi promenio:
 ```

@@ -1,98 +1,105 @@
-# 13 — Vežba: priprema AI-okvira i praktični sync
+# 13 — Vežba: priprema AI-okvira i sync (Docker)
 
-Ovo je model-vežba koju svaka oblast dobija: prvo **pripremiš AI-okvir** (agente/rules/skills) za temu oblasti, pa onda radiš **praktičan rad** kroz taj okvir i na kraju **sync**-uješ naučeno nazad u config. Prati `project-a-workflow` petlju (plan → diskusija → egzekucija → validacija → capture).
-
-## Cilj
-
-Na kraju imaš:
-- jasnu odluku koji `.cursor` agenti/rules/skills pokrivaju Docker rad u project-A (i šta, ako išta, dodaješ)
-- najmanji smislen dodatak okvira (ili obrazloženje zašto dodatak nije potreban)
-- Dockerfile iz laba 08 provučen kroz taj okvir: lintovan, skeniran, validiran
-- zabeležen `sync` u `.cursor/memory/decision_log.md`
-
-## Preduslovi
-
-- Završen lab `08-lab-kontejnerizuj-app` (imaš `Dockerfile`, `docker-compose.yml`)
-- Pročitano `01`–`07` ove oblasti (best practices, bezbednost)
-- Postojeći `.cursor` sistem (`/devops-engineer`, `project-a-workflow`, `/system-maintainer`, `process-feedback`)
+Potvrđuješ i proširuješ AI-okvir za Docker rad, pa Dockerfile iz laba 08 provodiš kroz taj okvir — lintovanje, skeniranje i smoke test.
 
 ---
 
-## Deo A — Priprema AI-okvira za Docker
+## 1. Diskusija
 
-### Korak A1 — Mapiraj šta Docker rad traži
+Pre nego počneš, razjasni sa AI-om:
 
-Napravi tabelu: za tipičan Docker zadatak (napiši/popravi Dockerfile, build, skeniraj) — šta od okvira već postoji, a šta fali.
+**Šta tačno radimo:**
+Odlučujemo da li je potreban Docker-specifičan artefakt u okviru (glob-rule za Dockerfile), pa Dockerfile iz laba 08 provodimo kroz hadolint i Trivy i verifikujemo da nema HIGH/CRITICAL nalaza.
 
-| Potreba | Postoji? | Gde |
-|---------|----------|-----|
-| Persona za DevOps rad | da | `/devops-engineer` |
-| Petlja plan→validacija | da | `project-a-workflow` |
-| Konkretna **Docker validacija** (lint/scan kriterijumi) | ? | — |
-| Odluka da/ne dodajem alat | — | `/system-maintainer` |
+**Pretpostavke za potvrdu:**
+- Lab `08-lab-kontejnerizuj-app` je završen — postoje `Dockerfile` i `docker-compose.yml`
+- Pročitani moduli `01`–`07` ove oblasti (best practices, bezbednost)
+- Postoji `.cursor/` okvir sa `/devops-engineer` i `project-a-workflow`
 
-### Korak A2 — Odluči (anti-sprawl)
+**Van opsega:**
+- Ne menjamo docker-compose.yml niti CI pipeline ovde
+- Ne radimo K8s deployment — samo lokalni Docker build i smoke test
 
-**Ne pravi pravilo/skill po refleksu.** Pusti `/system-maintainer` i `process-feedback` da klasifikuju potrebu i predlože:
-
+**Prompt za diskusiju:**
 ```
-Classification: workflow
-Candidate:      skill `review-dockerfile` ili glob-rule za **/Dockerfile
-Change:         add | none
-Evidence:       Docker se ponavlja kroz module 01, 13-aplikacija, 28
-Confidence:     ...
-Action:         ...
+Radim Docker oblast u project-A. Postojeći okvir: /devops-engineer +
+project-a-workflow. Da li mi treba poseban Docker artefakt (rule ili skill),
+ili je pokriveno? Predloži kao kandidat sa evidencijom i confidence,
+bez automatskog kreiranja.
 ```
 
-Pravilo odluke: dodaješ **samo** ako se potreba ponavlja kroz više modula i nije pokrivena postojećim. Za Docker to obično jeste slučaj (ponavlja se), pa je minimalan dodatak opravdan.
-
-### Korak A3 — Implementiraj minimalni dodatak
-
-Ako je odluka „dodaj", napravi **jedan** mali artefakt — npr. glob-scoped rule za Dockerfile-ove:
-
-```
-# .cursor/rules/dockerfile-checks.mdc
----
-description: Dockerfile review checklist for project-A
-globs: paths/project-A/**/Dockerfile
-alwaysApply: false
 ---
 
-# Dockerfile checks
+## 2. Plan
 
+> **Cursor:** uključi Plan mode pre bilo koje izmene  
+> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+
+**Cilj:** Dockerfile prolazi hadolint bez rešivih grešaka i Trivy bez HIGH/CRITICAL nalaza; smoke test vraća HTTP 200.
+
+**Fajlovi koji se diraju:**
+- `Dockerfile`
+- `.dockerignore` (ako ne postoji — kreirati)
+- `.cursor/rules/dockerfile-checks.mdc` (ako je odluka „dodaj")
+
+**Fajlovi koji se NE diraju:**
+- `docker-compose.yml` — nije predmet ove vežbe
+- Aplikacijski kod — samo Dockerfile i build config
+
+**AI okvir za ovu oblast:**
+
+> **Cursor:** napravi/ažuriraj `.cursor/rules/dockerfile-checks.mdc` (globs: `paths/project-A/**/Dockerfile`)  
+> **Claude Code:** dodaj sekciju `## Docker validation checklist` u `CLAUDE.md`, ili napravi `.claude/rules/dockerfile-checks.md`
+
+Sadržaj pravila (isti za oba alata):
+```
 - Pinuj verziju base image-a (nginx:1.25.3-alpine, ne :latest).
-- Multi-stage gde se kompajlira (Go/Node) → final image bez build alata.
-- Ne pokreći kao root gde nije nužno; `USER` po potrebi.
-- `.dockerignore` postoji i isključuje .git/.env.
-- Bez secrets u layer-ima (koristi `--mount=type=secret`).
-- HEALTHCHECK ili health endpoint za K8s liveness.
+- Multi-stage build gde se kompajlira (Go/Node) → final image bez build alata.
+- Ne pokreći kao root gde nije nužno; USER direktiva po potrebi.
+- .dockerignore postoji i isključuje .git i .env fajlove.
+- Bez secrets u layer-ima — koristi --mount=type=secret.
+- HEALTHCHECK ili health endpoint za K8s liveness probe.
 ```
 
-Ako je odluka „ne dodaj", zapiši u `decision_log.md` zašto (npr. „pokriveno sa `/devops-engineer` + best practices iz 07").
+Anti-sprawl: Docker se ponavlja kroz module 01, 13 i 28 — minimalan dodatak je opravdan. Ako je pokriveno postojećim pravilima, zapiši odluku i preskoči kreiranje.
 
-**Acceptance A:** postoji zapis odluke i (ako dodato) jedan funkcionalan artefakt koji se učitava na Dockerfile.
+**Acceptance criteria:**
+- [ ] Odluka o artefaktu doneta preko `/system-maintainer` i zapisana
+- [ ] `docker run --rm -i hadolint/hadolint < Dockerfile` — nula rešivih grešaka
+- [ ] `trivy image --severity HIGH,CRITICAL helloworld:local` — nula rešivih nalaza
+- [ ] `curl -s -o /dev/null -w "%{http_code}" http://localhost:8080` vraća `200`
+- [ ] Sync zapisan u `decision_log.md`
+
+**AI pregled plana:**
+```
+Evo plana pre egzekucije:
+- Donosim odluku o dockerfile-checks artefaktu
+- Pokrećem hadolint, popravljam nalaze, rebuildujem
+- Pokrećem Trivy scan
+- Smoke test: docker run, curl 8080, docker rm
+
+Da li su acceptance criteria merljivi i testabilni?
+Šta fali ili je nejasno pre nego počnem?
+```
 
 ---
 
-## Deo B — Praktičan rad (sync)
+## 3. Egzekucija
 
-Sada koristiš okvir na pravom zadatku: pooštri Dockerfile iz laba 08 kroz pripremljeni okvir.
+> **Cursor:** koristiš `/devops-engineer` agenta za DevOps rad  
+> **Claude Code:** direktno u terminalu, Claude izvršava komande
 
-### Korak B1 — Plan (Plan mode)
-
-Cilj: Dockerfile prolazi lint + scan bez high/critical nalaza. Zapiši dodirnute fajlove i acceptance kriterijume pre izmene.
-
-### Korak B2 — Lint sa hadolint
+Lint sa hadolint:
 
 ```bash
 docker run --rm -i hadolint/hadolint < Dockerfile
 ```
 
-> **Podman:** `podman run --rm -i hadolint/hadolint < Dockerfile`
+> **Podman alternativa:** `podman run --rm -i hadolint/hadolint < Dockerfile`
 
-Tipičan nalaz: `DL3006 Always tag the version of an image explicitly`, `DL3025`, itd. Popravi po checklist-i iz Dela A.
+Tipični nalazi: `DL3006 Always tag the version of an image explicitly`, `DL3025 Use arguments JSON notation for CMD and ENTRYPOINT`. Popravi po checklist-i iz AI okvira.
 
-### Korak B3 — Build i scan sa Trivy
+Build i scan sa Trivy:
 
 ```bash
 docker build -t helloworld:local .
@@ -101,60 +108,61 @@ docker run --rm \
   aquasec/trivy:latest image --severity HIGH,CRITICAL helloworld:local
 ```
 
-> **Podman:** zameni socket sa `/run/user/$(id -u)/podman/podman.sock:/var/run/docker.sock`
+> **Podman alternativa:** zameni socket sa `/run/user/$(id -u)/podman/podman.sock:/var/run/docker.sock`
 
-Cilj: nula HIGH/CRITICAL koje možeš da rešiš (npr. update base image tag).
-
-### Korak B4 — Smoke test
+Smoke test:
 
 ```bash
 docker run -d --name hw -p 8080:80 helloworld:local
-curl -o /dev/null -s -w "%{http_code}\n" http://localhost:8080   # 200
+curl -o /dev/null -s -w "%{http_code}\n" http://localhost:8080
 docker rm -f hw
 ```
 
-### Korak B5 — Sync (capture)
-
-Zatvori petlju — vrati naučeno u config:
-- ako si u B otkrio nov kriterijum (npr. dodaj `DL3059` u checklist), ažuriraj artefakt iz A3
-- zapiši u `.cursor/memory/decision_log.md`: šta je dodato/promenjeno i zašto
-
-```
-## <datum> — Docker tooling sync (oblast 01)
-- Dodat dockerfile-checks rule / ili: odlučeno bez dodatka jer ...
-- hadolint + trivy uvedeni kao Docker validacija u project-a-workflow
-```
-
----
-
-## Validacija — acceptance kriterijumi
-
-- [ ] Tabela iz A1 popunjena; odluka iz A2 doneta preko `/system-maintainer`
-- [ ] (ako „dodaj") artefakt postoji i učitava se na `**/Dockerfile`
-- [ ] `hadolint` bez grešaka koje su rešive
-- [ ] `trivy ... --severity HIGH,CRITICAL` bez rešivih nalaza
-- [ ] smoke test vraća `200`
-- [ ] sync zapisan u `decision_log.md`
-
-„Izgleda dobro" nije validacija — kriterijum je zelen lint/scan/test izlaz.
-
----
-
-## AI workflow
-
-Za odluku da/ne u Delu A:
-
-```
-Radim Docker oblast u project-A. Postojeći okvir: /devops-engineer +
-project-a-workflow. Da li mi treba poseban Docker artefakt (rule ili skill),
-ili je pokriveno? Predloži kao kandidat sa evidencijom i confidence, bez
-automatskog kreiranja.
-```
-
-Kad hadolint/trivy prijavi nalaz koji ne razumeš:
+Ako hadolint ili Trivy prijavi nalaz koji ne razumeš:
 
 ```
 hadolint daje [nalaz] na ovom Dockerfile-u:
 [sadržaj]
 Objasni pravilo, zašto je bitno za produkciju, i minimalan fix.
+```
+
+---
+
+## 4. AI validacija
+
+```
+Evo acceptance criteria iz plana:
+- hadolint bez rešivih grešaka
+- trivy --severity HIGH,CRITICAL bez rešivih nalaza
+- smoke test vraća 200
+- sync zapisan u decision_log.md
+
+Evo outputa:
+[ovde lepiš hadolint output, trivy output, curl output]
+
+Za svaki acceptance kriterijum: da ✓ ili ne ✗.
+Ako ne — šta tačno fali?
+```
+
+---
+
+## 5. UAT — ručna validacija
+
+| # | Akcija | Očekivani rezultat |
+|---|--------|--------------------|
+| 1 | Pokreni `docker run --rm -i hadolint/hadolint < Dockerfile` | Terminalni izlaz ne sadrži linije koje počinju sa `DL` ili `SC` |
+| 2 | Pokreni `trivy image --severity HIGH,CRITICAL helloworld:local` | Tabela rezultata prikazuje 0 HIGH i 0 CRITICAL ranjivosti |
+| 3 | Pokreni `docker run -d --name hw -p 8080:80 helloworld:local && curl -s -o /dev/null -w "%{http_code}" http://localhost:8080` | Shell ispisuje `200` |
+| 4 | Pokreni `docker rm -f hw` i potom `docker ps -a \| grep hw` | Nema izlaza — kontejner je uklonjen |
+
+**Sync — zatvori petlju:**
+
+> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
+> **Claude Code:** zapiši u `docs/decisions/docker-tooling.md` ili u `CLAUDE.md` sekciju `## Decision log`
+
+```
+## [datum] — Docker sync (oblast 01)
+- Urađeno: dockerfile-checks rule dodat / ili: odlučeno bez dodatka jer ...
+- Naučeno: hadolint + trivy kao Docker validacija u project-a-workflow
+- Šta bi promenio:
 ```

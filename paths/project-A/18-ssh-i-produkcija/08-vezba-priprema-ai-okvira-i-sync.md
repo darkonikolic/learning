@@ -1,55 +1,179 @@
-# 08 — Vežba: priprema AI-okvira i sync (pristup produkciji)
+# 08 — Vežba: Priprema AI-okvira i sync (pristup produkciji)
 
-Pripremaš AI-okvir za bezbedan pristup produkciji (SSM/least-privilege umesto otvorenog SSH), pa verifikuješ pristup.
+Gradiš AI-okvir koji forsira bezbedan pristup produkciji isključivo kroz bastion host ili SSM Session Manager — bez otvorenog SSH porta (22) prema internetu — i verifikuješ da svaka sesija ostavlja trag u audit logu.
 
-## Cilj
+---
 
-- okvir koji forsira pristup bez trajno otvorenog SSH porta
-- dokazano: pristup ide kroz SSM/bastion sa auditom, ne `0.0.0.0/0:22`
+## 1. Diskusija
 
-## Deo A — Priprema AI-okvira za prod pristup
+Pre nego počneš, razjasni sa AI-om:
 
-### A1 — Mapiraj
+**Šta tačno radimo:**
+Definišemo šta smemo i ne smemo raditi u produkciji tokom ove vežbe, verifikujemo da SSH pristup ide jedino kroz bastion/SSM (ne direktno sa interneta), i potvrđujemo da audit log beleži sesije.
 
-| Potreba | Postoji? | Gde |
-|---------|----------|-----|
-| Security persona | da | `/security-trainer` |
-| Pristup/incident checklist | delom | `cluster-security-checks` |
+**Pretpostavke za potvrdu:**
+- AWS IAM dozvole za SSM Session Manager postoje ili se mogu dodeliti
+- Security grupe su pod našom kontrolom (ili imamo pristup uvidu)
+- CloudWatch ili S3 je konfigurisan za SSM session logging (ili ćemo konfigurisati)
+- Bastion host postoji ili koristimo SSM bez bastion-a
 
-### A2 — Odluka (anti-sprawl)
+**Van opsega (u ovoj vežbi NE radimo):**
+- Deploy ili izmena aplikacijskog koda u produkciji
+- Restart produkcijskih servisa bez odobrenja
+- Brisanje ili izmena produkcijskih podataka
+- Ostavljanje otvorenih SSH sesija bez svrsishodnog razloga
 
-`/system-maintainer` + `process-feedback`: proširi `cluster-security-checks`/`terraform-checks` stavkom „nema otvorenog SSH; SSM Session Manager + audit". Bez novog rule-a ako postojeći pokrivaju.
-
-### A3 — Minimalni dodatak (primer)
-
+**Prompt za diskusiju:**
 ```
-# dopuna security checks (access)
-- Bez SG pravila 0.0.0.0/0 na 22; pristup preko SSM Session Manager.
-- Svaki interaktivni pristup logovan (SSM session logging u CloudWatch/S3).
-- Privremene, ne trajne, kredencijale (STS) za ljude.
+Hoću pristup prod instancama bez otvorenog SSH porta (22) prema internetu.
+Objasni SSM Session Manager pristup:
+- Šta tačno treba u IAM politici da SSM Session Manager radi?
+- Šta se menja u Security Group (šta se zatvara, šta ostaje)?
+- Kako se sesije loguju u CloudWatch/S3 i šta se tačno beleži?
+- Koja je razlika između bastion host i SSM pristupa — kada koristiti koje?
+- Šta su privremeni (STS) kredencijali i zašto su bolji od trajnih?
 ```
 
-## Deo B — Praktičan rad (sync)
+---
 
-### Verifikacija pristupa
+## 2. Plan
+
+> **Cursor:** uključi Plan mode pre bilo koje izmene
+> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+
+**Cilj:** Produkcijski pristup radi isključivo kroz SSM Session Manager ili bastion, bez ijednog SG pravila koje otvara port 22 prema 0.0.0.0/0, i svaka sesija se beleži u audit logu.
+
+**Fajlovi koji se diraju:**
+- `terraform/security-groups.tf` — ukloni pravilo 22/0.0.0.0/0 ako postoji
+- `terraform/iam-ssm.tf` — IAM politika za SSM Session Manager pristup
+- `terraform/ssm-logging.tf` — konfiguracija session logging-a u CloudWatch/S3
+
+**Fajlovi koji se NE diraju:**
+- `terraform/rds.tf` — baza ostaje kao jeste
+- `k8s/` manifesti — ova vežba je o infrastrukturnom pristupu, ne K8s-u
+
+**AI okvir za ovu oblast:**
+
+> **Cursor:** proširi `.cursor/rules/cluster-security-checks.mdc` ili napravi `.cursor/rules/prod-access-checks.mdc`
+> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/prod-access-checks.md`
+
+Sadržaj pravila (isti za oba alata):
+```
+- Bez SG pravila 0.0.0.0/0 na portu 22; pristup isključivo preko SSM Session Manager ili bastion.
+- Svaki interaktivni pristup produkciji logovan (SSM session logging u CloudWatch/S3).
+- Privremeni, ne trajni, kredencijali (STS assume-role) za ljude koji pristupaju prod.
+- Bastion host je jedina dozvoljena ulazna tačka ako SSM nije opcija.
+- Svaka prod sesija mora imati dokumentovan razlog (ticket, incident broj).
+```
+
+Anti-sprawl: proširi postojeće `cluster-security-checks` ako pokriva — novi rule samo ako ne pokriva prod access specifičnosti.
+
+**Acceptance criteria:**
+- [ ] `aws ec2 describe-security-groups` ne pokazuje nijedno pravilo `0.0.0.0/0` na portu 22
+- [ ] `aws ssm start-session` uspešno otvara sesiju bez SSH ključa
+- [ ] sesija se pojavljuje u CloudWatch Logs ili S3 audit logu posle zatvaranja
+- [ ] bastion host je jedina EC2 instanca sa pristupom iz javne mreže (ako se koristi bastion model)
+- [ ] sync zapisan u `decision_log.md` / `CLAUDE.md`
+
+**AI pregled plana:**
+```
+Evo plana pre egzekucije:
+- Proveravamo sve SG na port 22/0.0.0.0/0 i dokumentujemo nalaze
+- Konfigurišemo SSM Session Manager sa IAM politikama
+- Konfigurišemo session logging u CloudWatch
+- Verifikujemo da sesija radi i ostavlja audit trag
+
+Da li su acceptance criteria merljivi i testabilni?
+Šta fali ili je nejasno?
+```
+
+---
+
+## 3. Egzekucija
+
+> **Cursor:** koristiš `/devops-engineer` agenta
+> **Claude Code:** direktno u terminalu
+
+Proveri da li postoji otvoreni SSH port prema internetu:
 
 ```bash
-aws ssm start-session --target <instance-id>     # bez SSH ključa/porta
-aws ec2 describe-security-groups --query "SecurityGroups[].IpPermissions"   # nema 0.0.0.0/0:22
-kubectl exec -it <pod> -- sh                       # za pod-level pristup
+aws ec2 describe-security-groups \
+  --query "SecurityGroups[].{Name:GroupName,Rules:IpPermissions[?FromPort==\`22\`&&contains(IpRanges[].CidrIp,\`0.0.0.0/0\`)]}" \
+  --output table
+# Rezultat mora biti prazan za svaki SG
 ```
 
-## Validacija — acceptance kriterijumi
+Verifikuj SSM agent na instanci:
 
-- [ ] odluka A2 doneta preko `/system-maintainer`
-- [ ] nema security group pravila `0.0.0.0/0` na portu 22
-- [ ] pristup radi preko SSM (bez SSH ključa)
-- [ ] sesije se loguju (audit)
-- [ ] sync zapisan u `decision_log.md`
+```bash
+aws ssm describe-instance-information \
+  --query "InstanceInformationList[*].{ID:InstanceId,Status:PingStatus}"
+# Status mora biti Online
+```
 
-## AI workflow
+Otvori SSM sesiju (bez SSH ključa, bez porta 22):
+
+```bash
+aws ssm start-session --target <instance-id>
+# Sesija se otvara direktno u terminal
+```
+
+Verifikuj da je sesija zabeležena u CloudWatch:
+
+```bash
+# Posle zatvaranja sesije:
+aws logs get-log-events \
+  --log-group-name /ssm/sessions \
+  --log-stream-name <session-id> \
+  --limit 20
+```
+
+Proveri da li bastion ima ograničen pristup (ako se koristi bastion model):
+
+```bash
+aws ec2 describe-instances \
+  --filters "Name=tag:Role,Values=bastion" \
+  --query "Reservations[].Instances[].{ID:InstanceId,PublicIP:PublicIpAddress,SG:SecurityGroups}"
+```
+
+---
+
+## 4. AI validacija
 
 ```
-Hoću pristup prod instancama bez otvorenog SSH porta.
-Objasni SSM Session Manager pristup i šta treba u IAM/SG da to radi sa auditom.
+Evo acceptance criteria iz plana:
+- nema SG pravila 0.0.0.0/0 na portu 22
+- SSM sesija radi bez SSH ključa
+- sesija je zabeležena u audit logu
+- bastion je jedina javna ulazna tačka
+
+Evo outputa:
+[ovde lepiš: aws ec2 describe-security-groups output, aws ssm start-session potvrdna poruka, CloudWatch log events isečak]
+
+Za svaki acceptance kriterijum: da ✓ ili ne ✗.
+Ako ne — šta tačno fali?
+```
+
+---
+
+## 5. UAT — ručna validacija
+
+| # | Akcija | Očekivani rezultat |
+|---|--------|--------------------|
+| 1 | `aws ec2 describe-security-groups` filtrirano na port 22, CIDR 0.0.0.0/0 | Nula rezultata — nijedan SG nema otvoreni SSH prema internetu |
+| 2 | `aws ssm start-session --target <instance-id>` | Terminal sesija se otvara za ~5 sekundi bez traženja SSH ključa |
+| 3 | Unutar SSM sesije: `whoami && hostname` | Prikazuje korisnika i hostname produkcijske instance |
+| 4 | Zatvori sesiju; `aws logs get-log-events --log-group-name /ssm/sessions` | Session ID iz koraka 2 je vidljiv u logu sa timestamp-om i trajanjem |
+| 5 | Pokušaj direktnog SSH: `ssh ec2-user@<public-ip>` | Konekcija odbijena ili timeout — port 22 nije dostupan |
+
+**Sync — zatvori petlju:**
+
+> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
+> **Claude Code:** zapiši u `docs/decisions/prod-access-tooling.md` ili `CLAUDE.md`
+
+```
+## [datum] — SSH i produkcija sync
+- Urađeno:
+- Naučeno:
+- Šta bi promenio:
 ```

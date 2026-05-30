@@ -1,56 +1,186 @@
-# 11 — Vežba: priprema AI-okvira i sync (RDS i ElastiCache)
+# 11 — Vežba: AWS RDS i ElastiCache
 
-Pripremaš AI-okvir za upravljane baze (RDS MySQL master/replica) i Redis (ElastiCache), pa validiraš konekciju i backup.
+Validiraš AI-okvir za upravljane baze podataka (RDS MySQL master/replica) i Redis (ElastiCache), i dokazuješ da konekcija radi isključivo kroz interni put, enkripcija je uključena, a kredencijali dolaze iz Secrets Manager-a.
 
-## Cilj
+---
 
-- okvir koji pokriva RDS/ElastiCache module i konekcionu higijenu
-- dokazano: konekcija radi, backup/replica postoji, secrets nisu u kodu
+## 1. Diskusija
 
-## Deo A — Priprema AI-okvira za RDS/ElastiCache
+Pre nego počneš, razjasni sa AI-om:
 
-### A1 — Mapiraj
+**Šta tačno radimo:**
+Proširujemo postojeći `terraform-checks` rule DB stavkama za RDS i ElastiCache. Dokazujemo da konekcija na RDS ide kroz bastion ili interni VPC put (ne javni internet), da je ElastiCache dostupan samo iz app subneta, i da je enkripcija at-rest uključena.
 
-| Potreba | Postoji? | Gde |
-|---------|----------|-----|
-| Terraform/AWS checklist | da | `terraform-checks` |
-| DB konekcija/secrets | delom | (oblast 15 — SM) |
+**Pretpostavke za potvrdu:**
+- `terraform-checks` rule već postoji iz prethodnih oblasti
+- RDS instanca je already deployed ili se deploya u ovoj vežbi
+- Bastion host ili SSM Session Manager je dostupan za interne konekcije
+- AWS CLI je podešen sa ispravnim profilom i regionom
 
-### A2 — Odluka (anti-sprawl)
+**Van opsega:**
+- RDS Proxy podešavanje
+- Aurora Serverless konfiguracija
+- Cross-region replikacija
 
-`/system-maintainer` + `process-feedback`: proširi `terraform-checks` DB stavkama (enkripcija at-rest, automated backups, multi-AZ za prod, parametar grupe) umesto novog rule-a.
-
-### A3 — Minimalni dodatak (primer)
-
-```
-# dopuna terraform-checks (data)
-- RDS: storage_encrypted=true, backup_retention >= 7, deletion_protection u prod.
-- Read replica definisana gde aplikacija čita više nego što piše.
-- Lozinke iz Secrets Manager-a, ne u .tf/.tfvars.
-```
-
-## Deo B — Praktičan rad (sync)
-
-### Validacija konekcije i backup-a
-
-```bash
-terraform plan
-mysql -h <rds-endpoint> -u app -p -e "SELECT 1;"
-aws rds describe-db-instances --query "DBInstances[].{id:DBInstanceIdentifier,backup:BackupRetentionPeriod,enc:StorageEncrypted}"
-```
-
-## Validacija — acceptance kriterijumi
-
-- [ ] odluka A2 doneta preko `/system-maintainer`
-- [ ] konekcija na master i replica radi
-- [ ] enkripcija at-rest uključena, backup retention > 0
-- [ ] kredencijali dolaze iz Secrets Manager-a (ne hardkodovani)
-- [ ] sync zapisan u `decision_log.md`
-
-## AI workflow
-
+**Prompt za diskusiju:**
 ```
 Treba mi RDS MySQL master + read replica preko Terraform-a,
 sa enkripcijom, backup-om i lozinkom iz Secrets Manager-a.
 Daj modul i objasni replica/failover ponašanje.
+Potom objasni: zašto RDS ne sme biti javno dostupan,
+i kako security group pravila enforces pristup samo iz app subneta.
+```
+
+---
+
+## 2. Plan
+
+> **Cursor:** uključi Plan mode pre bilo koje izmene  
+> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+
+**Cilj:** Proširiti `terraform-checks` za RDS/ElastiCache higijenu i dokazati da infrastruktura zadovoljava sigurnosne i dostupnost zahteve.
+
+**Fajlovi koji se diraju:**
+- `terraform/modules/rds/` — RDS modul sa enkripcijom, backup i replica
+- `terraform/modules/elasticache/` — ElastiCache modul sa subnet group
+- `.cursor/rules/terraform-checks.mdc` ili `CLAUDE.md` — dopuna postojećeg rule-a
+
+**Fajlovi koji se NE diraju:**
+- `terraform/modules/vpc/` — mrežna konfiguracija se ne menja
+- `terraform/modules/iam/` — IAM role ostaju neizmenjene
+- Aplikacioni kod — ovo je isključivo infra vežba
+
+**AI okvir za ovu oblast:**
+
+> **Cursor:** ažuriraj `.cursor/rules/terraform-checks.mdc`  
+> **Claude Code:** ažuriraj sekciju u `CLAUDE.md` ili `.claude/rules/terraform-checks.md`
+
+Sadržaj pravila (isti za oba alata):
+```
+# dopuna terraform-checks (data tier)
+- RDS: storage_encrypted=true, backup_retention >= 7, deletion_protection u prod.
+- RDS: publicly_accessible=false; pristup samo iz app security grupe.
+- Read replica definisana gde aplikacija čita više nego što piše.
+- ElastiCache: dostupan samo iz app subneta, ne iz javnih subneta.
+- Lozinke iz Secrets Manager-a, ne u .tf/.tfvars fajlovima.
+- Multi-AZ za produkcione RDS instance.
+```
+
+Anti-sprawl: ovo je dopuna `terraform-checks` koji postoji — ne pravi se novi rule.
+
+**Acceptance criteria:**
+- [ ] `terraform plan` završava bez grešaka
+- [ ] Konekcija na RDS master ide kroz bastion ili SSM (ne javni internet)
+- [ ] Konekcija na read replica radi odvojeno
+- [ ] ElastiCache je dostupan samo iz app subneta (ne spolja)
+- [ ] AWS Console potvrđuje: Storage encrypted = Yes za RDS
+- [ ] `backup_retention_period` je >= 7 dana
+- [ ] Kredencijali se čitaju iz Secrets Manager-a (nema hardkodovanih lozinki u .tf)
+- [ ] Sync zapisan
+
+**AI pregled plana:**
+```
+Evo plana pre egzekucije:
+1. Dopuniti terraform-checks pravila za RDS i ElastiCache
+2. Pokrenuti terraform plan
+3. Konektovati se na RDS kroz bastion/SSM i potvrditi konekciju
+4. Proveriti AWS Console za enkripciju i backup retention
+5. Proveriti da ElastiCache nije dostupan van app subneta
+
+Da li su acceptance criteria merljivi i testabilni?
+Šta fali ili je nejasno pre nego počnem?
+```
+
+---
+
+## 3. Egzekucija
+
+> **Cursor:** koristiš `/devops-engineer` agenta  
+> **Claude Code:** direktno u terminalu
+
+Validacija Terraform plana:
+
+```bash
+terraform plan
+```
+
+Konekcija na RDS kroz bastion host (ne direktno s javnog interneta):
+
+```bash
+# Kroz SSH tunel via bastion
+ssh -L 3306:<rds-endpoint>:3306 ec2-user@<bastion-ip> -N &
+mysql -h 127.0.0.1 -u app -p -e "SELECT 1;"
+
+# Ili kroz AWS SSM Session Manager
+aws ssm start-session --target <instance-id> \
+  --document-name AWS-StartPortForwardingSessionToRemoteHost \
+  --parameters '{"host":["<rds-endpoint>"],"portNumber":["3306"],"localPortNumber":["3306"]}'
+mysql -h 127.0.0.1 -u app -p -e "SELECT 1;"
+```
+
+Provera RDS konfiguracije u AWS CLI:
+
+```bash
+aws rds describe-db-instances \
+  --query "DBInstances[].{id:DBInstanceIdentifier,backup:BackupRetentionPeriod,enc:StorageEncrypted,public:PubliclyAccessible,multiAZ:MultiAZ}"
+```
+
+Provera da kredencijali dolaze iz Secrets Manager-a (ne iz .tf fajlova):
+
+```bash
+grep -r "password" terraform/ --include="*.tf" | grep -v "secretsmanager"
+# Rezultat treba biti prazan ili samo reference na SM
+```
+
+Provera ElastiCache subnet grupe:
+
+```bash
+aws elasticache describe-cache-subnet-groups \
+  --query "CacheSubnetGroups[].{name:CacheSubnetGroupName,subnets:Subnets[].SubnetAvailabilityZone}"
+```
+
+---
+
+## 4. AI validacija
+
+```
+Evo acceptance criteria iz plana:
+- terraform plan završava bez grešaka
+- Konekcija na RDS ide kroz bastion/SSM (ne javni internet)
+- Read replica konekcija radi
+- ElastiCache nije dostupan van app subneta
+- AWS Console: Storage encrypted = Yes
+- backup_retention_period >= 7
+- Nema hardkodovanih lozinki u .tf fajlovima
+
+Evo outputa / diff-a / konfiguracije:
+[ovde lepiš: terraform plan output, aws rds describe-db-instances output, grep rezultat za passwords, screenshot AWS Console enkripcija]
+
+Za svaki acceptance kriterijum: da ✓ ili ne ✗.
+Ako ne — šta tačno fali?
+```
+
+---
+
+## 5. UAT — ručna validacija
+
+| # | Akcija | Očekivani rezultat |
+|---|--------|--------------------|
+| 1 | Pokušaj direktnu konekciju na RDS endpoint sa lokalnog računara (bez tunela) | Konekcija se odbija — RDS nije javno dostupan |
+| 2 | Konektuj se na RDS kroz bastion ili SSM tunel, izvrši `SELECT 1` | Vraća `1` — konekcija radi internim putem |
+| 3 | Konektuj se na read replica endpoint i izvrši `SHOW SLAVE STATUS\G` | Replikacija je aktivna i Seconds_Behind_Master je mali |
+| 4 | Otvori AWS Console → RDS → DB instance → Configuration | Storage encrypted: Yes, Backup retention: ≥ 7 dana |
+| 5 | Otvori AWS Console → ElastiCache → Subnet groups | Samo app subneti su navedeni, nema javnih subneta |
+| 6 | Proveri AWS Secrets Manager → secret za DB lozinku postoji | Secret postoji i verzija je ažurna |
+
+**Sync — zatvori petlju:**
+
+> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
+> **Claude Code:** zapiši u `docs/decisions/aws-rds-elasticache-tooling.md` ili `CLAUDE.md`
+
+```
+## [datum] — RDS i ElastiCache sync
+- Urađeno:
+- Naučeno:
+- Šta bi promenio:
 ```
