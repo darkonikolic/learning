@@ -38,8 +38,7 @@ Objasni SSM Session Manager pristup:
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Produkcijski pristup radi isključivo kroz SSM Session Manager ili bastion, bez ijednog SG pravila koje otvara port 22 prema 0.0.0.0/0, i svaka sesija se beleži u audit logu.
 
@@ -54,10 +53,9 @@ Objasni SSM Session Manager pristup:
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** proširi `.cursor/rules/cluster-security-checks.mdc` ili napravi `.cursor/rules/prod-access-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/prod-access-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/prod-access-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Bez SG pravila 0.0.0.0/0 na portu 22; pristup isključivo preko SSM Session Manager ili bastion.
 - Svaki interaktivni pristup produkciji logovan (SSM session logging u CloudWatch/S3).
@@ -73,7 +71,7 @@ Anti-sprawl: proširi postojeće `cluster-security-checks` ako pokriva — novi 
 - [ ] `aws ssm start-session` uspešno otvara sesiju bez SSH ključa
 - [ ] sesija se pojavljuje u CloudWatch Logs ili S3 audit logu posle zatvaranja
 - [ ] bastion host je jedina EC2 instanca sa pristupom iz javne mreže (ako se koristi bastion model)
-- [ ] sync zapisan u `decision_log.md` / `CLAUDE.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log` / `CLAUDE.md`
 
 **AI pregled plana:**
 ```
@@ -91,8 +89,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Proveri da li postoji otvoreni SSH port prema internetu:
 
@@ -168,8 +165,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/prod-access-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — SSH i produkcija sync

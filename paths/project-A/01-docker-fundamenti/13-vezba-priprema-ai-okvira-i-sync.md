@@ -14,7 +14,7 @@ Odlučujemo da li je potreban Docker-specifičan artefakt u okviru (glob-rule za
 **Pretpostavke za potvrdu:**
 - Lab `08-lab-kontejnerizuj-app` je završen — postoje `Dockerfile` i `docker-compose.yml`
 - Pročitani moduli `01`–`07` ove oblasti (best practices, bezbednost)
-- Postoji `.cursor/` okvir sa `/devops-engineer` i `project-a-workflow`
+- Postoji `CLAUDE.md` u korenu radnog repoa sa `## Project-A workflow` sekcijom
 
 **Van opsega:**
 - Ne menjamo docker-compose.yml niti CI pipeline ovde
@@ -22,9 +22,9 @@ Odlučujemo da li je potreban Docker-specifičan artefakt u okviru (glob-rule za
 
 **Prompt za diskusiju:**
 ```
-Radim Docker oblast u project-A. Postojeći okvir: /devops-engineer +
-project-a-workflow. Da li mi treba poseban Docker artefakt (rule ili skill),
-ili je pokriveno? Predloži kao kandidat sa evidencijom i confidence,
+Radim Docker oblast u project-A. Kontekst je u CLAUDE.md (sekcija ## Project-A workflow).
+Da li mi treba posebna CLAUDE.md sekcija ili .claude/rules/ fajl za Docker validaciju,
+ili je pokriveno postojećim pravilima? Predloži kao kandidat sa evidencijom i confidence,
 bez automatskog kreiranja.
 ```
 
@@ -32,15 +32,14 @@ bez automatskog kreiranja.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Dockerfile prolazi hadolint bez rešivih grešaka i Trivy bez HIGH/CRITICAL nalaza; smoke test vraća HTTP 200.
 
 **Fajlovi koji se diraju:**
 - `Dockerfile`
 - `.dockerignore` (ako ne postoji — kreirati)
-- `.cursor/rules/dockerfile-checks.mdc` (ako je odluka „dodaj")
+- `CLAUDE.md` ili `.claude/rules/dockerfile-checks.md` (ako je odluka „dodaj")
 
 **Fajlovi koji se NE diraju:**
 - `docker-compose.yml` — nije predmet ove vežbe
@@ -48,10 +47,9 @@ bez automatskog kreiranja.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/dockerfile-checks.mdc` (globs: `paths/project-A/**/Dockerfile`)  
-> **Claude Code:** dodaj sekciju `## Docker validation checklist` u `CLAUDE.md`, ili napravi `.claude/rules/dockerfile-checks.md`
+Dodaj sekciju `## Docker validation checklist` u `CLAUDE.md`, ili napravi `.claude/rules/dockerfile-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Pinuj verziju base image-a (nginx:1.25.3-alpine, ne :latest).
 - Multi-stage build gde se kompajlira (Go/Node) → final image bez build alata.
@@ -64,11 +62,11 @@ Sadržaj pravila (isti za oba alata):
 Anti-sprawl: Docker se ponavlja kroz module 01, 13 i 28 — minimalan dodatak je opravdan. Ako je pokriveno postojećim pravilima, zapiši odluku i preskoči kreiranje.
 
 **Acceptance criteria:**
-- [ ] Odluka o artefaktu doneta preko `/system-maintainer` i zapisana
+- [ ] Odluka o artefaktu doneta i zapisana u `.claude/memory/decisions.md` ili `CLAUDE.md`
 - [ ] `docker run --rm -i hadolint/hadolint < Dockerfile` — nula rešivih grešaka
 - [ ] `trivy image --severity HIGH,CRITICAL helloworld:local` — nula rešivih nalaza
 - [ ] `curl -s -o /dev/null -w "%{http_code}" http://localhost:8080` vraća `200`
-- [ ] Sync zapisan u `decision_log.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log`
 
 **AI pregled plana:**
 ```
@@ -86,8 +84,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta za DevOps rad  
-> **Claude Code:** direktno u terminalu, Claude izvršava komande
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Lint sa hadolint:
 
@@ -135,7 +132,7 @@ Evo acceptance criteria iz plana:
 - hadolint bez rešivih grešaka
 - trivy --severity HIGH,CRITICAL bez rešivih nalaza
 - smoke test vraća 200
-- sync zapisan u decision_log.md
+- sync zapisan u .claude/memory/decisions.md ili CLAUDE.md
 
 Evo outputa:
 [ovde lepiš hadolint output, trivy output, curl output]
@@ -157,8 +154,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/docker-tooling.md` ili u `CLAUDE.md` sekciju `## Decision log`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Docker sync (oblast 01)

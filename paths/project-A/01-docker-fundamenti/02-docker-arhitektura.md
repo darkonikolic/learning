@@ -44,6 +44,8 @@ Docker sistem se sastoji od tri dela koji komuniciraju međusobno:
 
 Ova razdvojenost znači da možeš imati Docker CLI na jednoj mašini koji komunicira sa Docker daemonom na drugoj. Na tome se zasniva Docker Context i daljinska administracija.
 
+> **Podman arhitektura:** Podman nema centralnog daemona. Svaka `podman` komanda direktno komunicira sa container runtimeom (crun/runc) bez posrednika. Ovo je "daemonless" arhitektura — sigurnija jer nema root daemona koji sluša konekcije. Socket (`/run/user/$(id -u)/podman/podman.sock`) postoji samo ako ga eksplicitno pokrneš (`podman system service`). Za korištenje u ovom kursu: `podman build`, `podman run` itd. rade identično kao `docker` ekvivalenti.
+
 ## Image layeri — kako Docker skladišti fajlove
 
 Docker image nije jedan monolitni fajl. To je stek read-only slojeva (layera).
@@ -114,7 +116,11 @@ Kontejner prolazi kroz ova stanja:
            (gone)
 ```
 
+> **Podman:** Sve komande iz dijagrama rade identično — zamijeni `docker` sa `podman`: `podman create`, `podman start`, `podman pause`, `podman unpause`, `podman stop`, `podman rm`.
+
 `docker run` = `docker create` + `docker start` u jednoj komandi.
+
+> **Podman:** `podman run` = `podman create` + `podman start`
 
 Ono što ovo znači za nas: RUNNING kontejner = RUNNING proces unutar kontejnera. Kada nginx proces unutar kontejnera pukne ili se zaustavi, kontejner prelazi u STOPPED. Kubernetes to detektuje i restartuje pod. Monitoring mora pratiti ovo stanje.
 
@@ -147,6 +153,15 @@ Vizualizacija kompletnog toka koji ćemo proći u project-A:
 5. DOCKER RUN (K8s pokreće kontejner iz image-a)
    image → running container = running nginx process
 ```
+
+> **Podman:**
+> ```bash
+> podman build -t helloworld:local .
+> podman tag helloworld:local registry.gitlab.com/firma/project-a:abc123
+> podman push registry.gitlab.com/firma/project-a:abc123
+> podman pull registry.gitlab.com/...
+> podman run helloworld:local
+> ```
 
 Ovaj tok se automatizuje u GitLab CI/CD pipeline-u. Svaki `git push` pokreće sve ove korake bez ručne intervencije.
 

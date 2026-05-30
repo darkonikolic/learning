@@ -33,14 +33,13 @@ u odnosu na klasični stage redosled.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Proširiti CI okvir za review apps i DAG, i dokazati da pipeline prolazi lint sa kraćim ukupnim vremenom.
 
 **Fajlovi koji se diraju:**
 - `.gitlab-ci.yml` — dodaješ review app job i `needs:` deklaracije
-- `.cursor/rules/gitlab-ci-checks.mdc` ili `CLAUDE.md` — dopuna pravila
+- `CLAUDE.md` ili `.claude/rules/gitlab-ci-checks.md` — dopuna pravila
 
 **Fajlovi koji se NE diraju:**
 - `src/` — ovo je CI izmena, ne aplikacioni kod
@@ -48,10 +47,9 @@ u odnosu na klasični stage redosled.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** ažuriraj `.cursor/rules/gitlab-ci-checks.mdc`  
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili ažuriraj `.claude/rules/gitlab-ci-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili ažuriraj `.claude/rules/gitlab-ci-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 # dopuna gitlab-ci-checks (advanced)
 - Review app ima `environment.on_stop` i `auto_stop_in` (cleanup).
@@ -87,8 +85,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta  
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Lint pipeline konfiguracije:
 
@@ -152,8 +149,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/gitlab-ci-advanced-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — GitLab napredni CI sync

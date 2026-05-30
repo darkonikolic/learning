@@ -33,8 +33,7 @@ Koji su tipični bottleneck-ovi za ovakav endpoint (DB, N+1, lock contention)?
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** K6 test sa definisanim pragovima prolazi; bottleneck identifikovan ako padne.
 
@@ -48,10 +47,9 @@ Koji su tipični bottleneck-ovi za ovakav endpoint (DB, N+1, lock contention)?
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/perf-test-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/perf-test-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/perf-test-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Definiši prag PRE testa (p95 < Xms, error rate < Y%); ne beri pragove posle.
 - Profil opterećenja realan: ramp-up faza, plato, ramp-down — ne samo max RPS odmah.
@@ -83,8 +81,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš relevantnog agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Pokreni k6 test:
 
@@ -158,8 +155,7 @@ Ako ne — šta tačno fali i koji je sledeći korak za optimizaciju?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/performance-testing-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Performance Testing sync

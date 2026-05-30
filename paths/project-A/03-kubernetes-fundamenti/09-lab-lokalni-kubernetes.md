@@ -360,3 +360,54 @@ Moj Pod je u ImagePullBackOff stanju. Evo kubectl describe outputa:
 
 Koji je uzrok i kako riješiti?
 ```
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi Kubernetes i kind. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 03: Kubernetes ===
+
+cluster-create: ## Kreiraj lokalni kind Kubernetes cluster
+	kind create cluster --name $(APP_NAME)
+
+cluster-delete: ## Obriši lokalni kind cluster
+	kind delete cluster --name $(APP_NAME)
+
+pods: ## Prikaži sve podove u svim namespace-ima
+	docker run --rm -v ~/.kube:/root/.kube bitnami/kubectl:$(KUBECTL_VERSION) get pods --all-namespaces
+
+svc: ## Prikaži sve servise u svim namespace-ima
+	docker run --rm -v ~/.kube:/root/.kube bitnami/kubectl:$(KUBECTL_VERSION) get svc --all-namespaces
+
+k-apply: ## Primijeni YAML fajl na cluster (FILE=deployment.yaml make k-apply)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  -v $(PWD):/workspace -w /workspace \
+	  bitnami/kubectl:$(KUBECTL_VERSION) apply -f $(FILE)
+
+k-dry-run: ## Dry-run primjena — provjeri bez mijenjanja stanja (FILE=x.yaml make k-dry-run)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  -v $(PWD):/workspace -w /workspace \
+	  bitnami/kubectl:$(KUBECTL_VERSION) apply --dry-run=client -f $(FILE)
+
+k-diff: ## Prikaži razliku između lokalnog YAML-a i live stanja (FILE=x.yaml make k-diff)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  -v $(PWD):/workspace -w /workspace \
+	  bitnami/kubectl:$(KUBECTL_VERSION) diff -f $(FILE)
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+make cluster-create
+make pods
+FILE=k8s/deployment.yaml make k-dry-run
+make help | grep cluster
+make help | grep "^k-"
+```

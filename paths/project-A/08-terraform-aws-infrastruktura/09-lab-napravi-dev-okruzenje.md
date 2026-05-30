@@ -216,3 +216,49 @@ Kada zaglavlješ:
 3. Daj Claude-u: "Radim project-A lab, korak X, dobio sam ovu grešku..."
 
 Claude može čitati Terraform plan output i preporučiti izmjene — ovo je standardni workflow za debuggovanje infrastrukture.
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi Terraform za AWS infrastrukturu sa S3 backendom. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 08: Terraform AWS infrastruktura ===
+
+infra-init: ## Inicijalizuj Terraform za AWS infra (s3 backend) (ENV=dev make infra-init)
+	docker run --rm \
+	  -v $(PWD)/infra:/workspace -w /workspace \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  hashicorp/terraform:$(TF_VERSION) init \
+	  -backend-config="key=envs/$(ENV)/terraform.tfstate"
+
+infra-plan: ## Plan AWS infrastrukture za okruženje (ENV=dev make infra-plan)
+	docker run --rm \
+	  -v $(PWD)/infra:/workspace -w /workspace \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  hashicorp/terraform:$(TF_VERSION) plan \
+	  -var-file="environments/$(ENV).tfvars" -out=tfplan
+
+infra-apply: ## Primijeni infrastrukturni plan (uvijek nakon infra-plan) (ENV=dev make infra-apply)
+	docker run --rm \
+	  -v $(PWD)/infra:/workspace -w /workspace \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  hashicorp/terraform:$(TF_VERSION) apply tfplan
+
+infra-destroy: ## ⚠️ Uništi svu AWS infrastrukturu za okruženje (ENV=dev make infra-destroy)
+	docker run --rm \
+	  -v $(PWD)/infra:/workspace -w /workspace \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  hashicorp/terraform:$(TF_VERSION) destroy \
+	  -var-file="environments/$(ENV).tfvars"
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+ENV=dev make infra-init
+ENV=dev make infra-plan
+make help | grep infra
+```

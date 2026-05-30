@@ -34,8 +34,7 @@ Objasni:
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Klaster ima least-privilege RBAC, default-deny NetworkPolicy i nema neprihvaćenih HIGH/CRITICAL image nalaza.
 
@@ -51,10 +50,9 @@ Objasni:
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/cluster-security-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/cluster-security-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/cluster-security-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - ServiceAccount po servisu; bez cluster-admin bindinga za aplikacije.
 - Default-deny NetworkPolicy u svakom namespace-u, pa eksplicitni allow.
@@ -70,7 +68,7 @@ Anti-sprawl: uvedi `cluster-security-checks` — sigurnost je sistemska briga ko
 - [ ] default-deny NetworkPolicy aktivna u aplikacijskom namespace-u
 - [ ] `trivy image` ne pokazuje neprihvaćene CRITICAL nalaze (HIGH su dokumentovani)
 - [ ] GitLab Security dashboard prikazuje rezultate poslednjeg CI skena
-- [ ] sync zapisan u `decision_log.md` / `CLAUDE.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log` / `CLAUDE.md`
 
 **AI pregled plana:**
 ```
@@ -88,8 +86,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Primeni RBAC i NetworkPolicy:
 
@@ -165,8 +162,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/sigurnost-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Sigurnost sync

@@ -204,3 +204,27 @@ export function getAuthToken() {
   return res.json('access_token');
 }
 ```
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi k6 za performance testiranje. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 25: Performance ===
+
+perf-test: ## Pokreni k6 load test (SCRIPT=load-test.js VUSERS=10 DURATION=30s make perf-test)
+	docker run --rm \
+	  -v $(PWD)/tests:/scripts \
+	  grafana/k6:latest run \
+	  --vus $(VUSERS) --duration $(DURATION) /scripts/$(SCRIPT)
+```
+
+Centralni Makefile već sadrži ovaj target — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da target radi:
+```bash
+SCRIPT=load-test.js VUSERS=10 DURATION=30s make perf-test
+make help | grep perf
+```

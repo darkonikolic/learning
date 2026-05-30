@@ -1,5 +1,20 @@
 # Claude za GitLab Pipeline
 
+## CLAUDE.md kontekst za pipeline rad
+
+Dodaj u `CLAUDE.md` da Claude generiše pipeline koji odgovara tvom setup-u:
+
+```markdown
+## GitLab CI validation checklist
+- Svaki job ima stage, rules: (ne only/except), i jasne needs:.
+- Path-based rules: changes: da se ne build-uje sve pri svakom commitu.
+- Bez plaintext secrets — koristi CI/CD variables (masked, protected).
+- interruptible: true za feature grane.
+- AWS auth: OIDC (CI_JOB_JWT_V2) — ne access key/secret u variables.
+- Docker push: CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA format.
+- Helm deploy: --wait --timeout 5m minimum.
+```
+
 ## Generisanje kompleksnog .gitlab-ci.yml
 
 Pipeline je jedan od najkompleksnijih fajlova u projektu — ima mnogo opcija,

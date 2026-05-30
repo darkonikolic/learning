@@ -14,7 +14,7 @@ Odlučujemo da li je potreban K8s-specifičan artefakt u okviru (glob-rule za ma
 **Pretpostavke za potvrdu:**
 - Postoje K8s manifesti u `k8s/` direktorijumu (iz prethodnih labova oblasti 03)
 - `kubectl` je konfigurisan na lokalni kind klaster
-- Postoji `.cursor/` okvir sa `/devops-engineer` i `project-a-workflow`
+- Postoji `CLAUDE.md` u korenu radnog repoa sa `## Project-A workflow` sekcijom
 
 **Van opsega:**
 - Ne podešavamo produkcijski klaster — samo lokalni kind
@@ -23,8 +23,7 @@ Odlučujemo da li je potreban K8s-specifičan artefakt u okviru (glob-rule za ma
 **Prompt za diskusiju:**
 ```
 Radim Kubernetes oblast u project-A. Imam K8s manifeste u k8s/
-direktorijumu koje treba da proverim. Postojeći okvir: /devops-engineer +
-project-a-workflow. Da li mi treba poseban K8s artefakt (rule za manifeste),
+direktorijumu koje treba da proverim. Kontekst je u CLAUDE.md (sekcija ## Project-A workflow). Da li mi treba poseban K8s artefakt (rule za manifeste),
 ili je pokriveno? Predloži kao kandidat sa evidencijom i confidence,
 bez automatskog kreiranja.
 ```
@@ -33,14 +32,13 @@ bez automatskog kreiranja.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** K8s manifesti prolaze kubeconform schema validaciju i `kubectl apply --dry-run=server`, deployment proradi i pod je Running.
 
 **Fajlovi koji se diraju:**
 - `k8s/*.yaml` (manifesti)
-- `.cursor/rules/k8s-manifest-checks.mdc` (ako je odluka „dodaj")
+ (ako je odluka „dodaj")
 
 **Fajlovi koji se NE diraju:**
 - `Dockerfile` — obrađen u oblasti 01
@@ -49,10 +47,9 @@ bez automatskog kreiranja.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/k8s-manifest-checks.mdc` (globs: `paths/project-A/**/k8s/**/*.yaml`)  
-> **Claude Code:** dodaj sekciju `## Kubernetes manifest checklist` u `CLAUDE.md`, ili napravi `.claude/rules/k8s-manifest-checks.md`
+Dodaj sekciju `## Kubernetes manifest checklist` u `CLAUDE.md`, ili napravi `.claude/rules/k8s-manifest-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Svaki kontejner ima resources.requests i resources.limits.
 - liveness i readiness probe definisani za svaki kontejner.
@@ -63,12 +60,12 @@ Sadržaj pravila (isti za oba alata):
 Anti-sprawl: K8s se ponavlja kroz module 03, 13 i 22 — minimalan dodatak je opravdan. Ako je pokriveno postojećim pravilima, zapiši odluku i preskoči kreiranje.
 
 **Acceptance criteria:**
-- [ ] Odluka o artefaktu doneta preko `/system-maintainer` i zapisana
+- [ ] Odluka o artefaktu doneta i zapisana u `.claude/memory/decisions.md` ili `CLAUDE.md`
 - [ ] `kubeconform -strict k8s/` — nula grešaka
 - [ ] `kubectl apply --dry-run=server -f k8s/` — prolazi bez grešaka
 - [ ] `kubectl rollout status deployment/<ime>` — status `successfully rolled out`
 - [ ] Svi kontejneri u manifestima imaju `resources` i probe definisane
-- [ ] Sync zapisan u `decision_log.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log`
 
 **AI pregled plana:**
 ```
@@ -86,8 +83,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta za DevOps rad  
-> **Claude Code:** direktno u terminalu, Claude izvršava komande
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Schema validacija (offline):
 
@@ -156,8 +152,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/kubernetes-tooling.md` ili u `CLAUDE.md` sekciju `## Decision log`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Kubernetes sync (oblast 03)

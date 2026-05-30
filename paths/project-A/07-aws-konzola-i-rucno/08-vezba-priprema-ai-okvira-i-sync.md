@@ -30,15 +30,13 @@ Napravio sam ručno [resurs, npr. EC2 t3.micro u eu-west-1] sa parametrima [AMI 
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Verifikovati da ručno napravljen resurs postoji sa tačnim parametrima i da je zabeležen u formatu koji omogućava Terraform prevod bez gubitka informacija.
 
 **Fajlovi koji se diraju:**
-- `.cursor/memory/decision_log.md` ili `docs/decisions/rucni-resursi.md` — zapis parametara
-- `.cursor/rules/rucni-resurs-checks.mdc` (Cursor) ako se checklist ponavlja
-- `CLAUDE.md` — nova sekcija ako Claude Code
+- `CLAUDE.md` — nova sekcija (ako se checklist ponavlja kroz više modula)
+- `.claude/rules/rucni-resurs-checks.md` (alternativa CLAUDE.md sekciji)
 
 **Fajlovi koji se NE diraju:**
 - Terraform fajlovi — ne pišemo Terraform u ovoj oblasti, samo dokumentujemo
@@ -46,10 +44,9 @@ Napravio sam ručno [resurs, npr. EC2 t3.micro u eu-west-1] sa parametrima [AMI 
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi `.cursor/rules/rucni-resurs-checks.mdc` (globs: `paths/project-A/07-aws-konzola-i-rucno/**`)
-> **Claude Code:** dodaj sekciju `## Ručni resurs — checklist za Terraform prevod` u `CLAUDE.md`
+Dodaj sekciju `## Ručni resurs — checklist za Terraform prevod` u `CLAUDE.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Za svaki ručno kreiran resurs zabeleži: ID/ARN, region, tip, ključne parametre.
 - Zapiši zavisnosti: koji VPC, subnet, SG, IAM role resurs koristi.
@@ -82,8 +79,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 ```bash
 # 1. Verifikuj EC2 instancu po tagu (zameni <ime> sa stvarnim tagom)
@@ -108,7 +104,7 @@ aws ec2 describe-tags \
   --output table
 ```
 
-Zabeleži output po checklist-i u `docs/decisions/rucni-resursi.md` ili `decision_log.md`.
+Zabeleži output po checklist-i u `docs/decisions/rucni-resursi.md` ili `.claude/memory/decisions.md`.
 
 ---
 
@@ -141,8 +137,7 @@ Ako ne — koji parametar nedostaje ili se ne podudara?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/rucni-resursi.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Ručni resurs sync

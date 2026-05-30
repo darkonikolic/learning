@@ -208,6 +208,15 @@ docker compose \
   up go-service
 ```
 
+> **Podman:**
+> ```bash
+> podman compose \
+>   -f docker-compose.yml \
+>   -f docker-compose.override.yml \
+>   -f docker-compose.debug.yml \
+>   up php-service
+> ```
+
 ```yaml
 # docker-compose.debug.yml
 services:
@@ -291,6 +300,19 @@ docker compose \
   -f docker-compose.test.yml \
   down --volumes --remove-orphans
 ```
+
+> **Podman:**
+> ```bash
+> podman compose \
+>   -f docker-compose.yml \
+>   -f docker-compose.test.yml \
+>   run --rm go-service-test
+>
+> podman compose \
+>   -f docker-compose.yml \
+>   -f docker-compose.test.yml \
+>   down --volumes --remove-orphans
+> ```
 
 ---
 
@@ -404,6 +426,8 @@ Jenkinsfile
 
 Praktična provjera: `docker build --no-cache .` i zatim `docker history <image>` da vidiš veličinu svakog layer-a. Ako `COPY` layer ima stotine MB, nešto nije dobro.
 
+> **Podman:** `podman build --no-cache .` / `podman history <image>`
+
 ---
 
 ## daemon.json — Docker daemon konfiguracija
@@ -413,6 +437,8 @@ Ovo je konfiguracija za sam Docker daemon, ne za kontejnere. Mijenja se rijetko,
 Lokacija:
 - macOS Docker Desktop: `~/.docker/daemon.json` (ili kroz Docker Desktop GUI > Settings > Docker Engine)
 - Linux: `/etc/docker/daemon.json` (zahtijeva `systemctl restart docker`)
+
+> **Podman:** Nema daemon.json. Podman konfiguracija je u `~/.config/containers/containers.conf` (rootless) ili `/etc/containers/containers.conf` (sistem). Log driver i ulimiti se postavljaju tamo. Podman nema centralnog daemona koji bi se restartovao — konfiguracija se primjenjuje pri svakom pozivu.
 
 ```json
 {
@@ -458,6 +484,12 @@ Ili inline za jedan build:
 ```bash
 DOCKER_BUILDKIT=1 docker build --target production -t myapp:latest .
 ```
+
+> **Podman:** Podman koristi buildah ispod haube i nema BuildKit. `DOCKER_BUILDKIT` varijabla se ignoriše. `--mount=type=cache` i `--mount=type=secret` rade nativno bez ikakve konfiguracije (Podman 4.2+).
+> ```bash
+> podman compose up --build
+> podman build --target production -t myapp:latest .
+> ```
 
 U GitLab CI, postavi ove varijable kao project-level CI/CD variables ili direktno u `.gitlab-ci.yml`:
 

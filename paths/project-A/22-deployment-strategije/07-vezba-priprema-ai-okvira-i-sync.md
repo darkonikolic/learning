@@ -34,15 +34,14 @@ Koji readiness probe je dovoljan za ovaj servis?
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Dokazati zero-downtime canary deploy sa automatskim rollback-om kada metrike padnu.
 
 **Fajlovi koji se diraju:**
 - `k8s/deployment.yaml` — dodati strategy, readiness probe i rollback annotation
 - `.gitlab-ci.yml` ili ekvivalentni CI fajl — dodati health gate korak
-- `.cursor/rules/deploy-checks.mdc` ili `.claude/rules/deploy-checks.md`
+- `CLAUDE.md` ili `.claude/rules/deploy-checks.md`
 
 **Fajlovi koji se NE diraju:**
 - `k8s/service.yaml` — service definicija ostaje ista tokom ovog runda
@@ -50,10 +49,9 @@ Koji readiness probe je dovoljan za ovaj servis?
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/deploy-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/deploy-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/deploy-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Svaki deploy ima readiness gate; CI čeka `rollout status` pre nego što nastavi na sledeći korak.
 - Canary: promovisati tek ako error-rate i latency ostaju unutar SLO za definisano vreme osmatranja.
@@ -86,8 +84,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Prati status rolling rollout-a:
 
@@ -157,8 +154,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/deployment-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Deployment strategije sync

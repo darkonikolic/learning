@@ -14,7 +14,7 @@ Odlučujemo da li je potreban Helm-specifičan artefakt u okviru (dopuna k8s-man
 **Pretpostavke za potvrdu:**
 - Postoji `helloworld/` Helm chart sa `values/dev.yaml` i `values/prod.yaml` (iz prethodnih labova oblasti 04)
 - `helm` CLI je instalisan
-- Postoji `.cursor/` okvir sa `/devops-engineer`, `project-a-workflow` i (iz oblasti 03) `k8s-manifest-checks` rule
+- Postoji `CLAUDE.md` u korenu radnog repoa sa `## Project-A workflow` sekcijom
 
 **Van opsega:**
 - Ne deployujemo na produkciju — samo lokalna validacija
@@ -23,18 +23,17 @@ Odlučujemo da li je potreban Helm-specifičan artefakt u okviru (dopuna k8s-man
 **Prompt za diskusiju:**
 ```
 Radim Helm oblast u project-A. Imam helloworld chart sa values/dev.yaml
-i values/prod.yaml. Postojeći okvir: /devops-engineer + project-a-workflow +
-k8s-manifest-checks. Da li da proširim k8s-manifest-checks na Helm templates,
-ili da dodam zaseban rule? Predloži kao kandidat sa evidencijom i confidence,
-bez automatskog kreiranja.
+i values/prod.yaml. Kontekst je u CLAUDE.md (sekcija ## Project-A workflow i
+## Kubernetes manifest checklist). Da li da proširim k8s-manifest-checks sekciju
+na Helm templates, ili da dodam zaseban .claude/rules/ fajl? Predloži kao kandidat
+sa evidencijom i confidence, bez automatskog kreiranja.
 ```
 
 ---
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** `helloworld` chart prolazi `helm lint` i `helm template` renderuje validne manifeste za dev i prod, bez hardkodovanih vrednosti u template-ima.
 
@@ -43,7 +42,7 @@ bez automatskog kreiranja.
 - `helloworld/values/dev.yaml`
 - `helloworld/values/prod.yaml`
 - `helloworld/_helpers.tpl`
-- `.cursor/rules/k8s-manifest-checks.mdc` ili novi `helm-chart-checks.mdc` (po odluci)
+- `CLAUDE.md` ili `.claude/rules/helm-chart-checks.md` (ako je odluka „dodaj")
 
 **Fajlovi koji se NE diraju:**
 - `k8s/` direktni manifesti — obrađeni u oblasti 03
@@ -51,10 +50,9 @@ bez automatskog kreiranja.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/helm-chart-checks.mdc` (globs: `paths/project-A/**/templates/*.yaml`) ili dopuni `k8s-manifest-checks.mdc`  
-> **Claude Code:** dodaj sekciju `## Helm chart checklist` u `CLAUDE.md`, ili napravi `.claude/rules/helm-chart-checks.md`
+Dodaj sekciju `## Helm chart checklist` u `CLAUDE.md`, ili napravi `.claude/rules/helm-chart-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Vrednosti dolaze iz values/<env>.yaml — ne hardkodovane u template.
 - Svaki resurs koristi {{ include "...labels" . }} iz _helpers.tpl.
@@ -64,12 +62,12 @@ Sadržaj pravila (isti za oba alata):
 Anti-sprawl: Helm se ponavlja kroz module 04, 13 i 22 — minimalan dodatak je opravdan. Ako `k8s-manifest-checks` već pokriva potrebu, dopuni ga umesto kreiranja novog fajla.
 
 **Acceptance criteria:**
-- [ ] Odluka o artefaktu doneta preko `/system-maintainer` i zapisana
+- [ ] Odluka o artefaktu doneta i zapisana u `.claude/memory/decisions.md` ili `CLAUDE.md`
 - [ ] `helm lint helloworld -f helloworld/values/dev.yaml` — nula grešaka
 - [ ] `helm template helloworld -f helloworld/values/prod.yaml` — renderuje bez grešaka
 - [ ] `helm template ... | grep "image:"` prikazuje pinovan tag (ne `:latest`)
 - [ ] `grep -r "hardcoded\|localhost\|password" helloworld/templates/` — nema plaintext vrednosti
-- [ ] Sync zapisan u `decision_log.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log`
 
 **AI pregled plana:**
 ```
@@ -87,8 +85,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta za DevOps rad  
-> **Claude Code:** direktno u terminalu, Claude izvršava komande
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Lint chart-a za dev okruženje:
 
@@ -155,8 +152,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/helm-tooling.md` ili u `CLAUDE.md` sekciju `## Decision log`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Helm sync (oblast 04)

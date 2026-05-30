@@ -304,3 +304,34 @@ aws ec2 describe-vpc-endpoints \
   --filters "Name=service-name,Values=com.amazonaws.eu-west-1.ssm"
 # Trebaju biti 3 endpoint-a: ssm, ssmmessages, ec2messages
 ```
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi SSH pristup i AWS SSM. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 18: SSH i produkcija ===
+
+ssm-connect: ## Konekcija na EC2 instancu via AWS SSM (INSTANCE_ID=i-xxx make ssm-connect)
+	docker run --rm -it \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  amazon/aws-cli:latest ssm start-session \
+	  --target $(INSTANCE_ID) --region $(AWS_REGION)
+
+k-exec: ## Exec shell u pod (POD=xxx NS=dev make k-exec)
+	docker run --rm -it \
+	  -v ~/.kube:/root/.kube \
+	  bitnami/kubectl:$(KUBECTL_VERSION) exec -n $(NS) -it $(POD) -- /bin/sh
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+INSTANCE_ID=i-0123456789abcdef0 make ssm-connect
+POD=go-service-abc123 NS=dev make k-exec
+make help | grep ssm
+make help | grep k-exec
+```

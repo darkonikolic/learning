@@ -33,8 +33,7 @@ Koji OWASP Top 10 rizici su relevantni za ovaj servis? Objasni svaki korak.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** AppSec provere integrisane u CI, build pada na critical, security headers prisutni.
 
@@ -49,10 +48,9 @@ Koji OWASP Top 10 rizici su relevantni za ovaj servis? Objasni svaki korak.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/appsec-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/appsec-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/appsec-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - CI faza za SAST (semgrep) i dependency scan (trivy); build pada na critical.
 - Security headers obavezni: CSP, HSTS, X-Content-Type-Options, X-Frame-Options.
@@ -84,8 +82,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš relevantnog agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Pokreni lokalne provere pre nego što push-uješ na GitLab:
 
@@ -145,8 +142,7 @@ Ako ne — šta tačno fali i kako popraviti?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/appsec-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — AppSec sync

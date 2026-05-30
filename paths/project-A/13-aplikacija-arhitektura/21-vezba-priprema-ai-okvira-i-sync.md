@@ -35,14 +35,13 @@ i kako PHP proxy enforces tu granicu.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Uvesti `service-contract-checks` rule i dokazati da svi servisi stanu zdravi i da poziv kroz ceo lanac vraća 200.
 
 **Fajlovi koji se diraju:**
 - `docker-compose.yml` — dodaješ healthcheck-ove i depends_on ako nedostaju
-- `.cursor/rules/service-contract-checks.mdc` ili `CLAUDE.md` — novi rule
+- `CLAUDE.md` ili `.claude/rules/service-contract-checks.md` — novi rule
 
 **Fajlovi koji se NE diraju:**
 - `src/vue/` — aplikacioni kod SPA-e ostaje nepromenjen
@@ -51,10 +50,9 @@ i kako PHP proxy enforces tu granicu.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi `.cursor/rules/service-contract-checks.mdc`  
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/service-contract-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/service-contract-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 # service-contract-checks
 - Svaki servis izlaže /health endpoint koji vraća 200 kada je spreman.
@@ -92,8 +90,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta  
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Podizanje stack-a:
 
@@ -170,8 +167,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/arhitektura-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Arhitektura aplikacije sync

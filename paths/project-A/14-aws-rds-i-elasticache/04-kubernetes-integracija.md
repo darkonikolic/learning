@@ -495,3 +495,27 @@ metadata:
     # Ova anotacija govori aws-iam-authenticator/EKS Pod Identity webhook-u
     # da injektuje IRSA credentials u pod
 ```
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi RDS i ElastiCache integraciju. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 14: Baze podataka ===
+
+db-port-forward: ## Port-forward MySQL RDS via kubectl na localhost:3306 (POD=mysql-pod NS=dev make db-port-forward)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  -p 3306:3306 \
+	  bitnami/kubectl:$(KUBECTL_VERSION) port-forward -n $(NS) pod/$(POD) 3306:3306
+```
+
+Centralni Makefile već sadrži ovaj target — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da target radi:
+```bash
+POD=mysql-bastion NS=dev make db-port-forward
+make help | grep db-port-forward
+```

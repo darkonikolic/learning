@@ -34,8 +34,7 @@ Objasni rizike ako preskočim idempotenciju.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Worker obrađuje poruke tačno-jednom efektivno; neuspeh završava u DLQ; dubina reda vidljiva.
 
@@ -51,10 +50,9 @@ Objasni rizike ako preskočim idempotenciju.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/async-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/async-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/async-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Handler mora biti idempotentan (dedup ključ ili upsert); at-least-once isporuka je default.
 - Retry sa eksponencijalnim backoff-om; posle N pokušaja poruka ide u dead-letter queue.
@@ -86,8 +84,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš relevantnog agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Pokreni stack i verifikuj producer/consumer tok:
 
@@ -151,8 +148,7 @@ Da li postoji rizik race condition-a u trenutnoj implementaciji?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/async-queues-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Async i redovi sync

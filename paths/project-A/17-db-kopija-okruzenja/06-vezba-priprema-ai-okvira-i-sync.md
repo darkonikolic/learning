@@ -36,8 +36,7 @@ Predloži kompletan proces:
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Staging baza sadrži kopiju prod podataka sa maskiranim PII, verifikovanim integritetom, i bez traga prod kredencijala u procesu.
 
@@ -52,10 +51,9 @@ Predloži kompletan proces:
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/db-copy-safety.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/db-copy-safety.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/db-copy-safety.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Prod → niže okruženje SAMO uz maskiranje PII (email, ime, telefon, adresa).
 - Dump uvek sa --single-transaction; nikad bez toga na živoj bazi.
@@ -73,7 +71,7 @@ Anti-sprawl: uvedi `db-copy-safety` — PII/pravni rizik je visok i ovaj proces 
 - [ ] broj redova u staging odgovara prod dumpovanom skupu (ili dokumentovano zašto ne)
 - [ ] staging baza ne sadrži ni jedan pravi email adrese u `users` tabeli
 - [ ] nijedan prod kredencijal nije korišćen u staging restore procesu
-- [ ] sync zapisan u `decision_log.md` / `CLAUDE.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log` / `CLAUDE.md`
 
 **AI pregled plana:**
 ```
@@ -91,8 +89,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Dump prod baze (konzistentan snapshot):
 
@@ -176,8 +173,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/db-kopija-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — DB kopija okruženja sync

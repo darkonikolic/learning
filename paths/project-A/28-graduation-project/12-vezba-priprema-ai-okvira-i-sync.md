@@ -12,7 +12,7 @@ Pre nego počneš, razjasni sa AI-om:
 Prolazimo kroz ceo AI okvir (sva pravila, agenti, skills) izgrađen kroz oblasti 00–27. Identifikujemo šta se preklapa, šta je neiskorišćeno i šta nedostaje. Zatim pokrćemo kompletan end-to-end tok i validiramo da svaki korak prolazi. Ovo je čišćenje i verifikacija, ne dodavanje.
 
 **Pretpostavke za potvrdu:**
-- Sva pravila iz svih oblasti su zapisana na jednom mestu (`.cursor/rules/` ili `CLAUDE.md`)
+- Sva pravila iz svih oblasti su zapisana na jednom mestu (`CLAUDE.md` sekcije ili `.claude/rules/` fajlovi)
 - Stack se može podići jednom komandom (`docker compose up`)
 - GitLab CI pipeline ima sve faze: lint → test → security scan → build → deploy
 - Rollback mehanizam je implementiran (Kubernetes rollout undo ili docker compose prethodni tag)
@@ -34,22 +34,20 @@ Pre "diplome", proveri:
 4. Da li "project-a-workflow" (plan→diskusija→egzekucija→validacija→sync) važi za sve module?
 
 Predloži šta treba konsolidovati — nemoj ništa automatski menjati.
-Koji alat koristiti: Cursor, Claude Code, ili oba — i kada?
 ```
 
 ---
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene — ili **Claude Code:** `/plan` u terminalu
-> Oba alata su prihvatljiva za graduation; možeš koristiti oba paralelno.
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
+Za graduation vježbu možeš koristiti više Claude Code sessiona paralelno ako ti to pomaže u organizaciji.
 
 **Cilj:** Jedan konsolidovan AI okvir bez duplikata; kompletan E2E tok potvrđen.
 
 **Fajlovi koji se diraju:**
-- `.cursor/rules/*.mdc` — spajanje ili brisanje preklapajućih pravila (Cursor)
+
 - `CLAUDE.md` ili `.claude/rules/` — konsolidacija za Claude Code
-- `.cursor/memory/decision_log.md` — finalni sync zapis
 - `docs/decisions/` — finalni Claude Code sync zapisi
 
 **Fajlovi koji se NE diraju:**
@@ -59,12 +57,11 @@ Koji alat koristiti: Cursor, Claude Code, ili oba — i kada?
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** pregledi `.cursor/rules/` folder i ukloni/spoji duplikate
-> **Claude Code:** pregledi `CLAUDE.md` sekcije i uradi isto
+Pregledi sve sekcije u `CLAUDE.md` i fajlove u `.claude/rules/` — spoji ili obriši duplikate.
 
 Finalni kriterijum konsolidovanog okvira:
 ```
-- Nijedan artefakt (rule, skill, agent) nema duplikat sa istom svrhom.
+- Nijedna CLAUDE.md sekcija ili .claude/rules/ fajl nema duplikat sa istom svrhom.
 - Svako pravilo ima jasnu oblast primene: koja oblast, koji trigger, šta blokira.
 - Sve oblasti 00-27 imaju barem jedno pravilo koje ih pokriva.
 - project-a-workflow (plan→diskusija→egzekucija→validacija→sync) dokumentovan
@@ -73,7 +70,7 @@ Finalni kriterijum konsolidovanog okvira:
 ```
 
 **Acceptance criteria:**
-- [ ] Inventar okvira kompletan — nema nepoznatih ili neiskorišćenih pravila
+- [ ] Inventar okvira kompletan (`CLAUDE.md` sekcije i `.claude/rules/` fajlovi) — nema nepoznatih ili neiskorišćenih pravila
 - [ ] Nema dupliranih pravila koja pokrivaju istu stvar različitim imenima
 - [ ] Ceo stack se diže: `docker compose up -d --build` + `docker compose ps` all healthy
 - [ ] CI lanac prolazi: lint → test → security scan → build → deploy (sve faze zelene)
@@ -101,8 +98,7 @@ Koji deo E2E toka najčešće pada — šta da pratim posebno?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš relevantnog agenta — ili **Claude Code:** direktno u terminalu
-> Preporučeno: koristi oba alata da proveriš njihovu konzistentnost na istom projektu.
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Kompletan end-to-end tok:
 
@@ -178,12 +174,11 @@ Da li ima pravila koja nikad nisu bila triggerovana u ovom projektu — kandidat
 | 4 | Prođi kompletan korisnički tok kroz deployed aplikaciju (registracija → login → akcija → logout) | Svaki korak radi bez grešaka; response kodovi ispravni |
 | 5 | `kubectl rollout undo deployment/project-a` | Rollback uspešan; prethodna verzija servira zahteve; `curl /health` vraća 200 |
 | 6 | Simuliraj grešku (uglasi endpoint, premaši error rate) | Monitoring alert se aktivira u roku od 2-3 minuta (Prometheus/Grafana ili GitLab alert) |
-| 7 | Preglej konsolidovani AI okvir u `.cursor/rules/` ili `CLAUDE.md` | Nema duplikata; svako pravilo ima jasnu oblast; neiskorišćeno je obrisano |
+| 7 | Preglej konsolidovani AI okvir u `CLAUDE.md` i `.claude/rules/` | Nema duplikata; svako pravilo ima jasnu oblast; neiskorišćeno je obrisano |
 
 **Sync — zatvori petlju (finalni):**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/graduation-sync.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 > Preporučeno: zapiši u oba, jer je ovo graduation — finalni dokument celog učenja.
 
 ```

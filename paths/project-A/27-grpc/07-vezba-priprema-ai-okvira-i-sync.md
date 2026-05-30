@@ -34,8 +34,7 @@ su ispravni za koji slučaj u ovom servisu?
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Proto kontrakt zaštićen buf-om u CI; svaki RPC verifikovan grpcurl-om; error kodovi ispravni.
 
@@ -50,10 +49,9 @@ su ispravni za koji slučaj u ovom servisu?
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/proto-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/proto-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/proto-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Nikad ne menjaj broj ili tip postojećeg polja; uklonjena polja idu u `reserved`.
 - CI pokreće `buf lint` + `buf breaking` against main grane; breaking promena blokira merge.
@@ -87,8 +85,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš relevantnog agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 ```bash
 # Buf lint — proveri proto stilska pravila
@@ -152,8 +149,7 @@ Ako ne — šta tačno fali i koji je ispravni error kod / proto popravak?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/grpc-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — gRPC sync

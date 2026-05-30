@@ -31,13 +31,12 @@ Gasim okruženje project-A preko noći radi uštede troškova. Resursi su: [EC2,
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Verifikovati da backup/snapshot postoji pre gašenja, da su resursi stvarno zaustavljeni (ne samo planirani za zaustavljanje), i da resume vraća radno stanje.
 
 **Fajlovi koji se diraju:**
-- `.cursor/rules/safe-teardown-checks.mdc` (Cursor) — novo pravilo
+
 - `CLAUDE.md` ili `.claude/rules/safe-teardown-checks.md` (Claude Code) — nova sekcija
 - `docs/decisions/shutdown-resume-log.md` — zapis svakog gašenja/podizanja
 
@@ -48,10 +47,9 @@ Gasim okruženje project-A preko noći radi uštede troškova. Resursi su: [EC2,
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi `.cursor/rules/safe-teardown-checks.mdc` (globs: `paths/project-A/**`)
-> **Claude Code:** dodaj sekciju `## Safe teardown checklist` u `CLAUDE.md`, ili napravi `.claude/rules/safe-teardown-checks.md`
+Dodaj sekciju `## Safe teardown checklist` u `CLAUDE.md`, ili napravi `.claude/rules/safe-teardown-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 # Pre destroy/stop:
 - RDS: kreirati manual snapshot i potvrditi status "available" pre nastavka.
@@ -93,8 +91,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 ```bash
 # ===== SHUTDOWN =====
@@ -173,8 +170,7 @@ Ako ne — šta tačno nije zaustavljeno ili koji snapshot nedostaje?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/shutdown-resume-log.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Shutdown/resume sync

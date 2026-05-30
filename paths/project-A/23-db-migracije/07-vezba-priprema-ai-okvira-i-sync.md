@@ -33,14 +33,13 @@ Kako da proverim idempotentnost migracije?
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Dokazati da up/down migracije rade, da je promena reverzibilna i da dvostruko pokretanje ne prave grešku.
 
 **Fajlovi koji se diraju:**
 - `migrations/` direktorijum — nova migracija fajl (up + down)
-- `.cursor/rules/migration-checks.mdc` ili `.claude/rules/migration-checks.md`
+- `CLAUDE.md` ili `.claude/rules/migration-checks.md` (ako je odluka „dodaj")
 
 **Fajlovi koji se NE diraju:**
 - Aplikacioni model/entity fajlovi — menjaju se u zasebnom koraku posle migracije
@@ -48,10 +47,9 @@ Kako da proverim idempotentnost migracije?
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/migration-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/migration-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/migration-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Svaka migracija ima `down` korak (ili dokumentovan razlog zašto je nepovratna).
 - Expand-contract za promene koje aplikacija koristi uživo: dodaj → dvostruko piši → backfill → preusmeri → ukloni.
@@ -84,8 +82,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/golang-engineer` za golang-migrate ili `/php-architect` za Doctrine
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Pokreni migraciju gore i proveri šemu (prilagodi komande svom alatu):
 
@@ -170,8 +167,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/db-migracije-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — DB migracije sync

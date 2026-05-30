@@ -282,3 +282,57 @@ Evo relevantnog template fajla:
 
 Sta uzrokuje gresku i kako da je ispravim?
 ```
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi Helm. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 04: Helm ===
+
+helm-lint: ## Provjeri Helm chart za greške (CHART=./charts/myapp make helm-lint)
+	docker run --rm \
+	  -v $(PWD):/charts -w /charts \
+	  alpine/helm:$(HELM_VERSION) lint $(CHART)
+
+helm-template: ## Renderiraj Helm chart template lokalno (CHART=./charts/myapp ENV=dev make helm-template)
+	docker run --rm \
+	  -v $(PWD):/charts -w /charts \
+	  alpine/helm:$(HELM_VERSION) template $(APP_NAME) $(CHART) -f $(CHART)/values/$(ENV).yaml
+
+helm-install: ## Instaliraj Helm chart na cluster (CHART=./charts/myapp ENV=dev NS=dev make helm-install)
+	docker run --rm \
+	  -v $(PWD):/charts \
+	  -v ~/.kube:/root/.kube -w /charts \
+	  alpine/helm:$(HELM_VERSION) install $(APP_NAME) $(CHART) \
+	  -f $(CHART)/values/$(ENV).yaml -n $(NS) --create-namespace
+
+helm-upgrade: ## Upgradeuj postojeći Helm release (CHART=./charts/myapp ENV=dev NS=dev make helm-upgrade)
+	docker run --rm \
+	  -v $(PWD):/charts \
+	  -v ~/.kube:/root/.kube -w /charts \
+	  alpine/helm:$(HELM_VERSION) upgrade $(APP_NAME) $(CHART) \
+	  -f $(CHART)/values/$(ENV).yaml -n $(NS)
+
+helm-uninstall: ## Ukloni Helm release (NS=dev make helm-uninstall)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  alpine/helm:$(HELM_VERSION) uninstall $(APP_NAME) -n $(NS)
+
+helm-list: ## Prikaži sve instalirane Helm release-ove
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  alpine/helm:$(HELM_VERSION) list --all-namespaces
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+CHART=./charts/helloworld make helm-lint
+CHART=./charts/helloworld ENV=dev make helm-template
+make helm-list
+make help | grep helm
+```

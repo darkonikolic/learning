@@ -96,29 +96,61 @@ spec:
                   number: 9090
 ```
 
-## TLS u Ingressu
+## TLS u Ingressu — nije opcija
 
-Za HTTPS trebate TLS certifikat kao Kubernetes Secret. Lokalno: self-signed. Na AWS: ACM certifikat.
+> **TLS blok je obavezan u svakom Ingress resursu od prvog puta.** Lokalno koristiš self-signed Secret, na AWS-u ACM certifikat kroz Ingress annotation. Ingress bez TLS bloka je privremeno rješenje koje se zaboravi ukloniti.
 
-Generisanje self-signed certifikata:
+Kreiranje TLS Secret-a iz lokalnih certifikata (generirani s `make cert-local-mkcert` ili `make cert-local-openssl`):
 
 ```bash
-# Generišite self-signed cert za app.local
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout app.local.key \
-  -out app.local.crt \
-  -subj "/CN=app.local/O=project-a"
-
-# Kreiranje Kubernetes Secret-a
-kubectl create secret tls hello-world-tls \
-  --key app.local.key \
-  --cert app.local.crt \
-  -n helloworld-dev
+# Kreiraj K8s TLS secret iz lokalnih certifikata
+kubectl create secret tls app-tls-secret \
+  --cert=certs/app.local.crt \
+  --key=certs/app.local.key \
+  -n dev
 ```
 
-Ingress s TLS:
+Ili koristeći Makefile target koji radi dry-run + apply:
+
+```bash
+NS=dev make cert-k8s-secret
+```
+
+Kompletan Ingress sa TLS — ovako izgleda svaki Ingress u project-A pathu:
 
 ```yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: dev
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - app.local
+      secretName: app-tls-secret
+  rules:
+    - host: app.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: app-svc
+                port:
+                  number: 8080
+```
+
+`ssl-redirect: "true"` annotation govori nginx ingress controlleru da automatski radi HTTP → HTTPS redirect — ekvivalent `return 301` u lokalnom nginx.conf.
+
+Stariji primjer (samo za referencu, ako ga vidiš u kodu — dodaj TLS blok):
+
+```yaml
+# OVAJ OBLIK DOPUNI TLS BLOKOM
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -129,7 +161,7 @@ spec:
   tls:
     - hosts:
         - app.local
-      secretName: hello-world-tls      # ime Secret-a
+      secretName: hello-world-tls
   rules:
     - host: app.local
       http:

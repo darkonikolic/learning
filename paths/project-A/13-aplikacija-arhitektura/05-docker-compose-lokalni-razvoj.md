@@ -22,13 +22,18 @@ volumes:
 
 services:
 
-  # ─── nginx + Vue.js ───────────────────────────────────────────────
+  # ─── nginx reverse proxy (TLS termination) ───────────────────────
+  # nginx je uvijek prvi servis — jedina tačka ulaza iz browsera.
+  # Drži TLS certifikat, radi HTTP→HTTPS redirect, i proxy_pass-uje
+  # na backende. App kontejneri nemaju portove prema hostu.
   nginx:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: nginx:1.25-alpine
     ports:
       - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./certs:/etc/nginx/certs:ro
     depends_on:
       php-service:
         condition: service_healthy
@@ -176,6 +181,22 @@ services:
 
 ---
 
+## nginx kao standard — zašto svaki docker-compose ima nginx ispred
+
+Svaki `docker-compose.yml` u project-A pathu ima nginx kao prvi servis i jedinu tačku ulaza. App kontejneri (PHP, Go, Vue) koriste `expose`, ne `ports` — direktno nisu dostupni iz browsera.
+
+**Razlog 1 — TLS na jednom mjestu.** nginx drži certifikat i radi TLS termination. Aplikacioni servisi komuniciraju plain HTTP kroz interni Docker network — ne moraju znati ništa o certifikatima.
+
+**Razlog 2 — Isti pattern lokalno i u produkciji.** Lokalno: nginx kontejner sa mkcert certifikatom. Na AWS-u: ALB preuzima ulogu nginx-a (TLS, redirect, routing). Aplikacioni kod i konfiguracija su nepromijenjeni.
+
+**Razlog 3 — Security headers na jednom mjestu.** HSTS, X-Frame-Options, X-Content-Type-Options — jednom u nginx.conf, važe za sve backend servise.
+
+**Razlog 4 — HTTP → HTTPS redirect.** Jedan `return 301` u nginx bloku za port 80. Nema potrebe implementirati u svakoj aplikaciji zasebno.
+
+**Lokalni certifikati** se generišu s `make cert-local-mkcert` ili `make cert-local-openssl` i stavljaju u `certs/` (koji je u `.gitignore`). Detalji u `01-docker-fundamenti/14-nginx-reverse-proxy-i-https.md`.
+
+---
+
 ## .env.local — sve credentials na jednom mjestu
 
 ```bash
@@ -304,3 +325,40 @@ docker compose restart go-service
 > - Sintaksa je identična: `docker compose up -d` → `podman compose up -d`
 
 Kada `docker compose up` završi bez grešaka, `http://localhost` treba otvoriti Vue.js login stranicu. Ako nginx javlja 502, PHP-FPM nije dostupan. Ako API pozivi vraćaju 503, Go servis ili MySQL nije spreman.
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi docker-compose za lokalni razvoj. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === LOKALNI RAZVOJ ===
+
+up: ## Pokreni sve servise lokalno (docker-compose)
+	docker compose up -d
+
+down: ## Zaustavi i ukloni lokalne kontejnere
+	docker compose down
+
+logs: ## Prikaži logove lokalnih servisa (live)
+	docker compose logs -f
+
+ps: ## Prikaži status lokalnih servisa
+	docker compose ps
+
+restart: ## Restart specifičnog servisa (SVC=php make restart)
+	docker compose restart $(SVC)
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+make up
+make ps
+make logs
+SVC=go-service make restart
+make down
+make help | grep -E "^(up|down|logs|ps|restart)"
+```

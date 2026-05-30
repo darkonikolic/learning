@@ -1,6 +1,6 @@
 # 06 — Vežba: AI-assisted DevOps (meta-konsolidacija)
 
-Konsoliduješ sve AI agente, rules i skills koje su oblasti 01–11 uvele, eliminišeš preklapanja i dokazuješ da svaki AI-generisani artefakt prolazi domensku validaciju pre primene.
+Konsoliduješ sve CLAUDE.md sekcije i `.claude/rules/` fajlove koje su oblasti 01–11 uvele, eliminišeš preklapanja i dokazuješ da svaki AI-generisani artefakt prolazi domensku validaciju pre primene.
 
 ---
 
@@ -12,19 +12,18 @@ Pre nego počneš, razjasni sa AI-om:
 Ovo je meta-oblast — predmet rada je sam AI-okvir. Mapiramo sve što je akumulirano, spajamo preklapajuća pravila, brišemo neiskorišćena, i definišemo jasan kriterijum za verifikaciju AI-izlaza.
 
 **Pretpostavke za potvrdu:**
-- Postoji barem 3–4 rule fajla iz prethodnih oblasti (dockerfile-checks, gitlab-ci-checks, k8s-manifest-checks, terraform-checks, observability-checks)
+- Postoje barem 3–4 CLAUDE.md sekcije ili `.claude/rules/` fajlovi iz prethodnih oblasti (docker, gitlab-ci, k8s, terraform, observability)
 - Barem jedan AI-generisan artefakt postoji u radnom repou za testiranje
 - Domenski alati su dostupni: `hadolint`, `kubeconform`, `terraform validate`, `glab ci lint`, `promtool`
 
 **Van opsega:**
-- Dodavanje novih pravila ili skill-ova — ovde je akcenat na uklanjanju, ne dodavanju
+- Dodavanje novih pravila — ovde je akcenat na uklanjanju, ne dodavanju
 - Izmena aplikacionog koda
-- Podešavanje novih agenata
 
 **Prompt za diskusiju:**
 ```
-Evo svih .cursor pravila/skills koje sam uveo do sada:
-[lista fajlova iz .cursor/rules/ i skills/]
+Evo svih CLAUDE.md sekcija i .claude/rules/ fajlova koje sam uveo do sada:
+[lista sekcija iz CLAUDE.md i fajlova iz .claude/rules/]
 
 Koja se preklapaju ili se ne koriste?
 Predloži spajanje/brisanje — ne menjaj automatski, samo predloži.
@@ -35,15 +34,13 @@ Potom: koji zadaci su pogodni za AI generisanje, a koji zahtevaju obaveznu ručn
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Dobiti konsolidovan AI-okvir bez dupliranja, gde svako pravilo ima jasan trigger i gde postoji eksplicitan standard za verifikaciju AI-izlaza.
 
 **Fajlovi koji se diraju:**
-- `.cursor/rules/*.mdc` — spajanje ili brisanje preklapajućih rule fajlova
-- `.cursor/skills/` — brisanje neiskorišćenih candidate skill-ova
-- `CLAUDE.md` ili `.claude/rules/` — iste izmene za Claude Code
+
+- `CLAUDE.md` ili `.claude/rules/` — spajanje ili brisanje preklapajućih sekcija/fajlova
 
 **Fajlovi koji se NE diraju:**
 - `src/`, `terraform/`, `k8s/` — ne menjamo aplikacioni ili infra kod
@@ -51,10 +48,9 @@ Potom: koji zadaci su pogodni za AI generisanje, a koji zahtevaju obaveznu ručn
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi ili ažuriraj `.cursor/rules/ai-output-verification.mdc`  
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/ai-output-verification.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/ai-output-verification.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 # ai-output-verification
 - Svaki AI-generisan artefakt (Dockerfile, manifest, .tf, pipeline) mora proći
@@ -92,16 +88,11 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta ili `/system-maintainer`  
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Izlistaj sve rule fajlove:
 
 ```bash
-# Cursor
-ls -la .cursor/rules/
-
-# Claude Code
 ls -la .claude/rules/
 grep -n "## " CLAUDE.md | head -40
 ```
@@ -154,7 +145,7 @@ Ako ne — šta tačno fali?
 
 | # | Akcija | Očekivani rezultat |
 |---|--------|--------------------|
-| 1 | Izlistaj sve rule fajlove u .cursor/rules/ ili CLAUDE.md | Nema dva fajla sa identičnom svrhom |
+| 1 | Izlistaj sve sekcije u `CLAUDE.md` i fajlove u `.claude/rules/` | Nema dvije sekcije/fajla sa identičnom svrhom |
 | 2 | Za svaki rule: proveri da li ima definisan trigger (glob/agent) | Svako pravilo ima jasan uslov aktivacije |
 | 3 | Uzmi AI-generisan Dockerfile i pokreni `hadolint` | Output pokazuje prolaz ili konkretne greške (ne prazan) |
 | 4 | Primeni AI sugestiju na jedan artefakt, pa pokreni domenski alat | Alat potvrđuje ispravnost ili prijavljuje tačan problem |
@@ -162,8 +153,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/ai-devops-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — AI-assisted DevOps sync

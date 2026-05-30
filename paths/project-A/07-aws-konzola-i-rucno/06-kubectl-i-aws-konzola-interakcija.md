@@ -338,3 +338,34 @@ Helm generiše ove iste YAML manifeste iz templateova, ali dodaje:
 - **Values override**: jedan `values.yaml` za sve environment-specifične vrijednosti
 
 Manuelni `kubectl apply` koji si upravo radio ekvivalent je `helm install` bez release trackinga. U produkciji uvijek Helm.
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi AWS CLI i EKS. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 06-07: AWS ===
+
+aws-whoami: ## Provjeri AWS identitet (koji nalog/rola je aktivan)
+	docker run --rm \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  amazon/aws-cli:latest sts get-caller-identity
+
+aws-kubeconfig: ## Preuzmi kubeconfig za EKS cluster (CLUSTER=project-a-dev make aws-kubeconfig)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  amazon/aws-cli:latest eks update-kubeconfig \
+	  --region $(AWS_REGION) --name $(CLUSTER)
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+make aws-whoami
+CLUSTER=project-a-dev make aws-kubeconfig
+make help | grep aws
+```

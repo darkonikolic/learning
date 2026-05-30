@@ -309,3 +309,42 @@ Ili za Loki:
 > 1. Filtrira samo 4xx greške
 > 2. Broji ih po minuti
 > 3. Prikazuje koje putanje su najčešće 404"
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi Prometheus i Grafana stack. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 11: Monitoring ===
+
+monitoring-install: ## Instaliraj Prometheus + Grafana stack (kube-prometheus-stack)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  alpine/helm:$(HELM_VERSION) install kube-prometheus-stack \
+	  prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+
+monitoring-grafana: ## Port-forward Grafana na localhost:3000
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  -p 3000:3000 \
+	  bitnami/kubectl:$(KUBECTL_VERSION) port-forward \
+	  -n monitoring svc/kube-prometheus-stack-grafana 3000:80
+
+monitoring-prometheus: ## Port-forward Prometheus na localhost:9090
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  -p 9090:9090 \
+	  bitnami/kubectl:$(KUBECTL_VERSION) port-forward \
+	  -n monitoring svc/kube-prometheus-stack-prometheus 9090:9090
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+make monitoring-install
+make monitoring-grafana   # otvori http://localhost:3000
+make help | grep monitoring
+```

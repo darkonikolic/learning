@@ -54,6 +54,8 @@ Ako aplikacija ne treba pisati na disk (a nginx koji servira statički HTML ne t
 docker run --read-only --rm -p 8080:80 helloworld:local
 ```
 
+> **Podman:** `podman run --read-only --rm -p 8080:80 helloworld:local`
+
 nginx treba pisati u `/tmp` i `/var/run` za pid fajlove. Montiraj te direktorijume kao tmpfs:
 
 ```bash
@@ -64,6 +66,16 @@ docker run --read-only \
   -p 8080:80 \
   helloworld:local
 ```
+
+> **Podman:**
+> ```bash
+> podman run --read-only \
+>   --tmpfs /tmp \
+>   --tmpfs /var/run \
+>   --tmpfs /var/cache/nginx \
+>   -p 8080:80 \
+>   helloworld:local
+> ```
 
 U docker-compose.yml:
 ```yaml
@@ -109,6 +121,12 @@ docker exec mycontainer env
 docker inspect mycontainer  # env je u JSON outputu
 ```
 
+> **Podman:**
+> ```bash
+> podman exec mycontainer env
+> podman inspect mycontainer
+> ```
+
 Pravilo: environment variables su za konfiguraciju, ne za secrets.
 
 Gdzie onda idu secrets?
@@ -140,6 +158,16 @@ docker run --rm \
   image --severity HIGH,CRITICAL \
   helloworld:local
 ```
+
+> **Podman:** Trivy podržava Podman nativno bez socketa:
+> ```bash
+> podman run --rm \
+>   -v /run/user/$(id -u)/podman/podman.sock:/var/run/docker.sock \
+>   aquasec/trivy:latest \
+>   image --severity HIGH,CRITICAL \
+>   helloworld:local
+> ```
+> Alternativno, Trivy može skenirati image direktno iz lokalnog Podman storage-a ako je instaliran na hostu: `trivy image helloworld:local`
 
 Primer output-a:
 ```

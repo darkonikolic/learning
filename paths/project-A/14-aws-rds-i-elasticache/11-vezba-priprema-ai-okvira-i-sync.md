@@ -35,15 +35,14 @@ i kako security group pravila enforces pristup samo iz app subneta.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Proširiti `terraform-checks` za RDS/ElastiCache higijenu i dokazati da infrastruktura zadovoljava sigurnosne i dostupnost zahteve.
 
 **Fajlovi koji se diraju:**
 - `terraform/modules/rds/` — RDS modul sa enkripcijom, backup i replica
 - `terraform/modules/elasticache/` — ElastiCache modul sa subnet group
-- `.cursor/rules/terraform-checks.mdc` ili `CLAUDE.md` — dopuna postojećeg rule-a
+- `CLAUDE.md` ili `.claude/rules/terraform-checks.md` — dopuna postojećeg rule-a
 
 **Fajlovi koji se NE diraju:**
 - `terraform/modules/vpc/` — mrežna konfiguracija se ne menja
@@ -52,10 +51,9 @@ i kako security group pravila enforces pristup samo iz app subneta.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** ažuriraj `.cursor/rules/terraform-checks.mdc`  
-> **Claude Code:** ažuriraj sekciju u `CLAUDE.md` ili `.claude/rules/terraform-checks.md`
+ažuriraj sekciju u `CLAUDE.md` ili `.claude/rules/terraform-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 # dopuna terraform-checks (data tier)
 - RDS: storage_encrypted=true, backup_retention >= 7, deletion_protection u prod.
@@ -95,8 +93,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta  
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Validacija Terraform plana:
 
@@ -175,8 +172,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/aws-rds-elasticache-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — RDS i ElastiCache sync

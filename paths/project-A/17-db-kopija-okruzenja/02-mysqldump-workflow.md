@@ -184,3 +184,33 @@ U pipeline-u, dodaj checksum provjeru:
 sha256sum dump_latest.sql.gz > dump_latest.sql.gz.sha256
 aws s3 cp dump_latest.sql.gz.sha256 s3://$STATE_BUCKET/db-dumps/latest.sql.gz.sha256
 ```
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi mysqldump workflow. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 17: DB kopija okruženja ===
+
+db-dump: ## Dump MySQL baze iz produkcije (DB=mydb HOST=rds.endpoint make db-dump)
+	docker run --rm \
+	  -v $(PWD):/dump \
+	  mysql:8 mysqldump -h $(HOST) -u root -p$(MYSQL_PASSWORD) \
+	  --single-transaction --quick $(DB) > ./dump/$(DB)-$$(date +%Y%m%d).sql
+
+db-restore: ## Restore MySQL dump u ciljno okruženje (FILE=dump.sql DB=mydb HOST=localhost make db-restore)
+	docker run --rm \
+	  -v $(PWD):/dump \
+	  mysql:8 mysql -h $(HOST) -u root -p$(MYSQL_PASSWORD) $(DB) < /dump/$(FILE)
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+DB=myapp HOST=prod-rds.example.com make db-dump
+FILE=myapp-20240101.sql DB=myapp HOST=localhost make db-restore
+make help | grep "^db-"
+```

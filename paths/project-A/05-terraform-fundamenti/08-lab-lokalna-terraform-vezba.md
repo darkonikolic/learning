@@ -362,3 +362,67 @@ Ovaj terraform plan output prikazuje:
 
 Zašto se resurs rekreira? Je li to normalno?
 ```
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi Terraform. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 05: Terraform ===
+
+tf-init: ## Inicijalizuj Terraform radni direktorijum (DIR=. make tf-init)
+	docker run --rm \
+	  -v $(PWD)/$(DIR):/workspace -w /workspace \
+	  hashicorp/terraform:$(TF_VERSION) init
+
+tf-validate: ## Validiraj Terraform sintaksu
+	docker run --rm \
+	  -v $(PWD):/workspace -w /workspace \
+	  hashicorp/terraform:$(TF_VERSION) validate
+
+tf-fmt: ## Formatiraj Terraform fajlove (provjerava stil)
+	docker run --rm \
+	  -v $(PWD):/workspace -w /workspace \
+	  hashicorp/terraform:$(TF_VERSION) fmt -recursive -diff
+
+tf-plan: ## Generiši Terraform plan (ENV=dev make tf-plan)
+	docker run --rm \
+	  -v $(PWD):/workspace -w /workspace \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  hashicorp/terraform:$(TF_VERSION) plan -var="env_name=$(ENV)" -out=tfplan
+
+tf-apply: ## Primijeni Terraform plan (uvijek nakon tf-plan)
+	docker run --rm \
+	  -v $(PWD):/workspace -w /workspace \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  hashicorp/terraform:$(TF_VERSION) apply tfplan
+
+tf-destroy: ## Uništi Terraform resurse (ENV=dev make tf-destroy) ⚠️ DESTRUKTIVNO
+	docker run --rm \
+	  -v $(PWD):/workspace -w /workspace \
+	  -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
+	  hashicorp/terraform:$(TF_VERSION) destroy -var="env_name=$(ENV)"
+
+tf-output: ## Prikaži Terraform output vrijednosti
+	docker run --rm \
+	  -v $(PWD):/workspace -w /workspace \
+	  hashicorp/terraform:$(TF_VERSION) output
+
+tf-security: ## Statička analiza sigurnosti Terraform koda (tfsec)
+	docker run --rm \
+	  -v $(PWD):/src \
+	  aquasec/tfsec:latest /src --no-color
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+DIR=. make tf-init
+make tf-validate
+make tf-fmt
+ENV=dev make tf-plan
+make help | grep "^tf-"
+```

@@ -84,6 +84,8 @@ Jer jednom kad nginx živí u kontejneru:
 docker run -p 8080:80 registry.gitlab.com/firma/project-a:sha-abc123
 ```
 
+> **Podman:** `podman run -p 8080:80 registry.gitlab.com/firma/project-a:sha-abc123`
+
 Ova jedna komanda radi identično na:
 - Laptopa u development-u
 - kind clusteru lokalno

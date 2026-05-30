@@ -140,3 +140,32 @@ bash scripts/cost-check.sh dev
 - Alert na 100% ($50) — akcija
 
 Bez ovog alarma, ne pokreći nikakav AWS environment.
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi strategije za gašenje i pokretanje okruženja. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 09: Shutdown i resume ===
+
+env-shutdown: ## Spusti compute resurse okruženja (scale to 0, zadrži podatke) (ENV=dev make env-shutdown)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  bitnami/kubectl:$(KUBECTL_VERSION) scale deployment --all --replicas=0 -n $(ENV)
+
+env-resume: ## Pokreni compute resurse okruženja (ENV=dev make env-resume)
+	docker run --rm \
+	  -v ~/.kube:/root/.kube \
+	  bitnami/kubectl:$(KUBECTL_VERSION) scale deployment --all --replicas=1 -n $(ENV)
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+ENV=dev make env-shutdown
+ENV=dev make env-resume
+make help | grep env-
+```

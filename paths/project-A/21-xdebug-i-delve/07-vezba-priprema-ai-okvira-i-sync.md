@@ -32,8 +32,7 @@ Kako da proverim da Delve radi pre nego što otvorim IDE?
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Funkcionalan step-through debug za PHP i Go u Docker dev okruženju, bez curenja u prod.
 
@@ -41,7 +40,7 @@ Kako da proverim da Delve radi pre nego što otvorim IDE?
 - `docker-compose.override.yml` — dodati debug portove i env varijable
 - `php/Dockerfile` — debug build target sa Xdebug ekstenzijom
 - `go/Dockerfile` — debug build target sa Delve instalacijom
-- `.cursor/rules/debug-checks.mdc` ili `.claude/rules/debug-checks.md`
+- `CLAUDE.md` ili `.claude/rules/debug-checks.md`
 
 **Fajlovi koji se NE diraju:**
 - `docker-compose.yml` (prod compose) — debug ne sme ovde da se pojavi
@@ -50,10 +49,9 @@ Kako da proverim da Delve radi pre nego što otvorim IDE?
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/debug-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/debug-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/debug-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Xdebug i Delve samo u dev/debug build target-u, nikad u prod image-u.
 - Debug portovi (9003 za Xdebug, 2345 za Delve) izloženi samo u docker-compose.override.yml.
@@ -86,8 +84,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/php-architect` za Xdebug konfiguraciju, `/golang-engineer` za Delve
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Proveri da Xdebug je aktivan u PHP kontejneru:
 
@@ -161,8 +158,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/debug-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Xdebug i Delve sync

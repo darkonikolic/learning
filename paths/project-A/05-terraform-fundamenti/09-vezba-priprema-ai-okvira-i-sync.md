@@ -29,13 +29,12 @@ Radim na Terraform kodu za project-A. Koje su najvažnije greške koje AI asiste
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Napraviti AI-okvir za Terraform koji hvata greške u verzijama, state konfiguraciji i sekretima pre nego što kod uđe u repo.
 
 **Fajlovi koji se diraju:**
-- `.cursor/rules/terraform-checks.mdc` (Cursor)
+
 - `CLAUDE.md` ili `.claude/rules/terraform-checks.md` (Claude Code)
 - `.tf` fajlovi u trenutnoj oblasti — samo za validaciju, bez izmene sadržaja
 
@@ -45,10 +44,9 @@ Radim na Terraform kodu za project-A. Koje su najvažnije greške koje AI asiste
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/terraform-checks.mdc` (globs: `paths/project-A/**/*.tf`)
-> **Claude Code:** dodaj sekciju `## Terraform validation checklist` u `CLAUDE.md`, ili napravi `.claude/rules/terraform-checks.md`
+Dodaj sekciju `## Terraform validation checklist` u `CLAUDE.md`, ili napravi `.claude/rules/terraform-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - required_version i required_providers pinovani (bez ~> Latest ili bez verzije).
 - Nema secrets u .tf/.tfvars fajlovima koji se commit-uju u repo — koristi variable bez default-a ili external secrets manager.
@@ -82,8 +80,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Pokreni validaciju redom — svaki korak mora proći pre sledećeg:
 
@@ -136,8 +133,7 @@ Ako ne — šta tačno fali i koji je minimalan ispravan oblik?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/terraform-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Terraform sync

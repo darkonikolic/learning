@@ -1,5 +1,19 @@
 # Napomene za dalje — Što naučiti nakon graduation projekta
 
+## HTTPS od prvog dana
+
+Svaki lokalni setup u ovom pathu koristi nginx kao reverse proxy ispred aplikacije. App kontejner nikad nije direktno eksponiran prema hostu — uvijek ide kroz nginx koji drži TLS certifikat.
+
+Pattern koji se ne mijenja:
+
+```
+Browser → nginx :443 (TLS) → app :8080 (interni network)
+```
+
+Certifikat se mijenja po okruženju (mkcert lokalno, ACM na AWS), ali nginx pattern ostaje isti. Naučiš ga u oblasti 01, koristiš svuda.
+
+---
+
 Nakon završetka graduation projekta, ovo su prirodni sljedeći koraci. Sortirani po prioritetu.
 
 ---

@@ -31,13 +31,12 @@ Koje coverage metrike su relevantne za jezgro logike nasuprot helpera?
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Uspostaviti testnu piramidu sa merljivim pragom pokrivenosti koji CI blokira.
 
 **Fajlovi koji se diraju:**
-- `.cursor/rules/test-checks.mdc` ili `.claude/rules/test-checks.md`
+- `CLAUDE.md` ili `.claude/rules/test-checks.md`
 - `Makefile` ili CI konfiguracija — dodati coverage threshold korak
 - `playwright.config.ts` — smoke test konfiguracija
 
@@ -47,10 +46,9 @@ Koje coverage metrike su relevantne za jezgro logike nasuprot helpera?
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/test-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/test-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/test-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Piramida: jezgro logike pokriveno unit-testovima; integracija samo za kritične putanje; malo, stabilnih E2E.
 - CI obara build ako coverage < prag (npr. 70% na jezgru logike).
@@ -83,8 +81,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/golang-engineer` za Go testove, `/php-architect` za PHP/Pest
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Pokreni Go testove sa coverage profilom:
 
@@ -150,8 +147,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/testiranje-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Testiranje sync

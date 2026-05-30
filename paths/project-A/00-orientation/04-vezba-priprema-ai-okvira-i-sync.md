@@ -9,66 +9,67 @@ Pre prvog modula inicijalizuješ i potvrđuješ AI-okvir kojim ćeš voditi ceo 
 Pre nego počneš, razjasni sa AI-om:
 
 **Šta tačno radimo:**
-Mapiramo koji agenti, pravila i skills već postoje u `.cursor/` okviru, potvrđujemo da `project-a-workflow` radi u radnom repou, i donosi se odluka šta (ako išta) inicijalizovati pre prvog modula.
+Inicijalizujemo `CLAUDE.md` u radnom repou, potvrđujemo da `## Project-A workflow` sekcija radi, i donosi se odluka šta (ako išta) inicijalizovati pre prvog modula.
 
 **Pretpostavke za potvrdu:**
-- Radni repo je kreiran i ima `.cursor/` direktorijum ili ga treba inicijalizovati
-- Postoje agenti `/devops-engineer`, `/learning-architect`, `/system-maintainer`
-- `project-a-workflow` pravilo je dostupno i scopovano na ovaj repo
+- Radni repo je kreiran i Claude Code CLI je instaliran (`claude --version` radi)
+- `CLAUDE.md` ne postoji ili treba inicijalizovati sa `claude /init`
+- `## Project-A workflow` sekcija treba biti dodata ručno posle inicijalizacije
 
 **Van opsega:**
 - Ne dodajemo oblast-specifična pravila ovde (to rade kasniji moduli)
-- Ne menjamo globalni `.cursor/` config — samo radni repo
+- Ne menjamo globalni Claude Code config — samo radni repo
 
 **Prompt za diskusiju:**
 ```
-Krećem project-A u novom repou. Koji minimalni .cursor setup
-(rules, agenti) mi treba da bih radio po plan→validacija petlji,
-bez dodavanja suvišnog? Koji agenti i pravila već postoje u okviru?
-Predloži šta da inicijalizujem, ne kreiraj automatski.
+Krećem project-A u novom repou. Koji minimalni CLAUDE.md setup
+mi treba da bih radio po plan→validacija petlji,
+bez dodavanja suvišnog? Šta staviti u ## Project-A workflow sekciju?
+Predloži sadržaj, ne kreiraj automatski.
 ```
 
 ---
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
-**Cilj:** Inicijalizovati minimalni AI-okvir u radnom repou tako da `project-a-workflow` petlja radi i Plan mode blokira izmene bez odobrenog plana.
+**Cilj:** Inicijalizovati minimalni AI-okvir u radnom repou tako da `## Project-A workflow` sekcija u `CLAUDE.md` radi i `/plan` blokira izmene bez odobrenog plana.
 
 **Fajlovi koji se diraju:**
-- `.cursor/rules/project-a-workflow.mdc`
+- `CLAUDE.md` — kreiranje sa `## Project-A workflow` sekcijom
 
 **Fajlovi koji se NE diraju:**
 - Svi ostali fajlovi u repou — nulti sync ne menja kod
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/project-a-workflow.mdc` (globs: `paths/project-A/**/*`)  
-> **Claude Code:** dodaj sekciju `## Project-A workflow` u `CLAUDE.md`, ili napravi `.claude/rules/project-a-workflow.md`
+Dodaj sekciju `## Project-A workflow` u `CLAUDE.md`, ili napravi `.claude/rules/project-a-workflow.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
-- Pre svake izmene: napiši plan i dobij potvrdu (Plan mode / /plan).
+## Project-A workflow
+
+- Pre svake izmene: napiši plan i dobij potvrdu (/plan u Claude Code terminalu).
 - Petlja: diskusija → plan → egzekucija → validacija → sync/capture.
-- Agenti: /devops-engineer za DevOps rad, /learning-architect za strukturu, /system-maintainer za odluke o okviru.
-- Anti-sprawl: ne dodaj rule/skill dok se potreba ne ponovi kroz više modula.
-- Svaka oblast završava sync-om u decision_log.md.
+- Kontekst: uvijek uključi verzije alata, cloud region, i existing konfiguraciju pri DevOps pitanjima.
+- Anti-sprawl: ne dodaj CLAUDE.md sekciju ili .claude/rules/ fajl dok se potreba ne ponovi kroz više modula.
+- Svaka oblast završava sync-om u .claude/memory/decisions.md ili CLAUDE.md ## Decision log sekciji.
 ```
 
 Anti-sprawl: ovo je osnovno pravilo — mora se dodati. Oblast-specifična pravila dolaze tek u kasnijim modulima.
 
 **Acceptance criteria:**
-- [ ] Tabela agenti/pravila/skills popunjena i potvrđena
-- [ ] `project-a-workflow` pravilo se učitava u radnom repou (Cursor prikazuje rule u context; Claude Code: `/plan` komanda prepoznata)
-- [ ] Plan mode dokazano read-only — pokušaj izmene bez plana je odbijen (Cursor) ili `/plan` blokira direktnu egzekuciju (Claude Code)
+- [ ] `CLAUDE.md` postoji u korenu radnog repoa
+- [ ] `## Project-A workflow` sekcija je prisutna u `CLAUDE.md`
+- [ ] `/plan` komanda u Claude Code terminalu prepoznaje workflow i traži plan pre egzekucije
 
 **AI pregled plana:**
 ```
 Evo plana pre egzekucije:
-- Inicijalizujem .cursor/rules/project-a-workflow.mdc scoped na ovaj repo
-- Potvrđujem da se učitava i da Plan mode blokira izmene bez plana
+- Pokrećem claude /init da kreiram CLAUDE.md
+- Dodajem ## Project-A workflow sekciju ručno
+- Potvrđujem da se učitava: /plan u terminalu
 
 Da li su acceptance criteria merljivi i testabilni?
 Šta fali ili je nejasno pre nego počnem?
@@ -78,34 +79,34 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta za DevOps rad  
-> **Claude Code:** direktno u terminalu, Claude izvršava komande
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
-Provjeri strukturu `.cursor/` direktorijuma:
-
-```bash
-ls -la .cursor/rules/ 2>/dev/null || echo "Direktorijum ne postoji — treba ga kreirati"
-```
-
-Inicijalizuj direktorijum ako ne postoji:
+Inicijalizuj `CLAUDE.md` ako ne postoji:
 
 ```bash
-mkdir -p .cursor/rules .cursor/memory
+# Pokreni u korenu radnog repoa
+claude /init
 ```
 
-Potvrdi koji agenti su dostupni (pregledaj globalni `.cursor/` config):
+Provjeri da li postoji i sadrži workflow sekciju:
 
 ```bash
-ls ~/.cursor/rules/ 2>/dev/null || ls ~/.config/cursor/rules/ 2>/dev/null
+grep -A 10 "Project-A workflow" CLAUDE.md 2>/dev/null || echo "CLAUDE.md nema workflow sekciju — dodaj je ručno"
 ```
 
-Provjeri da li se pravilo učitava u Cursor-u: otvori bilo koji fajl u repou i u Cursor chat potvrdi da `project-a-workflow` rule je u kontekstu.
-
-> **Claude Code alternativa:** Provjeri da je `CLAUDE.md` kreiran u korenu repoa sa sekcijom `## Project-A workflow`, ili da postoji `.claude/rules/project-a-workflow.md`.
+Provjeri `.claude/` direktorijum:
 
 ```bash
-cat CLAUDE.md | grep -A 10 "Project-A workflow" 2>/dev/null || echo "CLAUDE.md nema workflow sekciju"
+ls -la .claude/ 2>/dev/null || echo "Direktorijum .claude/ ne postoji"
 ```
+
+Ako trebaš posebna pravila po oblasti (umjesto CLAUDE.md sekcija), napravi `.claude/rules/` folder:
+
+```bash
+mkdir -p .claude/rules .claude/memory
+```
+
+Provjeri da `/plan` radi — pokreni `claude` u terminalu i kucaj `/plan`. Claude treba da odgovori tražeći plan opis pre bilo kakve egzekucije.
 
 ---
 
@@ -113,12 +114,12 @@ cat CLAUDE.md | grep -A 10 "Project-A workflow" 2>/dev/null || echo "CLAUDE.md n
 
 ```
 Evo acceptance criteria iz plana:
-- Tabela agenti/pravila/skills popunjena i potvrđena
-- project-a-workflow pravilo se učitava u radnom repou
-- Plan mode dokazano read-only
+- CLAUDE.md postoji u korenu repoa
+- ## Project-A workflow sekcija je prisutna
+- /plan komanda prepoznaje workflow
 
-Evo outputa / konfiguracije:
-[ovde lepiš ls output .cursor/rules/, sadržaj pravila, i rezultat testa Plan mode-a]
+Evo outputa:
+[ovde lepiš: cat CLAUDE.md | head -30, ls .claude/, i rezultat /plan testa]
 
 Za svaki acceptance kriterijum: da ✓ ili ne ✗.
 Ako ne — šta tačno fali?
@@ -130,19 +131,18 @@ Ako ne — šta tačno fali?
 
 | # | Akcija | Očekivani rezultat |
 |---|--------|--------------------|
-| 1 | Otvori Cursor, kucaj u chat bez uključenog Plan mode-a i pokušaj da izmenjaš fajl | Cursor prikazuje upozorenje ili odbija izmenu dok plan nije odobren |
-| 2 | U Cursor chat napiši `/devops-engineer` i pošalji poruku | Agent se aktivira i odgovara u DevOps personi |
-| 3 | U terminalu (Claude Code) pokreni `/plan` | Komanda traži plan pre egzekucije, ne izvršava odmah |
-| 4 | Provjeri `.cursor/rules/` direktorijum | Postoji `project-a-workflow.mdc` sa ispravnim `globs:` poljem |
+| 1 | Pokreni `cat CLAUDE.md` | Fajl postoji i sadrži `## Project-A workflow` sekciju sa pravilima |
+| 2 | U Claude Code terminalu kucaj `/plan` | Claude traži opis plana i ne izvršava odmah ništa |
+| 3 | U Claude Code terminalu napiši pitanje o DevOps temi | Claude odgovara uzimajući u obzir kontekst iz CLAUDE.md |
+| 4 | Provjeri `ls .claude/` | Postoji `.claude/` direktorijum (settings.json i/ili rules/ i/ili memory/) |
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/orientation-tooling.md` ili u `CLAUDE.md` sekciju `## Decision log`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Orijentacija sync
-- Urađeno: inicijalizovan project-a-workflow rule; potvrđeni agenti i Plan mode
-- Naučeno: koji agenti postoje, kako Plan mode blokira izmene
+- Urađeno: inicijalizovan CLAUDE.md sa ## Project-A workflow sekcijom; potvrđen /plan workflow
+- Naučeno: kako CLAUDE.md daje kontekst Claudeu, kako /plan blokira direktnu egzekuciju
 - Šta bi promenio:
 ```

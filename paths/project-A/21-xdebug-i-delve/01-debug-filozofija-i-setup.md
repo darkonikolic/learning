@@ -271,3 +271,28 @@ docker run --rm test-php-prod php -m | grep xdebug && echo "FAIL: xdebug found" 
 | Delve ports | — | ✓ | — |
 | SYS_PTRACE cap | — | ✓ | — |
 | `launch.json` | — | `.vscode/` (commit) | — |
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi debug setup za PHP i Go. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 21: Debug ===
+
+debug-php: ## Pokreni PHP servis sa Xdebug (listen na port 9003)
+	docker compose -f docker-compose.yml -f docker-compose.debug.yml up php
+
+debug-go: ## Pokreni Go servis sa Delve debuggerom (listen na port 2345)
+	docker compose -f docker-compose.yml -f docker-compose.debug.yml up go-service
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+make debug-php    # PHP servis sa Xdebug na portu 9003
+make debug-go     # Go servis sa Delve na portu 2345
+make help | grep debug
+```

@@ -385,3 +385,33 @@ Grype vs Trivy za project-a:
 - Trivy: širi scope (IaC, secrets, K8s), bolji GitLab integracija
 - Grype: brži za čisti image scan, offline mode sa `grype db update`
 - Preporuka: Trivy kao primarni CI gate, Grype za lokalni dev provjere
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi sigurnosne skenove. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 16: Sigurnost ===
+
+security-scan-all: ## Pokreni sve security skenove: trivy + tfsec + kubesec
+	@$(MAKE) trivy-scan
+	@$(MAKE) tf-security
+	@echo "Pokreni kubesec zasebno na svakom YAML-u: make kubesec-scan FILE=deployment.yaml"
+
+kubesec-scan: ## Skeniraj Kubernetes manifest za sigurnosne probleme (FILE=deployment.yaml make kubesec-scan)
+	docker run --rm \
+	  -v $(PWD):/data \
+	  kubesec/kubesec:latest scan /data/$(FILE)
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+make security-scan-all
+FILE=k8s/deployment.yaml make kubesec-scan
+make help | grep security
+make help | grep kubesec
+```

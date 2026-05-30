@@ -12,7 +12,7 @@ Pre nego počneš, razjasni sa AI-om:
 Dopunjujemo postojeći `terraform-checks` rule iz oblasti 05 sa AWS-specifičnim stavkama — enkripcija, public access, security group pravila. Onda verifikujemo da `terraform plan` nema iznenađenja i da security scan prolazi.
 
 **Pretpostavke za potvrdu:**
-- `terraform-checks` rule iz oblasti 05 već postoji (Cursor ili Claude Code)
+- `## Terraform validation checklist` sekcija u `CLAUDE.md` iz oblasti 05 već postoji
 - `terraform init` je uspešno pokrenuto i remote backend je konfigurisan
 - Imaš pristup AWS nalogu gde se resursi kreiraju
 - checkov ili tfsec je dostupan (Docker je OK)
@@ -33,13 +33,12 @@ Da li je nalaz realan rizik ovde i koji je minimalan fix bez rušenja arhitektur
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Proširiti AI-okvir AWS security pravilima i verifikovati da plan i security scan prolaze pre bilo kakvog `apply`-a.
 
 **Fajlovi koji se diraju:**
-- `.cursor/rules/terraform-checks.mdc` — dopuna postojećeg rule-a (Cursor)
+
 - `CLAUDE.md` ili `.claude/rules/terraform-checks.md` — dopuna sekcije (Claude Code)
 - `.tf` fajlovi u oblasti — samo za validaciju, ne za izmenu sadržaja u ovom koraku
 
@@ -50,10 +49,9 @@ Da li je nalaz realan rizik ovde i koji je minimalan fix bez rušenja arhitektur
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** dopuni `.cursor/rules/terraform-checks.mdc` AWS sekcijom (globs: `paths/project-A/**/*.tf`)
-> **Claude Code:** dopuni sekciju `## Terraform validation checklist` u `CLAUDE.md` ili `.claude/rules/terraform-checks.md`
+dopuni sekciju `## Terraform validation checklist` u `CLAUDE.md` ili `.claude/rules/terraform-checks.md`
 
-Sadržaj pravila — dodati uz postojeća iz oblasti 05 (isti za oba alata):
+Sadržaj pravila — dodati uz postojeća iz oblasti 05:
 ```
 # AWS-specifično (dopuna terraform-checks)
 - S3 bucket: versioning uključen, public access blocked, server-side enkripcija (AES256 ili KMS).
@@ -89,8 +87,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 ```bash
 # 1. Osvezi provider-e i module
@@ -144,8 +141,7 @@ Ako ne — koji nalaz je realan rizik i koji je minimalan fix?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/terraform-aws-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Terraform AWS sync

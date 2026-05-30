@@ -14,7 +14,7 @@ Odlučujemo da li je potreban CI-specifičan artefakt u okviru (glob-rule za `.g
 **Pretpostavke za potvrdu:**
 - Postoji `.gitlab-ci.yml` u radnom repou (iz prethodnih labova oblasti 02)
 - `glab` CLI je instalisan i autentifikovan na GitLab instancu
-- Postoji `.cursor/` okvir sa `/devops-engineer` i `project-a-workflow`
+- Postoji `CLAUDE.md` u korenu radnog repoa sa `## Project-A workflow` sekcijom
 
 **Van opsega:**
 - Ne menjamo aplikacijski kod niti Dockerfile
@@ -23,7 +23,7 @@ Odlučujemo da li je potreban CI-specifičan artefakt u okviru (glob-rule za `.g
 **Prompt za diskusiju:**
 ```
 Radim GitLab CI oblast u project-A. Imam .gitlab-ci.yml koji treba da
-prođe lint. Postojeći okvir: /devops-engineer + project-a-workflow.
+prođe lint. Kontekst je u CLAUDE.md (sekcija ## Project-A workflow).
 Da li mi treba poseban CI artefakt (rule za .gitlab-ci.yml), ili je
 pokriveno? Predloži kao kandidat sa evidencijom i confidence, bez
 automatskog kreiranja.
@@ -33,14 +33,13 @@ automatskog kreiranja.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene  
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** `.gitlab-ci.yml` prolazi `glab ci lint` bez grešaka i ne sadrži plaintext secrets.
 
 **Fajlovi koji se diraju:**
 - `.gitlab-ci.yml`
-- `.cursor/rules/gitlab-ci-checks.mdc` (ako je odluka „dodaj")
+- `CLAUDE.md` ili `.claude/rules/gitlab-ci-checks.md` (ako je odluka „dodaj")
 
 **Fajlovi koji se NE diraju:**
 - `Dockerfile` — obrađen u oblasti 01
@@ -48,10 +47,9 @@ automatskog kreiranja.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/gitlab-ci-checks.mdc` (globs: `paths/project-A/**/.gitlab-ci.yml`)  
-> **Claude Code:** dodaj sekciju `## GitLab CI validation checklist` u `CLAUDE.md`, ili napravi `.claude/rules/gitlab-ci-checks.md`
+Dodaj sekciju `## GitLab CI validation checklist` u `CLAUDE.md`, ili napravi `.claude/rules/gitlab-ci-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Svaki job ima stage, rules: (ne only/except), i jasne needs:.
 - Path-based rules: changes: da se ne build-uje sve pri svakom commitu.
@@ -62,10 +60,10 @@ Sadržaj pravila (isti za oba alata):
 Anti-sprawl: CI se ponavlja kroz module 02, 10 i 22 — minimalan dodatak je opravdan. Ako je pokriveno postojećim pravilima, zapiši odluku i preskoči kreiranje.
 
 **Acceptance criteria:**
-- [ ] Odluka o artefaktu doneta preko `/system-maintainer` i zapisana
+- [ ] Odluka o artefaktu doneta i zapisana u `.claude/memory/decisions.md` ili `CLAUDE.md`
 - [ ] `glab ci lint` prolazi bez grešaka
 - [ ] `grep -r "password\|secret\|token" .gitlab-ci.yml` — nema plaintext secrets
-- [ ] Sync zapisan u `decision_log.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log`
 
 **AI pregled plana:**
 ```
@@ -83,8 +81,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta za DevOps rad  
-> **Claude Code:** direktno u terminalu, Claude izvršava komande
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Lint GitLab CI konfiguracije:
 
@@ -123,7 +120,7 @@ Objasni uzrok i minimalan fix; da li rules: treba prepravku?
 Evo acceptance criteria iz plana:
 - glab ci lint prolazi bez grešaka
 - nema plaintext secrets u konfiguraciji
-- sync zapisan u decision_log.md
+- sync zapisan u .claude/memory/decisions.md ili CLAUDE.md
 
 Evo outputa:
 [ovde lepiš glab ci lint output i grep output]
@@ -141,12 +138,11 @@ Ako ne — šta tačno fali?
 | 1 | Pokreni `glab ci lint` u korenu repoa | Shell ispisuje `Validation successful` ili ekvivalent bez error linije |
 | 2 | Pokreni `grep -rn "password\|secret\|token\|api_key" .gitlab-ci.yml` | Nema izlaza (ili izlaz sadrži samo reference na CI/CD varijable u `$VAR` formatu) |
 | 3 | Otvori `.gitlab-ci.yml` i provjeri da svaki job ima `rules:` ključ, ne `only:` | Pretraga `grep "only:" .gitlab-ci.yml` nema izlaza |
-| 4 | Otvori `.cursor/rules/gitlab-ci-checks.mdc` ili `CLAUDE.md` | Fajl postoji i sadrži checklist sa 4 pravila |
+| 4 | Otvori `CLAUDE.md` ili `.claude/rules/gitlab-ci-checks.md` | Fajl postoji i sadrži checklist sa 4 pravila |
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`  
-> **Claude Code:** zapiši u `docs/decisions/gitlab-ci-tooling.md` ili u `CLAUDE.md` sekciju `## Decision log`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — GitLab CI sync (oblast 02)

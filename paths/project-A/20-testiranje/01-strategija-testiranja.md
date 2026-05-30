@@ -136,3 +136,36 @@ func TestLoginExistingUser(t *testing.T) {
 `t.Cleanup()` se izvršava čak i kad test padne — garantira čišćenje. Ovo je ekvivalent `defer` ali vezan uz test lifecycle.
 
 Za testcontainers: svaki integration test koji treba bazu dobiva svoju čistu bazu (ili barem transaction rollback na kraju). Dijeljenje baze između testova u parallelnom izvršavanju garantira flaky testove.
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi strategiju testiranja. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 20: Testiranje ===
+
+test-go: ## Pokreni Go unit testove sa race detektorom
+	docker run --rm \
+	  -v $(PWD):/app -w /app \
+	  golang:1.22-alpine go test -race ./...
+
+test-php: ## Pokreni PHP testove sa Pest
+	docker compose run --rm php ./vendor/bin/pest
+
+test-e2e: ## Pokreni Playwright E2E testove
+	docker run --rm \
+	  -v $(PWD):/app -w /app \
+	  mcr.microsoft.com/playwright:latest \
+	  npx playwright test
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+make test-go
+make test-php
+make help | grep "^test-"
+```

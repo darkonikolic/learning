@@ -34,8 +34,7 @@ Objasni svaki korak.
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Servis čita tajne iz AWS Secrets Manager-a kroz K8s Secret koji kreira External Secrets Operator, bez ijednog plaintext secret-a u repou.
 
@@ -49,10 +48,9 @@ Objasni svaki korak.
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** napravi/ažuriraj `.cursor/rules/secrets-hygiene.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/secrets-hygiene.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/secrets-hygiene.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Nikad plaintext secret u repo (kod, .tfvars, compose, K8s manifesti).
 - App dobija tajne preko SM/External Secrets u runtime-u, ne build-time.
@@ -68,7 +66,7 @@ Anti-sprawl: uvedi `secrets-hygiene` — rizik curenja je visok i ponavlja se kr
 - [ ] `kubectl describe pod <ime>` prikazuje `secretKeyRef`, ne stvarnu vrednost
 - [ ] ExternalSecret objekat kreira K8s Secret povlačenjem iz AWS SM
 - [ ] plan rotacije postoji (rotation je uključena ili postoji dokumentovan plan)
-- [ ] sync zapisan u `decision_log.md` / `CLAUDE.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log` / `CLAUDE.md`
 
 **AI pregled plana:**
 ```
@@ -86,8 +84,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Instaliraj External Secrets Operator ako već nije:
 
@@ -163,8 +160,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/secrets-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Secrets Manager sync

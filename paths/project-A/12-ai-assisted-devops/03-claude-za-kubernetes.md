@@ -1,5 +1,20 @@
 # Claude za Kubernetes
 
+## CLAUDE.md kontekst za Kubernetes rad
+
+Dodaj u `CLAUDE.md` da Claude ne pretpostavlja pogrešan K8s setup:
+
+```markdown
+## Kubernetes manifest checklist
+- Non-root user: runAsUser ne 0 gdje nginx=101, nije potreban root.
+- ReadOnlyRootFilesystem: true — montiraj emptyDir za /tmp i /var/cache.
+- Resource requests i limits: CPU i memory uvijek postavljeni.
+- Liveness i readiness probe: uvijek postavljene, initialDelaySeconds prilagođen.
+- Image tag: pinovan sha256 ili specifična verzija — ne :latest.
+- RBAC: ServiceAccount sa minimalnim permisijama.
+- EKS specifično: AWS ALB Ingress annotations (ne nginx ingress).
+```
+
 ## Debugging K8s problema sa AI
 
 Kubernetes greške su često kriptične. AI je koristan jer može prevesti

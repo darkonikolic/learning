@@ -36,8 +36,7 @@ Daj konfiguraciju (Terraform za ALB ili K8s Ingress YAML):
 
 ## 2. Plan
 
-> **Cursor:** uključi Plan mode pre bilo koje izmene
-> **Claude Code:** `/plan` u terminalu pre bilo koje izmene
+Aktiviraj plan mode: u Claude Code terminalu kucaj `/plan` pre bilo koje izmene.
 
 **Cilj:** Sav saobraćaj prolazi kroz LB, health check-ovi ispravno isključuju nezdrave backend-e, HTTP se redirectuje na HTTPS, i TLS >= 1.2 je aktivan.
 
@@ -52,10 +51,9 @@ Daj konfiguraciju (Terraform za ALB ili K8s Ingress YAML):
 
 **AI okvir za ovu oblast:**
 
-> **Cursor:** proširi `.cursor/rules/k8s-manifest-checks.mdc` ili napravi `.cursor/rules/lb-checks.mdc`
-> **Claude Code:** dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/lb-checks.md`
+Dodaj sekciju u `CLAUDE.md` ili napravi `.claude/rules/lb-checks.md`
 
-Sadržaj pravila (isti za oba alata):
+Sadržaj pravila:
 ```
 - Health check cilja dedikovan /health endpoint, ne /; pragovi razumni (ne flapping: 2 healthy, 3 unhealthy).
 - HTTP → HTTPS redirect obavezan; TLS >= 1.2; bez slabih cipher-a (RC4, DES, 3DES).
@@ -72,7 +70,7 @@ Anti-sprawl: proširi postojeće `k8s-manifest-checks` ili `terraform-checks` �
 - [ ] `aws elbv2 describe-target-health` prikazuje sve targete kao `healthy`
 - [ ] ukloni jedan pod; verifikuj da LB prestaje da šalje saobraćaj na taj pod; vrati pod; verifikuj da se ponovo registruje
 - [ ] TLS scan pokazuje minimalnu verziju TLS 1.2 i nema kritičnih cipher slabosti
-- [ ] sync zapisan u `decision_log.md` / `CLAUDE.md`
+- [ ] Sync zapisan u `.claude/memory/decisions.md` ili `CLAUDE.md ## Decision log` / `CLAUDE.md`
 
 **AI pregled plana:**
 ```
@@ -90,8 +88,7 @@ Da li su acceptance criteria merljivi i testabilni?
 
 ## 3. Egzekucija
 
-> **Cursor:** koristiš `/devops-engineer` agenta
-> **Claude Code:** direktno u terminalu
+U Claude Code terminalu izvršavaš komande direktno — Claude ima pristup shellu.
 
 Verifikuj da health endpoint vraća 200 kroz LB:
 
@@ -171,8 +168,7 @@ Ako ne — šta tačno fali?
 
 **Sync — zatvori petlju:**
 
-> **Cursor:** zapiši u `.cursor/memory/decision_log.md`
-> **Claude Code:** zapiši u `docs/decisions/load-balancer-tooling.md` ili `CLAUDE.md`
+Zapiši u `.claude/memory/decisions.md` ili u `CLAUDE.md` sekciju `## Decision log`
 
 ```
 ## [datum] — Load balancer sync

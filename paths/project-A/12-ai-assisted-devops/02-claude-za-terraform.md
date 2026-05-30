@@ -1,5 +1,43 @@
 # Claude za Terraform
 
+## CLAUDE.md snippet za Terraform projekte
+
+Dodaj ovo u `CLAUDE.md` na početku svakog Terraform projekta:
+
+```markdown
+## Terraform validation checklist
+- required_version i required_providers pinovani (bez ~> Latest ili bez verzije).
+- Nema secrets u .tf/.tfvars fajlovima koji se commit-uju — koristi variable bez default-a.
+- Svaki resurs nosi standardne tagove: env, project, owner.
+- State je remote (S3 + DynamoDB lock), ne lokalni.
+- Moduli imaju source sa pinovanom verzijom ili lokalnim relativnim putem.
+- Destruktivne izmjene (forces replacement) — uvijek provjeri ručno u plan outputu.
+- AWS provider: ~5.0 (ne stariji — kubernetes_network_config mijenja strukturu u v5).
+- Region: eu-west-1.
+```
+
+Kada Claude generiše Terraform kod, ove napomene su automatski u kontekstu i
+sprječavaju najčešće greške (hardcoded AMI ID-ovi, `"Action": "*"`, bez remote state).
+
+## `/plan` workflow prije `terraform apply`
+
+Nikad ne pokrećeš `terraform apply` direktno. Workflow u Claude Code terminalu:
+
+```
+/plan
+
+"Imam završen Terraform modul za EKS. Trebaš provjeriti plan output
+i identifikovati sve destruktivne promjene ili potencijalne troškove
+prije apply-a."
+```
+
+Claude će pregledati plan output koji mu zalijepiš i identificovati:
+- `# forces replacement` linije (resursi koji se brišu i ponovo kreiraju)
+- Potencijalne troškove (novi ELB, RDS, NAT gateway)
+- Sigurnosne probleme (široke security group rules, javni S3 bucket)
+
+Tek nakon Claude pregleda — i tvog ručnog pregleda — pokreni `terraform apply tfplan`.
+
 ## Efikasni promptovi za Terraform
 
 Loš prompt daje generički kod koji možda radi, ali ne razumiješ zašto.

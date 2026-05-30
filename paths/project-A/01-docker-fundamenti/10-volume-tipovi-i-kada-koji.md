@@ -110,6 +110,15 @@ docker volume inspect mysql-data  # Detalji i stvarna lokacija na hostu
 docker volume rm mysql-data   # Brisanje (mora biti odmontiran)
 ```
 
+> **Podman:**
+> ```bash
+> podman compose down
+> podman compose down --volumes
+> podman volume ls
+> podman volume inspect mysql-data
+> podman volume rm mysql-data
+> ```
+
 Backup named volume-a — jedina pouzdana metoda:
 
 ```bash
@@ -127,6 +136,21 @@ docker run --rm \
   alpine \
   tar xzf /backup/mysql-20240115.tar.gz -C /data
 ```
+
+> **Podman:**
+> ```bash
+> podman run --rm \
+>   -v mysql-data:/data \
+>   -v $(pwd)/backups:/backup \
+>   alpine \
+>   tar czf /backup/mysql-$(date +%Y%m%d).tar.gz -C /data .
+>
+> podman run --rm \
+>   -v mysql-data:/data \
+>   -v $(pwd)/backups:/backup \
+>   alpine \
+>   tar xzf /backup/mysql-20240115.tar.gz -C /data
+> ```
 
 Kada koristiti:
 - MySQL podaci — obavezno named volume, ne bind mount
@@ -334,6 +358,14 @@ docker system prune --volumes
 docker system prune -af --volumes
 ```
 
+> **Podman:**
+> ```bash
+> podman system df -v
+> podman volume prune
+> podman system prune --volumes
+> podman system prune -af --volumes
+> ```
+
 Sigurna rutina za reset lokalnog okruženja:
 ```bash
 # Zaustavi sve, obriši kontejnere i named volume-e za ovaj projekt
@@ -342,3 +374,9 @@ docker compose down --volumes
 # Ponovo pokreni s čistim stanjem
 docker compose up --build
 ```
+
+> **Podman:**
+> ```bash
+> podman compose down --volumes
+> podman compose up --build
+> ```

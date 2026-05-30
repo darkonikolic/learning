@@ -346,3 +346,67 @@ docker inspect helloworld output (network section):
 
 Zašto port nije dostupan?
 ```
+
+---
+
+## Korak 6 — Dodaj nginx reverse proxy i HTTPS
+
+Aplikacija trenutno radi na `http://localhost:8080` direktno. Sljedeći korak je standardni pattern koji koristiš na svakom projektu: nginx ispred, HTTPS od prvog dana.
+
+Pročitaj: `14-nginx-reverse-proxy-i-https.md`
+
+Zadatak:
+1. Generiši lokalne certifikate (mkcert ili openssl)
+2. Napiši `nginx/nginx.conf` sa HTTP → HTTPS redirect i `proxy_pass` na app
+3. Ažuriraj `docker-compose.yml`: nginx servis sa portovima 80/443, app bez direktnih portova prema hostu (`expose` umjesto `ports`)
+4. Dodaj `127.0.0.1 app.local` u `/etc/hosts`
+5. Provjeri: `http://localhost` → redirect → `https://localhost`
+
+Acceptance criteria:
+- [ ] `curl -I http://localhost` vraća `301`
+- [ ] `curl -k https://localhost` vraća sadržaj aplikacije
+- [ ] `docker compose ps` pokazuje nginx sa portovima 80/443, app nema mapirane portove prema hostu
+- [ ] `curl http://localhost:8080` vraća "Connection refused" (app nije direktno dostupna)
+
+---
+
+## Makefile — dodaj u ovom poglavlju
+
+Ovo poglavlje uvodi Docker kao primarni alat. Dodaj u `Makefile` u korenu projekta:
+
+```makefile
+# === OBLAST 01: Docker ===
+
+docker-build: ## Izgradi app image (docker build -t $(APP_IMAGE) .)
+	docker build -t $(APP_IMAGE) .
+
+docker-run: ## Pokreni app kontejner na portu 8080 (docker run -d -p 8080:80)
+	docker run -d --name $(APP_NAME) -p 8080:80 $(APP_IMAGE)
+
+docker-stop: ## Zaustavi i ukloni app kontejner
+	docker rm -f $(APP_NAME) 2>/dev/null || true
+
+docker-logs: ## Prikaži logove app kontejnera
+	docker logs -f $(APP_NAME)
+
+hadolint: ## Lint Dockerfile sa hadolintom (DL pravila)
+	docker run --rm -i hadolint/hadolint < Dockerfile
+
+trivy-scan: ## Skeniraj app image za HIGH/CRITICAL ranjivosti
+	docker run --rm \
+	  -v /var/run/docker.sock:/var/run/docker.sock \
+	  aquasec/trivy:latest image --severity HIGH,CRITICAL $(APP_IMAGE)
+```
+
+Centralni Makefile već sadrži ove targete — ovo je referenca šta si dodao u ovoj oblasti.
+
+Provjeri da targeti rade:
+```bash
+make docker-build
+make docker-run
+make docker-logs
+make docker-stop
+make help | grep docker
+make help | grep hadolint
+make help | grep trivy
+```
