@@ -44,6 +44,44 @@ Docker sistem se sastoji od tri dela koji komuniciraju međusobno:
 
 Ova razdvojenost znači da možeš imati Docker CLI na jednoj mašini koji komunicira sa Docker daemonom na drugoj. Na tome se zasniva Docker Context i daljinska administracija.
 
+## Docker socket — kanal komunikacije, ne daemon
+
+Česta zabuna: daemon i socket nisu ista stvar.
+
+```
+Docker daemon (dockerd)     → PROCES koji radi u pozadini, upravlja svim
+Docker socket               → FAJL kroz koji CLI i daemon razgovaraju
+/var/run/docker.sock
+```
+
+Analogija: daemon je recepcionar, socket je telefon na recepciji. Telefon nije recepcionar — samo kanal kroz koji ga zoveš.
+
+Kada kucaš `docker run nginx`:
+
+```
+CLI otvori /var/run/docker.sock
+    │
+    ▼
+Pošalje HTTP REST zahtjev: POST /containers/create
+    │
+    ▼
+Daemon primi zahtjev → pokrene kontejner → vrati odgovor
+```
+
+Komunikacija je REST API over Unix socket — isti protokol kao HTTP, samo umjesto TCP porta koristi fajl na disku.
+
+**Zašto je ovo važno u praksi:**
+
+```yaml
+# GitLab CI runner konfiguracija — montira socket u kontejner
+volumes:
+  - /var/run/docker.sock:/var/run/docker.sock
+```
+
+Ovo znači: kontejner može slati komande Docker daemonu na hostu. Može pokretati nove kontejnere, brisati ih, čitati sve volume-e. Efektivno ima root pristup hostu kroz daemon.
+
+Zato GitLab runner mora biti trusted — nije za javne fork projekte. Alternativa je Docker-in-Docker (`dind`) koji kreira izolirani daemon unutar kontejnera, bez pristupa host daemonu.
+
 > **Podman arhitektura:** Podman nema centralnog daemona. Svaka `podman` komanda direktno komunicira sa container runtimeom (crun/runc) bez posrednika. Ovo je "daemonless" arhitektura — sigurnija jer nema root daemona koji sluša konekcije. Socket (`/run/user/$(id -u)/podman/podman.sock`) postoji samo ako ga eksplicitno pokrneš (`podman system service`). Za korištenje u ovom kursu: `podman build`, `podman run` itd. rade identično kao `docker` ekvivalenti.
 
 ## Image layeri — kako Docker skladišti fajlove

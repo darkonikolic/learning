@@ -647,6 +647,98 @@ php         → LOŠE — profile po servisu, nejasna namjena
 database    → LOŠE — zbunjujuće, core DB je uvijek aktivan
 ```
 
+### Mrežna izolacija po environmentu
+
+Compose automatski kreira mrežu po projektu. Ako koristiš jedan `compose.yml` za sve profile, svi servisi završe na istoj `project_default` mreži — `app-test` kontejner može "vidjeti" `db-dev` ako ga netko pokrene paralelno.
+
+Idealan mentalni model:
+
+```
+dev environment
+  ├── app-dev, db-dev, redis-dev
+  └── dev_network          ← samo dev servisi
+
+test environment
+  ├── app-test, db-test, redis-test
+  └── test_network         ← samo test servisi
+```
+
+Servisi iz dev profila ne smiju vidjeti test. Servisi iz test profila ne smiju vidjeti dev. Ovo je posebno važno u CI gdje se profili mogu pokretati paralelno na istom agentu.
+
+Eksplicitno definiraj mreže po profilu:
+
+```yaml
+services:
+  # ─── DEV profil ───────────────────────────────────────────
+  app-dev:
+    build:
+      context: .
+      target: development
+    profiles: [dev]
+    networks: [dev_network]
+
+  db-dev:
+    image: mysql:8.0
+    profiles: [dev]
+    networks: [dev_network]
+
+  redis-dev:
+    image: redis:7-alpine
+    profiles: [dev]
+    networks: [dev_network]
+
+  # ─── TEST profil ──────────────────────────────────────────
+  app-test:
+    build:
+      context: .
+      target: test
+    profiles: [test]
+    networks: [test_network]
+
+  db-test:
+    image: mysql:8.0
+    profiles: [test]
+    tmpfs:
+      - /var/lib/mysql
+    networks: [test_network]
+
+  redis-test:
+    image: redis:7-alpine
+    profiles: [test]
+    networks: [test_network]
+
+networks:
+  dev_network:
+  test_network:
+```
+
+Rezultat:
+- `app-dev` vidi `db-dev` i `redis-dev`
+- `app-test` vidi `db-test` i `redis-test`
+- `app-dev` ne vidi `db-test`, i obratno
+
+**Napomena o produkciji:** prod se ne pokreće lokalnim `docker compose --profile prod up` osim za malu aplikaciju ili VPS. Za ozbiljnije okruženje:
+
+```
+dev/test lokalno  → Docker Compose s eksplicitnim mrežama
+prod              → Kubernetes (izolacija ide preko namespace, NetworkPolicy, ServiceAccount)
+```
+
+Minimum u CI/CD za provjeru da prod image nije "mrtav":
+
+```bash
+# Build prod image-a
+docker build --target production -t myapp:prod .
+
+# Smoke test — potvrdi da se pokreće
+docker run --rm myapp:prod php -v
+docker run -d -p 8080:80 --name smoke myapp:prod
+curl --fail http://localhost:8080/health
+docker rm -f smoke
+```
+
+> **Podman:** `podman build --target production -t myapp:prod .` / `podman run --rm myapp:prod php -v`
+
 ---
 
 ## Kombinovanje targeta i profila

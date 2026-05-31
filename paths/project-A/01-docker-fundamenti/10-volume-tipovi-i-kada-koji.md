@@ -317,6 +317,103 @@ Zašto ovo u produkciji: kompromitovan kontejner ne može modificirati binarne f
 
 ---
 
+## 6. Bind mount permissions — UID/GID problem
+
+Bind mount zadržava host permissions. Kontejner ih ne mijenja — direktno vidi isti ownership kao na hostu.
+
+```bash
+docker run -v $(pwd)/data:/data myapp
+# Permission denied: /data/file.txt
+
+# Host folder:
+drwxr-xr-x  darko  darko   ./data
+
+# Kontejner korisnik: appuser (UID 1001)
+```
+
+Zašto pada: host folder je vlasništvo `darko` (npr. UID 1000). Kontejner proces radi kao `appuser` (UID 1001). Za kernel, `appuser` je `other` — ima samo `r-x`, ne može pisati.
+
+Permissions se porede po UID brojevima, ne po imenima. `darko` na hostu i `darko` unutar kontejnera su isti UID samo ako su eksplicitno usklađeni.
+
+### Rješenja bez chmod 777
+
+**Opcija 1 — pokreni kontejner s host UID/GID (najčistije za dev):**
+
+```bash
+docker run \
+  --user "$(id -u):$(id -g)" \
+  -v "$(pwd)/data:/data" \
+  myapp
+```
+
+Proces unutar kontejnera piše kao tvoj host korisnik. Fajlovi koje napravi u `/data` imat će tvoj UID/GID na hostu.
+
+U docker-compose.override.yml:
+```yaml
+services:
+  php-service:
+    user: "${UID}:${GID}"
+```
+
+```bash
+# .env.local
+UID=1000
+GID=1000
+```
+
+**Opcija 2 — uskladi ownership host foldera s kontejner UID:**
+
+```bash
+# Ako aplikacija uvijek radi kao UID 1001:
+sudo chown -R 1001:1001 ./data
+docker run -v "$(pwd)/data:/data" myapp
+```
+
+Dobro kada je folder namijenjen isključivo tom kontejneru (npr. uploads direktorijum).
+
+**Opcija 3 — named volume umjesto bind mounta:**
+
+```bash
+docker volume create myapp_data
+docker run -v myapp_data:/data myapp
+```
+
+Docker upravlja ownership unutar volume-a. Rješava problem ali više ne možeš direktno editovati fajlove s hosta.
+
+**Opcija 4 — parametrizuj UID/GID u Dockerfilu (za timove):**
+
+```dockerfile
+ARG UID=1000
+ARG GID=1000
+
+RUN addgroup --gid ${GID} appgroup \
+ && adduser --uid ${UID} --gid ${GID} --ingroup appgroup appuser
+
+USER appuser
+```
+
+Build s host UID/GID:
+```bash
+docker build \
+  --build-arg UID=$(id -u) \
+  --build-arg GID=$(id -g) \
+  -t myapp .
+```
+
+Image je tada usklađen s tvojim host korisnikom. Korisno u timovima gdje svi imaju različite UID-ove.
+
+### Sažetak
+
+| Problem | Rješenje |
+|---------|----------|
+| Lokalni dev, brzo | `--user "$(id -u):$(id -g)"` |
+| Folder namijenjen kontejneru | `chown -R <uid> ./folder` |
+| Persistent data bez host pristupa | Named volume |
+| Tim s različitim UID-ovima | `--build-arg UID/GID` u Dockerfile |
+| Nikad | `chmod 777` |
+
+---
+
 ## Decision matrix za naš projekat
 
 | Use case | Volume tip | Konfiguracija |
