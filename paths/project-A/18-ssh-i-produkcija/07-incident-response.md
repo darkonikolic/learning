@@ -83,6 +83,37 @@ aws cloudwatch get-metric-statistics \
   --statistics Maximum
 ```
 
+### Korak 6: Traces — gdje se troši vrijeme (latency incident)
+
+Crash i OOM su vidljivi kroz logove. **Latency** incident (sve radi, ali je sporo) zahtijeva traces.
+
+Tok: Grafana alert → Loki log → `trace_id` → Tempo trace → bottleneck.
+
+```
+1. Grafana alert: p95 latency > 2s na /api/checkout
+
+2. Grafana Explore → Loki query:
+   {namespace="project-a-prod", app="php-service"} | json | duration > 2s
+   → nađeš log liniju s "trace_id":"7f3a1b2c..."
+
+3. Klikneš "View Trace" u Grafani (automatski link ako je trace_id u logu)
+   → Tempo otvara cijeli trace:
+
+   POST /api/checkout   2340ms
+     ├─ validate()         12ms
+     ├─ db.SelectCart      45ms
+     └─ go-service.Charge 2270ms  ← bottleneck
+          └─ stripe.API    2265ms  ← externi API timeout
+
+4. Root cause: Stripe API spor, nije tvoj kod.
+   Akcija: dodaj circuit breaker + fallback timeout.
+```
+
+TraceQL query u Tempo za traženje svih sporih zahtjeva:
+```
+{ resource.service.name="php-service" } | duration > 2s
+```
+
 ---
 
 ## Exit Code Mapa
@@ -298,6 +329,117 @@ Blameless kultura: PIR nije da krivimo osobu, nego da poboljšamo sistem.
 
 ---
 
+## Latency Incident — Praćenje Request-a kroz Sistem
+
+Crash incident ima jasne simptome (CrashLoopBackOff, exit code). Latency incident je teži — sve je "Running" ali korisnici se žale na sporost. Bez traces moraš nagađati.
+
+### Dijagnostički workflow
+
+```
+Alert: p95 latency > SLO threshold
+  │
+  ▼
+Grafana Dashboards
+  ├─ Error rate normalan? → nije crash
+  ├─ Koji servis ima spike? → php-service, go-service, nginx?
+  └─ Od kad tačno? → vremenski marker za Loki pretragu
+  │
+  ▼
+Loki — pronađi konkretne spore zahtjeve
+  │
+  {namespace="project-a-prod", app="go-service"}
+  | json
+  | duration > 1000   ← u ms
+  | line_format "{{.trace_id}} {{.path}} {{.duration}}ms"
+  │
+  ▼
+trace_id iz log linije → Tempo
+  │
+  { .trace_id = "7f3a1b2c9d4e5f6a" }
+  │
+  ▼
+Waterfall view — koji span troši najviše vremena?
+  │
+  ├─ nginx                    3ms
+  ├─ php-service            890ms  (ukupno)
+  │    ├─ middleware          5ms
+  │    ├─ controller         10ms
+  │    ├─ db.SelectUser      15ms
+  │    ├─ go-service.gRPC   845ms  ← ovo je problem
+  │    └─ render              5ms
+  └─ go-service             845ms
+       ├─ db.SelectOrder     12ms
+       ├─ redis.Get           2ms
+       └─ stripe.Charge      830ms  ← externi API
+```
+
+Root cause u jednom pogledu: Stripe API je spor. Nisi morao čitati ni jednu liniju koda.
+
+---
+
+### Korelacija u Grafani (jedan klik)
+
+Kada Loki pronađe log liniju s `trace_id` poljem, Grafana prikaže dugme "View Trace in Tempo". Workflow:
+
+```
+Grafana Explore
+  → Loki query: {app="go-service"} | json | duration > 500
+  → klikneš na log liniju s trace_id
+  → "Derived Fields" veza → otvara Tempo automatski
+```
+
+Ovo radi ako je Tempo konfigurisan kao datasource u Grafani i ako aplikacija loguje `trace_id` u JSON formatu:
+
+```json
+{"level":"info","trace_id":"7f3a1b2c","span_id":"abc123","path":"/api/order","duration":890,"msg":"request completed"}
+```
+
+OTel SDK automatski dodaje `trace_id` u sve logove ako koristiš structured logging s OTel log bridge-om.
+
+---
+
+### Distribucija latency — percentili, ne prosjeci
+
+```promql
+# p50, p95, p99 za go-service HTTP zahtjeve
+histogram_quantile(0.95,
+  sum(rate(http_request_duration_seconds_bucket{
+    namespace="project-a-prod",
+    app="go-service"
+  }[5m])) by (le, handler)
+)
+```
+
+p95 = 95% zahtjeva je brže od ovog broja. Korisnici koji dožive spore zahtjeve su u repu distribucije — prosjek ih maskira.
+
+Primjer: prosjek 200ms, p99 = 3000ms → 1% korisnika čeka 3 sekunde. Bez percentila, nikad ne bi vidio problem.
+
+---
+
+### Latency budget — ko smije koliko
+
+Definiciraj internu latency mapu za project-A:
+
+```
+Ukupni SLO: p95 < 500ms za /api/* endpointe
+
+  nginx               <  5ms   (proxy overhead)
+  php-service        < 200ms   (business logic)
+    └─ db query      <  50ms   (indexed query)
+    └─ go-service    < 100ms   (internal gRPC)
+  go-service         < 100ms   (ako direktno pozvan)
+    └─ redis         <   5ms
+    └─ db query      <  50ms
+  externi API        < 300ms   (sa timeout + circuit breaker)
+```
+
+Ako span premaši budget → alert na Tempo (TraceQL):
+```
+{ resource.service.name="go-service" && span.db.query.duration > 50ms }
+```
+
+---
+
 ## Brzih Referenca Komandi za Incident
 
 ```bash
@@ -327,4 +469,25 @@ helm rollback project-a -n project-a-prod
 
 # Prati rollout
 kubectl rollout status deployment/<name> -n project-a-prod --timeout=5m
+```
+
+**Latency incident — Loki + Tempo:**
+
+```logql
+# Loki: pronađi spore zahtjeve s trace_id
+{namespace="project-a-prod", app="go-service"} | json | duration > 1000
+
+# Loki: sve greške s trace_id u zadnjih sat
+{namespace="project-a-prod"} | json | level="error" | since=1h
+```
+
+```
+# Tempo TraceQL: svi spori span-ovi
+{ resource.service.name="go-service" } | duration > 500ms
+
+# Tempo: svi span-ovi s greškom
+{ resource.service.name="php-service" && status = error }
+
+# Tempo: po trace_id (iz Loki loga)
+{ .trace_id = "<id iz loga>" }
 ```
