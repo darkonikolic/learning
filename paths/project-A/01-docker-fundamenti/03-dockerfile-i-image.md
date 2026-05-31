@@ -91,6 +91,8 @@ RUN apk update && apk add --no-cache curl vim
 
 ## CMD i ENTRYPOINT — šta se pokreće
 
+> **Kada se izvršavaju?** `CMD` i `ENTRYPOINT` se **ne izvršavaju pri build-u** — samo su zapisani u image kao metadata. Izvršavaju se **svaki put kada pokreneš kontejner** (`docker run`). `RUN` je jedina direktiva koja se izvršava tokom builda i kreira layer.
+
 ```dockerfile
 # Nije u našem Dockerfile, ali nginx:alpine ima:
 CMD ["nginx", "-g", "daemon off;"]
@@ -100,9 +102,189 @@ CMD ["nginx", "-g", "daemon off;"]
 
 `daemon off` znači: nginx radi u foreground-u, ne u background-u. Ovo je kritično za kontejnere — kada main proces završi, kontejner staje. Nginx u background-u bi odmah vratio exit 0 i kontejner bi nestao.
 
-Razlika `CMD` vs `ENTRYPOINT`:
-- `CMD` je default, može se override-ovati: `docker run myimage /bin/sh`
-- `ENTRYPOINT` je fiksno, argument se dodaje na njega
+### ENTRYPOINT — fiksna ulazna tačka kontejnera
+
+`ENTRYPOINT` definiše **šta kontejner uvek radi** — bez obzira šta korisnik navede pri pokretanju. Dok se `CMD` može potpuno zamijeniti, `ENTRYPOINT` ostaje fiksan a sve što dodaš u `docker run` postaje argument njemu.
+
+```dockerfile
+# Primjer: kontejner koji je alat za ping
+FROM alpine
+ENTRYPOINT ["ping", "-c", "3"]
+CMD ["localhost"]
+```
+
+```bash
+# Koristi CMD default — pinguje localhost
+docker run myping
+
+# Korisnik dodaje argument — pinguje google.com umjesto CMD defaulta
+docker run myping google.com
+# Ovo izvršava: ping -c 3 google.com
+
+# CMD se može zamijeniti, ali ENTRYPOINT ostaje
+docker run myping 8.8.8.8
+# Ovo izvršava: ping -c 3 8.8.8.8
+```
+
+Najčešća kombinacija je `ENTRYPOINT` + `CMD` zajedno:
+- `ENTRYPOINT` — komanda koja se uvijek izvršava
+- `CMD` — default argumenti, korisnik ih može zamijeniti
+
+```dockerfile
+FROM python:3.11-slim
+COPY app.py /app.py
+ENTRYPOINT ["python", "/app.py"]
+CMD ["--port", "8080"]
+```
+
+```bash
+# Pokreće: python /app.py --port 8080
+docker run myapp
+
+# Korisnik mijenja port — CMD se zamjenjuje
+docker run myapp --port 9090
+# Pokreće: python /app.py --port 9090
+
+# Bez ENTRYPOINT, ovako bi izgledalo s CMD:
+docker run myapp python /app.py --port 9090  # mora sve navesti
+```
+
+### Shell vs Exec forma
+
+Obje direktive imaju dvije forme:
+
+```dockerfile
+# Shell forma — pokrenuto kroz /bin/sh -c
+ENTRYPOINT python /app.py
+CMD python /app.py
+
+# Exec forma (preporučena) — direktno, bez shell-a
+ENTRYPOINT ["python", "/app.py"]
+CMD ["python", "/app.py"]
+```
+
+Exec forma je bolja iz dva razloga:
+1. **Signal handling** — `docker stop` šalje SIGTERM direktno procesu. U shell formi SIGTERM ide `sh` procesu koji ga ne prosljeđuje, pa kontejner čeka timeout i biva ubijen.
+2. **PID 1** — u exec formi tvoja aplikacija je PID 1 i prima signale. U shell formi PID 1 je `sh`, a aplikacija je child proces.
+
+### Override pri pokretanju
+
+```bash
+# Override CMD — dovoljno navesti argument(e)
+docker run myapp --debug
+
+# Override ENTRYPOINT — potreban --entrypoint flag
+docker run --entrypoint /bin/sh myapp
+docker run --entrypoint python myapp /other_script.py
+```
+
+### ENTRYPOINT kao shell skripta
+
+Kada kontejner treba nešto da uradi **prije nego pokrenete aplikaciju** — postavljanje environment varijabli, provjera config fajlova, čekanje da baza postane dostupna, migracije — tada umjesto direktne komande kao ENTRYPOINT stavljate shell skriptu.
+
+```
+myapp/
+├── Dockerfile
+├── entrypoint.sh   ← skripta koja priprema okruženje
+└── app.py
+```
+
+`entrypoint.sh`:
+```bash
+#!/bin/sh
+set -e
+
+# Provjeri obaveznu env varijablu
+if [ -z "$DATABASE_URL" ]; then
+  echo "ERROR: DATABASE_URL nije postavljen"
+  exit 1
+fi
+
+# Čekaj da baza postane dostupna
+echo "Čekam bazu..."
+until nc -z "$DB_HOST" "$DB_PORT"; do
+  sleep 1
+done
+echo "Baza je dostupna."
+
+# Pokreni migracije
+python manage.py migrate
+
+# exec "$@" — predaj kontrolu CMD-u (vidi objašnjenje ispod)
+exec "$@"
+```
+
+`Dockerfile`:
+```dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh        # skripta mora biti executable
+
+COPY . .
+
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["python", "app.py"]
+```
+
+Šta se dešava pri `docker run myapp`:
+1. Docker pokreće `/entrypoint.sh`
+2. Skripta provjeri env varijable, čeka bazu, pokrene migracije
+3. `exec "$@"` — zamijeni skriptu s `python app.py` (iz CMD)
+4. Kontejner sada izvršava `python app.py` kao PID 1
+
+#### `exec "$@"` — zašto je ovo kritično
+
+`"$@"` su svi argumenti proslijeđeni skripti — to je CMD ili ono što korisnik navede u `docker run`.
+
+```bash
+# Bez exec — skripta je PID 1, aplikacija je child
+/entrypoint.sh → python app.py (child)
+# SIGTERM ide skripti, aplikacija ga ne dobija, kontejner se ne gasi čisto
+
+# Sa exec — skripta se zamijeni aplikacijom, aplikacija postaje PID 1
+/entrypoint.sh → exec python app.py (postaje PID 1)
+# SIGTERM ide direktno aplikaciji
+```
+
+Bez `exec "$@"` na kraju skripte, `docker stop` neće gracefully ugasiti aplikaciju.
+
+#### `set -e` na vrhu skripte
+
+```bash
+#!/bin/sh
+set -e
+```
+
+`set -e` kaže: ako **bilo koja komanda** vrati error (exit code != 0), odmah zaustavi skriptu. Bez toga skripta nastavlja dalje čak i kada nešto krene po zlu — aplikacija se pokrene s pokvarenim okruženjem.
+
+#### Kada koristiti shell skriptu kao ENTRYPOINT
+
+Koristi skriptu kada kontejner treba nešto od ovoga prije starta:
+- Provjera obaveznih env varijabli (`DATABASE_URL`, `SECRET_KEY`)
+- Čekanje vanjskog servisa (baza, Redis, API)
+- Pokretanje migracija pri deployu
+- Generisanje config fajlova iz env varijabli u runtime-u
+- Postavljanje permissions ili kreiranje direktorijuma
+
+Kada ništa od ovoga ne trebaš — direktna komanda u ENTRYPOINT je dovoljna:
+```dockerfile
+ENTRYPOINT ["python", "app.py"]  # bez skripte, jednostavnije
+```
+
+### Razlika CMD vs ENTRYPOINT — sažeto
+
+| | CMD | ENTRYPOINT |
+|---|---|---|
+| Može se zamijeniti | `docker run myimage /bin/sh` | `docker run --entrypoint /bin/sh myimage` |
+| Svrha | Default argumenti | Definicija što kontejner radi |
+| Tipična upotreba | Default config, portovi | Aplikacija, alat |
+
+Kada radiš **servis** (web app, API) — koristi `ENTRYPOINT` za aplikaciju, `CMD` za default config. Kada radiš **alat** (backup, migration) — samo `ENTRYPOINT` je dovoljan.
 
 ## Layer caching — redosled direktiva je bitan
 
