@@ -35,7 +35,7 @@ Kubernetes cluster se sastoji od dvije vrste mašina:
 
 - **kubelet** — agent koji prima instrukcije od control plane-a i pokreće/zaustavlja kontejnere
 - **kube-proxy** — mrežni proxy, implementira Kubernetes Service apstrakciju
-- **Container Runtime** — Docker, containerd ili CRI-O — stvarno pokretanje kontejnera
+- **Container Runtime** — containerd ili CRI-O — stvarno pokretanje kontejnera (detalji ispod)
 
 ```
 ┌─────────────────────────────────┐
@@ -54,6 +54,32 @@ Kubernetes cluster se sastoji od dvije vrste mašina:
 │  pods   │       │  pods   │
 └─────────┘       └─────────┘
 ```
+
+## CRI — kako kubelet govori s container runtimeom
+
+Kubernetes ne komunicira direktno s runc-om ili dockerd-om. Koristi standardizovani API: **CRI (Container Runtime Interface)**.
+
+```
+kubelet
+  │
+  │  gRPC (CRI protokol)
+  ▼
+containerd   ← implementira CRI, defaultni runtime na EKS, GKE, AKS
+  │
+  │  OCI Runtime Spec
+  ▼
+runc         ← stvarno pokrene kontejner (postavi namespace, cgroup, pa izađe)
+```
+
+CRI je razlog zašto Kubernetes 1.24+ nije više koristio dockerd — Docker nije implementirao CRI direktno. Kubernetes je godinama koristio `dockershim` (adapter koji je prevodio CRI pozive u Docker API), ali ga je uklonio jer je to bio overhead bez benefita. Rezultat: containerd je sada direktni runtime na svim managed K8s servisima (EKS, GKE, AKS).
+
+**Šta ovo znači za tebe:**
+- `docker build`, `docker push` i dalje radiš lokalno — to ostaje
+- Kada K8s deplouje Pod, kubelet govori containerd-u, ne dockerd-u
+- Image format je isti (OCI standard) — image buildovan s Dockerom radi u containerd-u bez izmjena
+- `kubectl describe pod` → sekcija `Container ID: containerd://sha256:...` potvrđuje runtime
+
+Za project-A: EKS nodovi koriste containerd. Tvoji Docker image-i rade bez ikakvih promjena.
 
 ## kind: Kubernetes u Docker kontejnerima
 

@@ -1,8 +1,8 @@
 # Docker arhitektura
 
-## Tri komponente
+## Tri komponente (i šta je ispod)
 
-Docker sistem se sastoji od tri dela koji komuniciraju međusobno:
+Docker sistem se sastoji od tri dela koji komuniciraju međusobno — ali ispod daemona postoji još jedan sloj koji je važan za razumijevanje Kubernetes-a:
 
 ```
 ┌──────────────────────────────────────────────────────────┐
@@ -20,11 +20,29 @@ Docker sistem se sastoji od tri dela koji komuniciraju međusobno:
 │  Docker Daemon (dockerd)                                 │
 │                                                          │
 │  - Prima komande od CLI                                  │
-│  - Gradi image-e                                         │
-│  - Pokreće i zaustavlja kontejnere                       │
+│  - Gradi image-e (BuildKit)                              │
 │  - Upravlja mrežama i volumima                           │
 │  - Komunicira sa registry-jem                            │
 └────────────────────┬─────────────────────────────────────┘
+                     │ gRPC (containerd API)
+                     ▼
+┌──────────────────────────────────────────────────────────┐
+│  containerd                                              │
+│                                                          │
+│  - OCI image management (pull, store, snapshot)          │
+│  - Lifecycle kontejnera (create, start, stop, delete)    │
+│  - Implementira CRI za Kubernetes                        │
+└────────────────────┬─────────────────────────────────────┘
+                     │ OCI Runtime Spec
+                     ▼
+┌──────────────────────────────────────────────────────────┐
+│  runc                                                    │
+│                                                          │
+│  - Jedino što stvarno pokrenė kontejner                  │
+│  - Postavlja namespaces i cgroups                        │
+│  - Pokrene entrypoint proces, pa izađe                   │
+└──────────────────────────────────────────────────────────┘
+
                      │ HTTPS (docker pull/push)
                      ▼
 ┌──────────────────────────────────────────────────────────┐
@@ -38,9 +56,15 @@ Docker sistem se sastoji od tri dela koji komuniciraju međusobno:
 
 **Docker CLI** — alat kojeg ti koristiš. Ne radi ništa sam. Šalje instrukcije daemonu.
 
-**Docker Daemon** — servis koji radi u pozadini na tvom laptopa (ili serveru). On zapravo gradi image-e i pokreće kontejnere. Komunicira sa kernel-om da postavi namespaces i cgroups.
+**Docker Daemon (dockerd)** — servis koji radi u pozadini. Prima komande, gradi image-e, upravlja mrežama i volumima. Ali kontejnere ne pokreće sam — delegira to containerd-u.
+
+**containerd** — container runtime koji radi ispod dockerd-a (i direktno u Kubernetes-u). Zadužen je za image lifecycle (pull, store, unpack) i upravljanje kontejner procesom. Implementira CRI (Container Runtime Interface) — standardizovani API koji Kubernetes koristi za komunikaciju s runtime-om. Ovo je ključno: **Kubernetes ne koristi dockerd uopšte — govori direktno s containerd-om**.
+
+**runc** — OCI-kompatibilni runtime koji stvarno pokreće kontejner. Dobije specifikaciju (koji namespace, koji cgroup, koji filesystem root), postavi izolaciju, pokrene proces, pa izađe. Nakon što runc izađe, containerd prati taj proces.
 
 **Registry** — skladište za Docker image-e. Docker Hub je javni default. GitLab Container Registry je privatni registry koji ćemo koristiti za project-A.
+
+Zašto ovo razumjeti: kada Kubernetes deplouje Pod, kubelet govori containerd-u (ne dockerd-u) da pokrene kontejner. containerd zove runc. runc postavi namespace i cgroup, pokrene nginx (ili go-service), pa izađe. Sve što si naučio o Docker-u direktno se prenosi — samo bez dockerd posrednika.
 
 Ova razdvojenost znači da možeš imati Docker CLI na jednoj mašini koji komunicira sa Docker daemonom na drugoj. Na tome se zasniva Docker Context i daljinska administracija.
 
@@ -82,7 +106,15 @@ Ovo znači: kontejner može slati komande Docker daemonu na hostu. Može pokreta
 
 Zato GitLab runner mora biti trusted — nije za javne fork projekte. Alternativa je Docker-in-Docker (`dind`) koji kreira izolirani daemon unutar kontejnera, bez pristupa host daemonu.
 
-> **Podman arhitektura:** Podman nema centralnog daemona. Svaka `podman` komanda direktno komunicira sa container runtimeom (crun/runc) bez posrednika. Ovo je "daemonless" arhitektura — sigurnija jer nema root daemona koji sluša konekcije. Socket (`/run/user/$(id -u)/podman/podman.sock`) postoji samo ako ga eksplicitno pokrneš (`podman system service`). Za korištenje u ovom kursu: `podman build`, `podman run` itd. rade identično kao `docker` ekvivalenti.
+> **Podman arhitektura:** Podman nema centralnog daemona — daemonless arhitektura. Ali nije direktno na runc-u. Stvarni chain:
+> ```
+> podman
+>   ↓
+> conmon  (container monitor — prati stdin/stdout i lifecycle)
+>   ↓
+> crun/runc  (OCI runtime — postavlja namespaces, pokreće proces)
+> ```
+> `conmon` je mali C program koji ostaje živ dok kontejner radi: drži stdin/stdout pipe-ove i detektuje kada proces završi. Bez conmon-a, Podman bi morao ostati kao roditeljev proces — ne bi mogao da radi "detached" kontejnere. Socket (`/run/user/$(id -u)/podman/podman.sock`) postoji samo ako ga eksplicitno pokrneš (`podman system service`). Za korištenje u ovom kursu: `podman build`, `podman run` itd. rade identično kao `docker` ekvivalenti.
 
 ## Image layeri — kako Docker skladišti fajlove
 

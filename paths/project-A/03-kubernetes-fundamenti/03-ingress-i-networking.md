@@ -242,3 +242,71 @@ Browser → Route53 DNS → ALB (ACM cert, TLS termination)
 ```
 
 Kubernetes manifesti su isti (Deployment, Service). Jedino Ingress se razlikuje po ingressClassName i AWS-specifičnim anotacijama. U kasnijim modulima ćemo koristiti Kustomize overlays da upravljamo ovim razlikama.
+
+## Gateway API — nasljednik Ingress-a
+
+Ingress radi i ostaje relevantan. Ali Kubernetes 1.28+ promovira **Gateway API** kao standardizovani, ekspresivniji zamjenski model.
+
+Razlika u pristupu:
+
+```
+Ingress                              Gateway API
+────────────────────────────────     ──────────────────────────────────
+Jedan resurs (Ingress)               Tri odvojena resursa
+Ograničene mogućnosti rutiranja      HTTPRoute, GRPCRoute, TCPRoute...
+Implementacijski detalji u           Čiste apstrakcije, controller-
+  annotation-ima                       specifični detalji odvojeni
+```
+
+Tri resursa Gateway API-ja:
+
+```yaml
+# 1. GatewayClass — definira koji controller implementira
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: nginx
+spec:
+  controllerName: k8s.nginx.org/nginx-gateway-controller
+
+# 2. Gateway — instanca load balancera (platforma tim konfiguriše)
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: project-a-gateway
+  namespace: infra
+spec:
+  gatewayClassName: nginx
+  listeners:
+    - name: https
+      port: 443
+      protocol: HTTPS
+      tls:
+        certificateRefs:
+          - name: project-a-tls
+
+# 3. HTTPRoute — pravila rutiranja (aplikacijski tim konfiguriše)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: hello-world
+  namespace: helloworld-dev
+spec:
+  parentRefs:
+    - name: project-a-gateway
+      namespace: infra
+  hostnames:
+    - "dev.project-a.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: hello-world
+          port: 80
+```
+
+Ključna prednost: platforma tim kreira i posjeduje `Gateway`, aplikacijski tim kreira `HTTPRoute` u svom namespace-u. Nema potrebe da aplikacijski tim ima pristup Ingress kontroleru.
+
+**Za project-A:** koristimo Ingress jer je podržan svuda i dobro dokumentovan. Gateway API je korak naprijed koji vrijedi poznavati — AWS Load Balancer Controller i nginx već imaju stable Gateway API podršku. Ako koristiš EKS 1.28+, možeš migrirati HTTPRoute po HTTPRoute bez downtime-a.
